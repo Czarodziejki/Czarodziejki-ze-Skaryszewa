@@ -1,34 +1,82 @@
+using Mirror;
+using Mirror.Examples.Common;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     private float horizontal;
     public float speed = 8f;
     public float jumpingPower = 15f;
 
-    public Collider2D collider;
-    public Rigidbody2D rigidBody;
+    private Collider2D playerCollider;
+    private Rigidbody2D rigidBody;
+    private SpriteRenderer spriteRenderer;
+
     public LayerMask groundLayer;
-    public SpriteRenderer spriteRenderer;
+    private Camera playerCamera;
 
     void Start()
     {
+        playerCamera = GetComponentInChildren<Camera>();
+        if (!isLocalPlayer)
+        {
+            // Disable the camera and audio listener for non-local players
+            if (playerCamera != null)
+            {
+                playerCamera.enabled = false;
+
+                var audioListener = playerCamera.GetComponent<AudioListener>();
+                if (audioListener != null)
+                {
+                    audioListener.enabled = false;
+                }
+            }
+
+            return;
+        }
+        SetupLocalPlayerCamera();
         rigidBody = GetComponent<Rigidbody2D>();
-        collider = GetComponent<Collider2D>();
+        playerCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        if (collider == null || rigidBody == null)
+
+        if (playerCollider == null || rigidBody == null)
         {
             Debug.LogError("Rigidbody2D or Collider2D is missing on the player!");
         }
     }
 
+    private void SetupLocalPlayerCamera()
+    {
+        if (playerCamera != null)
+        {
+            // Enable the camera
+            playerCamera.enabled = true;
+
+            // Enable the AudioListener
+            var audioListener = playerCamera.GetComponent<AudioListener>();
+            if (audioListener != null)
+            {
+                audioListener.enabled = true;
+            }
+
+            // Make this the Main Camera
+            playerCamera.tag = "MainCamera";
+
+            // Ensure it's properly recognized as the active Main Camera
+            Camera.SetupCurrent(playerCamera);
+        }
+    }
+
     void Update()
     {
+        if (!isLocalPlayer)
+            return;
+
         horizontal = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocityX, jumpingPower);
+            rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, jumpingPower);
         }
 
         Flip();
@@ -36,18 +84,21 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rigidBody.linearVelocity = new Vector2(horizontal * speed, rigidBody.linearVelocityY);
+        if (!isLocalPlayer)
+            return;
+
+        rigidBody.linearVelocity = new Vector2(horizontal * speed, rigidBody.linearVelocity.y);
     }
 
     private bool IsGrounded()
     {
-        Vector2 boxCenter = new Vector2(collider.bounds.center.x, collider.bounds.min.y - 0.1f);
-        Vector2 boxSize = new Vector2(collider.bounds.size.x * 0.9f, 0.1f);
+        Vector2 boxCenter = new Vector2(playerCollider.bounds.center.x, playerCollider.bounds.min.y - 0.1f);
+        Vector2 boxSize = new Vector2(playerCollider.bounds.size.x * 0.9f, 0.1f);
 
         return Physics2D.OverlapBox(
             boxCenter,
             boxSize,
-            0.2f,
+            0f,
             groundLayer
         );
     }
@@ -59,5 +110,4 @@ public class PlayerController : MonoBehaviour
         else if (horizontal > 0.01f)
             spriteRenderer.flipX = true;
     }
-
 }
