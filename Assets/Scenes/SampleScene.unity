@@ -1587,6 +1587,7 @@ GameObject:
   - component: {fileID: 1906124009}
   - component: {fileID: 1906124011}
   - component: {fileID: 1906124012}
+  - component: {fileID: 1906124013}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -1767,14 +1768,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a975721260fd6a44587d5ea9faf37b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 7
-  jumpingPower: 10
+  speed: 8
+  jumpingPower: 15
   collider: {fileID: 1906124010}
   rigidBody: {fileID: 1906124009}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   spriteRenderer: {fileID: 1906124007}
+  animator: {fileID: 1906124013}
+--- !u!95 &1906124013
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906124006}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 93a48becfeea32d47898f9efee6a5439, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
