@@ -1,105 +1,87 @@
 using UnityEngine;
-using Mirror;
-using System.Collections.Generic;
 using UnityEngine.Tilemaps;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using UnityEngine.WSA;
-using System;
-using UnityEngine.UIElements;
+using System.Collections.Generic;
+using Mirror;
+using static UnityEditor.ShaderGraph.Internal.Texture2DShaderProperty;
 
-public enum TileID : int
+public enum TileType : int
 {
-    None = 0,
-    Grass = 1,
-    TilesSize
+    None,
+    Grass
 }
 
 public class GameMapManager : NetworkBehaviour
 {
-    public Tilemap tilemap;
+    public TileBase grassTile;
 
-    public RuleTile grassTilePrefab;
+    private Tilemap tilemap;
+    private Dictionary<TileType, TileBase> tileDictionary;
+    private Vector2 tileSize = new Vector2(1.0f, 1.0f);
 
-    private LayerMask playerLayer;
-
-    void Start()
+    private void Awake()
     {
-        if (tilemap == null)
+        tileDictionary = new Dictionary<TileType, TileBase>
         {
-            Debug.LogError("Tilemap is not assigned!");
-            return;
-        }
+            { TileType.Grass, grassTile }
+        };
 
-        Vector3Int tilemapSize = tilemap.cellBounds.size;
+        tilemap = GetComponentInChildren<Tilemap>();
+    }
+    private TileBase GetTile(TileType tileType)
+    {
+        return tileDictionary.TryGetValue(tileType, out TileBase tile) ? tile : null;
+    }
+    public TileType GetTileType(Vector3Int position)
+    {
+        TileBase tile = tilemap.GetTile(position);
+        foreach (var pair in tileDictionary)
+        {
+            if (pair.Value == tile)
+                return pair.Key;
+        }
+        return TileType.None;
     }
 
     [Server]
-    public void SetTile(Vector3Int position, TileID tileID)
+    public void TryDestroyTile(Vector3Int position)
     {
-        tilemap.SetTile(position, grassTilePrefab);
+        tilemap.SetTile(position, null);
+        RpcDestroyTile(position);
+    }
 
-        // Optionally synchronize with all clients
-        RpcSetTile(position, tileID);
+    [Server]
+    public void TryBuildTile(Vector3Int position, TileType type)
+    {
+        if (IsValidTileBuilPosition(position))
+        {
+            tilemap.SetTile(position, GetTile(type));
+            RpcBuildTile(position, type);
+        }
     }
 
     [ClientRpc]
-    private void RpcSetTile(Vector3Int position, TileID tileID)
+    private void RpcDestroyTile(Vector3Int position)
     {
-        // Set the tile on the local copy of the tilemap
-        tilemap.SetTile(position, grassTilePrefab);
+        tilemap.SetTile(position, null);
     }
 
-    [TargetRpc]
-    private void TargetSetTile(NetworkConnection conn, Vector3Int position, TileID tileID)
+    [ClientRpc]
+    private void RpcBuildTile(Vector3Int position, TileType type)
     {
-        // Set the tile on the local copy of the tilemap
-        if (!isServer && conn == NetworkClient.connection)
-        {
-            tilemap.SetTile(position, grassTilePrefab);
-        }
+        tilemap.SetTile(position, GetTile(type));
     }
+
 
     [Server]
-    private bool IsValidTileChange(Vector3Int position)
+    private bool IsValidTileBuilPosition(Vector3Int position)
     {
-        bool noBlock = tilemap.GetTile(position) == null;
-        Vector3 worldPosition = tilemap.tileAnchor + tilemap.CellToWorld(position);
-        Vector3 tileSize = tilemap.cellSize;
-        bool insidePlayer = Physics2D.OverlapBox(new Vector2(worldPosition.x, worldPosition.y), new Vector2(tileSize.x, tileSize.y), 0, LayerMask.NameToLayer("Player"));
-        return noBlock && !insidePlayer;
+        if (tilemap.GetTile(position) != null)
+            return false;
+
+        int layerMask = LayerMask.GetMask("Player");
+        bool isOccupied = Physics2D.OverlapBox(tilemap.GetCellCenterWorld(position), tileSize, 0f, layerMask);
+        return !isOccupied;
     }
 
-    RuleTile GetTileByID(TileID tileID)
-    {
-        switch (tileID)
-        {
-            case TileID.None: return null;
-            case TileID.Grass: return grassTilePrefab;
-            default: return null;
-        }
-    }
 
-    TileID GetTileID(TileBase tile)
-    {
-        if (tile == grassTilePrefab)
-            return TileID.Grass;
-        else
-            return TileID.None;
-    }
-
-    [Server]
-    public void SyncTilemapToNewPlayer(NetworkConnection conn)
-    {
-        for (int x = tilemap.cellBounds.min.x; x < tilemap.cellBounds.max.x; x++)
-        {
-            for (int y = tilemap.cellBounds.min.y; y < tilemap.cellBounds.max.y; y++)
-            {
-                for (int z = tilemap.cellBounds.min.z; z < tilemap.cellBounds.max.z; z++)
-                {
-
-                    TargetSetTile(conn, new Vector3Int(x, y, z), GetTileID(tilemap.GetTile(new Vector3Int(x, y, z))));
-                }
-            }
-        }
-    }
 }

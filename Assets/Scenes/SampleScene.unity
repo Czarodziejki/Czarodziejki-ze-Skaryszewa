@@ -259,7 +259,7 @@ MonoBehaviour:
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
-  - {fileID: 5556454373586942185, guid: 789ad6af058e6b441b03caf0851db9e6, type: 3}
+  - {fileID: 7402533721660197922, guid: 789ad6af058e6b441b03caf0851db9e6, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -275,7 +275,8 @@ MonoBehaviour:
   evaluationMethod: 0
   evaluationInterval: 3
   timeInterpolationGui: 0
-  mapPrefab: {fileID: 5556454373586942185, guid: 789ad6af058e6b441b03caf0851db9e6, type: 3}
+  mapPrefab: {fileID: 7402533721660197922, guid: 789ad6af058e6b441b03caf0851db9e6, type: 3}
+  gameMapManager: {fileID: 0}
 --- !u!1 &208578342
 GameObject:
   m_ObjectHideFlags: 0

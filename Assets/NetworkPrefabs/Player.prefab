@@ -128,7 +128,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00063827634, y: 0.00006151199}
+  m_Offset: {x: 0.03, y: 0.00006151199}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -138,7 +138,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.59956867, y: 0.88131607}
+  m_Size: {x: 0.38, y: 0.88}
   m_EdgeRadius: 0
 --- !u!50 &3977115285728671099
 Rigidbody2D:
@@ -179,12 +179,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0ce588e72499eb4da9eb53a0b75789a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
-  grassTile: {fileID: 11400000, guid: ef3b4b9a68967da46a72b4cd61a51200, type: 2}
-  groundTileMap: {fileID: 0}
-  layer:
-    serializedVersion: 2
-    m_Bits: 8
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!114 &5568257073709482352
 MonoBehaviour:
   m_ObjectHideFlags: 0

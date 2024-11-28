@@ -6,33 +6,19 @@ public class GameNetworkManager : NetworkManager
 {
     public GameObject mapPrefab;
 
-    private GameObject mapInstance;
-    private GameMapManager mapManager;
-
+    public GameMapManager gameMapManager;
     public override void OnStartServer()
     {
-        SpawnMap(); 
+        SpawnMap();
     }
 
-    [Server]
+
     private void SpawnMap()
     {
-        if (mapPrefab == null)
-        {
-            Debug.LogError("Map prefab is not assigned!");
-            return;
-        }
-
-        // Spawn the map on the server
-        mapInstance = Instantiate(mapPrefab, Vector3.zero, Quaternion.identity);
+        GameObject mapInstance = Instantiate(mapPrefab, Vector3.zero, Quaternion.identity);
         NetworkServer.Spawn(mapInstance);
-
-        // Cache the TilemapManager for shared access
-        mapManager = mapInstance.GetComponent<GameMapManager>();
-
-        Debug.Log("Map spawned and ready!");
+        gameMapManager = mapInstance.GetComponent<GameMapManager>();
     }
-
 
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
@@ -42,12 +28,9 @@ public class GameNetworkManager : NetworkManager
             ? Instantiate(playerPrefab, startPos.position, startPos.rotation)
             : Instantiate(playerPrefab);
 
-        // instantiating a "Player" prefab gives it the name "Player(clone)"
-        // => appending the connectionId is WAY more useful for debugging!
         player.name = $"{playerPrefab.name} [connId={conn.connectionId}]";
+        player.GetComponent<BuildController>().gameMapManager = gameMapManager;
         Debug.Log($"Instatiating player {player.name}");
-        player.GetComponent<BuildController>().mapManager = mapManager;
-        mapManager.SyncTilemapToNewPlayer(conn);
         NetworkServer.AddPlayerForConnection(conn, player);
     }
 }

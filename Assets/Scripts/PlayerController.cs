@@ -20,7 +20,6 @@ public class PlayerController : NetworkBehaviour
         playerCamera = GetComponentInChildren<Camera>();
         if (!isLocalPlayer)
         {
-            // Disable the camera and audio listener for non-local players
             if (playerCamera != null)
             {
                 playerCamera.enabled = false;
@@ -49,20 +48,13 @@ public class PlayerController : NetworkBehaviour
     {
         if (playerCamera != null)
         {
-            // Enable the camera
             playerCamera.enabled = true;
-
-            // Enable the AudioListener
             var audioListener = playerCamera.GetComponent<AudioListener>();
             if (audioListener != null)
             {
                 audioListener.enabled = true;
             }
-
-            // Make this the Main Camera
             playerCamera.tag = "MainCamera";
-
-            // Ensure it's properly recognized as the active Main Camera
             Camera.SetupCurrent(playerCamera);
         }
     }

@@ -5,22 +5,18 @@ using UnityEngine.Tilemaps;
 
 public class BuildController : NetworkBehaviour
 { 
-    public Camera cam;
+    private Camera cam;
     private Vector3 mousePos, blockPos;
-    public GameMapManager mapManager;
-
-    public LayerMask layer;
-
     readonly float blockPlaceTime = 0f;
+    bool modifingBlock = false;
 
-    bool placingBlock = false;
+    public GameMapManager gameMapManager;
 
     void Start()
     {
         if (!isLocalPlayer)
             return;
         cam = GetComponentInChildren<Camera>();
-        Debug.Log("BuilControllerStart");
     }
 
     private void FixedUpdate()
@@ -36,10 +32,15 @@ public class BuildController : NetworkBehaviour
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         blockPos.y = Mathf.Round(mousePos.y - .5f);
         blockPos.x = Mathf.Round(mousePos.x - .5f);
-        if (Input.GetKey(KeyCode.Mouse1) && !placingBlock)
+        if (Input.GetKey(KeyCode.Mouse0) && !modifingBlock)
         {
-            placingBlock = true;
+            modifingBlock = true;
             StartCoroutine(PlaceBlock(blockPos));
+        }
+        else if (Input.GetKey(KeyCode.Mouse1) && !modifingBlock)
+        {
+            modifingBlock = true;
+            StartCoroutine(DestroyBlock(blockPos));
         }
     }
 
@@ -47,8 +48,16 @@ public class BuildController : NetworkBehaviour
     IEnumerator PlaceBlock(Vector2 pos)
     {
         yield return new WaitForSeconds(blockPlaceTime);
-        CmdRequestTileChange(new Vector3Int((int)pos.x, (int)pos.y, 0), TileID.Grass);
-        placingBlock = false;
+        CmdRequestPlaceTile(new Vector3Int((int)pos.x, (int)pos.y, 0), TileType.Grass);
+        modifingBlock = false;
+    }
+
+    [Client]
+    IEnumerator DestroyBlock(Vector2 pos)
+    {
+        yield return new WaitForSeconds(blockPlaceTime);
+        CmdRequestDestroyTile(new Vector3Int((int)pos.x, (int)pos.y, 0));
+        modifingBlock = false;
     }
 
     private void OnDrawGizmos()
@@ -61,9 +70,14 @@ public class BuildController : NetworkBehaviour
     }
 
     [Command]
-    private void CmdRequestTileChange(Vector3Int position, TileID tileID)
+    private void CmdRequestPlaceTile(Vector3Int position, TileType type)
     {
-        // Delegate tile placement to the server's GameMapManager
-        mapManager.SetTile(position, tileID);
+        gameMapManager.TryBuildTile(position, type);
+    }
+
+    [Command]
+    private void CmdRequestDestroyTile(Vector3Int position)
+    {
+        gameMapManager.TryDestroyTile(position);
     }
 }
