@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3977115285728671099}
   - component: {fileID: 5692444959838739560}
   - component: {fileID: 5568257073709482352}
+  - component: {fileID: 5099613701251907073}
   - component: {fileID: 3732061872553029042}
   - component: {fileID: -1024256700795660576}
   m_Layer: 3
@@ -182,6 +183,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  gameMapManager: {fileID: 0}
 --- !u!114 &5568257073709482352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,6 +204,23 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &5099613701251907073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3890295508702063332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be54072aedd3f8c4597655055032c8a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  projectilePrefab: {fileID: 6122572798316568362, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+  shootPoint: {fileID: 0}
 --- !u!114 &3732061872553029042
 MonoBehaviour:
   m_ObjectHideFlags: 0

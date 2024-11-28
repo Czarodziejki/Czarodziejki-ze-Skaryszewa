@@ -29,7 +29,6 @@ public class GameNetworkManager : NetworkManager
             : Instantiate(playerPrefab);
 
         player.name = $"{playerPrefab.name} [connId={conn.connectionId}]";
-        player.GetComponent<BuildController>().gameMapManager = gameMapManager;
         Debug.Log($"Instatiating player {player.name}");
         NetworkServer.AddPlayerForConnection(conn, player);
     }

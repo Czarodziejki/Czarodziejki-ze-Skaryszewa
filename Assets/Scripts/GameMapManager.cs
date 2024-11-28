@@ -12,14 +12,16 @@ public enum TileType : int
 
 public class GameMapManager : NetworkBehaviour
 {
+    public static GameMapManager Instance;
     public TileBase grassTile;
-
     private Tilemap tilemap;
     private Dictionary<TileType, TileBase> tileDictionary;
     private Vector2 tileSize = new Vector2(1.0f, 1.0f);
 
     private void Awake()
     {
+        if(Instance == null)
+            Instance = this;
         tileDictionary = new Dictionary<TileType, TileBase>
         {
             { TileType.Grass, grassTile }

@@ -10,8 +10,6 @@ public class BuildController : NetworkBehaviour
     readonly float blockPlaceTime = 0f;
     bool modifingBlock = false;
 
-    public GameMapManager gameMapManager;
-
     void Start()
     {
         if (!isLocalPlayer)
@@ -32,15 +30,17 @@ public class BuildController : NetworkBehaviour
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         blockPos.y = Mathf.Round(mousePos.y - .5f);
         blockPos.x = Mathf.Round(mousePos.x - .5f);
-        if (Input.GetKey(KeyCode.Mouse0) && !modifingBlock)
+        if (Input.GetKey(KeyCode.Mouse1) && !modifingBlock)
         {
             modifingBlock = true;
-            StartCoroutine(PlaceBlock(blockPos));
-        }
-        else if (Input.GetKey(KeyCode.Mouse1) && !modifingBlock)
-        {
-            modifingBlock = true;
-            StartCoroutine(DestroyBlock(blockPos));
+            if(Input.GetKey(KeyCode.LeftShift))
+            {
+                StartCoroutine(DestroyBlock(blockPos));
+            }
+            else
+            {
+                StartCoroutine(PlaceBlock(blockPos));
+            }
         }
     }
 
@@ -72,12 +72,12 @@ public class BuildController : NetworkBehaviour
     [Command]
     private void CmdRequestPlaceTile(Vector3Int position, TileType type)
     {
-        gameMapManager.TryBuildTile(position, type);
+        GameMapManager.Instance.TryBuildTile(position, type);
     }
 
     [Command]
     private void CmdRequestDestroyTile(Vector3Int position)
     {
-        gameMapManager.TryDestroyTile(position);
+        GameMapManager.Instance.TryDestroyTile(position);
     }
 }
