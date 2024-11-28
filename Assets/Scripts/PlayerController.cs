@@ -30,7 +30,13 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
+            animator.SetBool("IsJumping", true);
             rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocityX, jumpingPower);
+        }
+
+        if (IsGrounded() && rigidBody.linearVelocityY <= 0.01f)
+        {
+            animator.SetBool("IsJumping", false);
         }
 
         Flip();

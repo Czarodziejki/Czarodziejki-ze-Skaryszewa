@@ -1659,9 +1659,9 @@ Transform:
   m_GameObject: {fileID: 1906124006}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.86, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -1, y: 0.77, z: 0}
+  m_LocalScale: {x: 6, y: 6, z: 6}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1680,7 +1680,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 4
+  m_GravityScale: 6
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -1726,7 +1726,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00063827634, y: 0.00006151199}
+  m_Offset: {x: 0.035496984, y: 0.00006151199}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1736,7 +1736,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.59956867, y: 0.88131607}
+  m_Size: {x: 0.17537257, y: 0.88131607}
   m_EdgeRadius: 0
 --- !u!114 &1906124011
 MonoBehaviour:
@@ -1768,8 +1768,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a975721260fd6a44587d5ea9faf37b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8
-  jumpingPower: 15
+  speed: 12
+  jumpingPower: 25
   collider: {fileID: 1906124010}
   rigidBody: {fileID: 1906124009}
   groundLayer:
