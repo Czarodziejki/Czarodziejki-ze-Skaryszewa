@@ -27,11 +27,10 @@ public class CrosshairController : MonoBehaviour
 
 		transform.localPosition = scaledAimDirection;
 
-        var totalRotation = Quaternion.identity;
 		// Update spin
         var spinVelocity = Input.GetKey(KeyCode.Mouse0) ? firingSpinVelocity : idleSpinVelocity;
         spin = Quaternion.Euler(0, 0, spinVelocity) * spin;
-        totalRotation = spin * totalRotation;
+        var totalRotation = spin;
 
 		// Add base rotation
 		totalRotation = Quaternion.Euler(0, 70, 0) * totalRotation;
