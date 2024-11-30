@@ -7,8 +7,10 @@ public class PlayerController : NetworkBehaviour
     private float horizontal;
     public float speed = 8f;
     public float jumpingPower = 15f;
+    public GameObject crosshair;
 
-    private Collider2D playerCollider;
+
+	private Collider2D playerCollider;
     private Rigidbody2D rigidBody;
     private SpriteRenderer spriteRenderer;
 
@@ -34,6 +36,7 @@ public class PlayerController : NetworkBehaviour
             return;
         }
         SetupLocalPlayerCamera();
+        SetupLocalPlayerCrosshair();
         rigidBody = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -59,7 +62,14 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    void Update()
+	private void SetupLocalPlayerCrosshair()
+    {
+		var myCrosshair = Instantiate(crosshair);
+		myCrosshair.transform.parent = transform;
+	}
+
+
+	void Update()
     {
         if (!isLocalPlayer)
             return;
