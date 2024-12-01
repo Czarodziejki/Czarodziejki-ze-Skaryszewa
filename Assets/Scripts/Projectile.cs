@@ -19,6 +19,9 @@ public class Projectile : NetworkBehaviour
     public void Initialize(Vector2 startDirection)
     {
         direction = startDirection.normalized;
+
+        // Rotate projectile so it's facing it's direction
+        transform.rotation *= Quaternion.FromToRotation(new Vector3(1f, 0f, 0f), (Vector3)direction);
     }
 
     private void Awake()
