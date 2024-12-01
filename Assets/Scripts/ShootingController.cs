@@ -27,7 +27,7 @@ public class ShootingController : NetworkBehaviour
             mouseWorldPosition.z = 0f;
             Vector2 shootingDirection = (mouseWorldPosition - playerTransform.position).normalized;
             Vector2 startPoint = playerTransform.position;
-            startPoint += shootingDirection * 2.0f;
+            startPoint += shootingDirection * 2.5f;
             CmdShootProjectile(startPoint, shootingDirection);
         }
     }
