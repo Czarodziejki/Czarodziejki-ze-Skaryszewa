@@ -16,15 +16,6 @@ public class HealthController : NetworkBehaviour
     }
 
 
-    void Update()
-    {
-        if (isLocalPlayer && Input.GetKeyDown(KeyCode.G))
-        {
-            Damage(10);
-        }
-    }
-
-
     public void Damage(int damage)
     {
         currentHealth -= damage;
