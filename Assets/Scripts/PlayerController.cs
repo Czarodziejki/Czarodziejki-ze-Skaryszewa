@@ -89,6 +89,8 @@ public class PlayerController : NetworkBehaviour
             animator.SetBool("IsJumping", false);
         }
 
+        animator.SetFloat("yVelocity", rigidBody.linearVelocityY > 0.0f ? 1.0f : -1.0f);
+
         Flip();
     }
 
@@ -105,12 +107,16 @@ public class PlayerController : NetworkBehaviour
         Vector2 boxCenter = new Vector2(playerCollider.bounds.center.x, playerCollider.bounds.min.y - 0.1f);
         Vector2 boxSize = new Vector2(playerCollider.bounds.size.x * 0.9f, 0.1f);
 
-        return Physics2D.OverlapBox(
+        bool grounded = Physics2D.OverlapBox(
             boxCenter,
             boxSize,
             0f,
             groundLayer
         );
+
+        animator.SetBool("IsJumping", !grounded);
+
+        return grounded;
     }
 
     private void Flip()
