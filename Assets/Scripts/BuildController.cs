@@ -1,49 +1,63 @@
+using Mirror;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class BuildController : MonoBehaviour
-{
-    public Camera cam;
+public class BuildController : NetworkBehaviour
+{ 
+    private Camera cam;
     private Vector3 mousePos, blockPos;
-
-    public RuleTile grassTile;
-    public Tilemap groundTileMap;
-
-    public LayerMask layer;
-
     readonly float blockPlaceTime = 0f;
+    bool modifingBlock = false;
 
-    bool placingBlock = false;
+    void Start()
+    {
+        if (!isLocalPlayer)
+            return;
+        cam = GetComponentInChildren<Camera>();
+    }
 
     private void FixedUpdate()
     {
+        if (!isLocalPlayer)
+            return;
         ProcessBlockPlacing();
     }
 
+    [Client]
     private void ProcessBlockPlacing()
     {
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         blockPos.y = Mathf.Round(mousePos.y - .5f);
         blockPos.x = Mathf.Round(mousePos.x - .5f);
-
-        bool noBlock = groundTileMap.GetTile(new Vector3Int((int)blockPos.x, (int)blockPos.y, 0)) == null;
-        bool insidePlayer = Physics2D.OverlapBox(new Vector2(blockPos.x + .5f, blockPos.y + .5f), new Vector2(.5f, .5f), 0, layer);
-
-        if (Input.GetKey(KeyCode.Mouse1) && noBlock && !placingBlock && !insidePlayer)
+        if (Input.GetKey(KeyCode.Mouse1) && !modifingBlock)
         {
-            placingBlock = true;
-            StartCoroutine(PlaceBlock(groundTileMap, blockPos));
+            modifingBlock = true;
+            if(Input.GetKey(KeyCode.LeftShift))
+            {
+                StartCoroutine(DestroyBlock(blockPos));
+            }
+            else
+            {
+                StartCoroutine(PlaceBlock(blockPos));
+            }
         }
     }
 
-    IEnumerator PlaceBlock(Tilemap map, Vector2 pos)
+    [Client]
+    IEnumerator PlaceBlock(Vector2 pos)
     {
         yield return new WaitForSeconds(blockPlaceTime);
+        CmdRequestPlaceTile(new Vector3Int((int)pos.x, (int)pos.y, 0), TileType.Grass);
+        modifingBlock = false;
+    }
 
-        map.SetTile(new Vector3Int((int)pos.x, (int)pos.y, 0), grassTile);
-
-        placingBlock = false;
+    [Client]
+    IEnumerator DestroyBlock(Vector2 pos)
+    {
+        yield return new WaitForSeconds(blockPlaceTime);
+        CmdRequestDestroyTile(new Vector3Int((int)pos.x, (int)pos.y, 0));
+        modifingBlock = false;
     }
 
     private void OnDrawGizmos()
@@ -53,5 +67,17 @@ public class BuildController : MonoBehaviour
         Gizmos.DrawLine(blockPos, blockPos + new Vector3(0, 1, 0));
         Gizmos.DrawLine(blockPos + new Vector3(1, 0, 0), blockPos + new Vector3(1, 1, 0));
         Gizmos.DrawLine(blockPos + new Vector3(0, 1, 0), blockPos + new Vector3(1, 1, 0));
+    }
+
+    [Command]
+    private void CmdRequestPlaceTile(Vector3Int position, TileType type)
+    {
+        GameMapManager.Instance.TryBuildTile(position, type);
+    }
+
+    [Command]
+    private void CmdRequestDestroyTile(Vector3Int position)
+    {
+        GameMapManager.Instance.TryDestroyTile(position);
     }
 }
