@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6315705476054053490}
   - component: {fileID: 3417023709511461436}
   - component: {fileID: 5943770173789329444}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BaseProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,6 +104,7 @@ MonoBehaviour:
   syncInterval: 0
   speed: 10
   lifetime: 10
+  damage: 5
 --- !u!50 &6315705476054053490
 Rigidbody2D:
   serializedVersion: 5
