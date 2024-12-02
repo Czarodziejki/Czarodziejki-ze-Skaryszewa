@@ -1,11 +1,15 @@
 using Mirror;
-using Unity.VisualScripting;
 using UnityEngine;
+
 
 public class ShootingController : NetworkBehaviour
 {
     public GameObject projectilePrefab;
+    public float coolDownTime = 0.2f;
+
     private Transform playerTransform;
+    private float lastShootTime = 0f;   // Timestamp of the last shoot
+
 
     private void Start()
     {
@@ -14,13 +18,16 @@ public class ShootingController : NetworkBehaviour
 
     private void Update()
     {
-        if (isLocalPlayer && Input.GetMouseButtonDown(0))
+        // Checking time prevents spamming fire button
+        if (isLocalPlayer && Input.GetMouseButton(0) && Time.time - lastShootTime > coolDownTime)
         {
+            lastShootTime = Time.time;
+
             Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mouseWorldPosition.z = 0f;
             Vector2 shootingDirection = (mouseWorldPosition - playerTransform.position).normalized;
             Vector2 startPoint = playerTransform.position;
-            startPoint += shootingDirection * 2.0f;
+            startPoint += shootingDirection * 2.5f;
             CmdShootProjectile(startPoint, shootingDirection);
         }
     }
