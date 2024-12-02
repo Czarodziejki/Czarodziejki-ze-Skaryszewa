@@ -5,8 +5,9 @@ using UnityEngine.UIElements;
 
 public class Projectile : NetworkBehaviour
 {
-    public float speed = 1f;
-    public float lifetime = 10f;
+    public float speed = 10f;
+    public float lifetime = 15f;
+    public int damage = 5;
 
     [SyncVar]
     private Vector2 direction;
@@ -19,6 +20,9 @@ public class Projectile : NetworkBehaviour
     public void Initialize(Vector2 startDirection)
     {
         direction = startDirection.normalized;
+
+        // Rotate projectile so it's facing it's direction
+        transform.rotation *= Quaternion.FromToRotation(new Vector3(1f, 0f, 0f), (Vector3)direction);
     }
 
     private void Awake()
@@ -62,6 +66,9 @@ public class Projectile : NetworkBehaviour
                 int connectionId = identity.connectionToClient.connectionId;
                 Debug.Log($"Player hit with connectionId: {connectionId}");
             }
+
+            var healthController = collision.collider.GetComponent<HealthController>();
+            healthController.Damage(damage);
         }
 
         Tilemap collidedTilemap = collision.collider.GetComponentInParent<Tilemap>();
