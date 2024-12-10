@@ -8,6 +8,8 @@ public class PlayerController : NetworkBehaviour
     public float speed = 8f;
     public float jumpingPower = 15f;
     public GameObject crosshair;
+    public Vector2 boxSize;
+    public float castDistance;
 
 
 	private Collider2D playerCollider;
@@ -104,19 +106,16 @@ public class PlayerController : NetworkBehaviour
 
     private bool IsGrounded()
     {
-        Vector2 boxCenter = new Vector2(playerCollider.bounds.center.x, playerCollider.bounds.min.y - 0.1f);
-        Vector2 boxSize = new Vector2(playerCollider.bounds.size.x * 0.9f, 0.1f);
-
-        bool grounded = Physics2D.OverlapBox(
-            boxCenter,
-            boxSize,
-            0f,
-            groundLayer
-        );
-
-        animator.SetBool("IsJumping", !grounded);
-
-        return grounded;
+        if(Physics2D.BoxCast(playerCollider.bounds.center, boxSize, 0, -transform.up, castDistance, groundLayer))
+        {
+            animator.SetBool("IsJumping", false);
+            return true;
+        }
+        else
+        {
+            animator.SetBool("IsJumping", true);
+            return false;
+        }
     }
 
     private void Flip()
@@ -125,5 +124,13 @@ public class PlayerController : NetworkBehaviour
             spriteRenderer.flipX = false;
         else if (horizontal > 0.01f)
             spriteRenderer.flipX = true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if(playerCollider != null)
+        {
+            Gizmos.DrawWireCube(playerCollider.bounds.center - transform.up * castDistance, boxSize);
+        }
     }
 }

@@ -204,6 +204,8 @@ MonoBehaviour:
   speed: 12
   jumpingPower: 25
   crosshair: {fileID: 4651783735258460839, guid: 3260ea32c3d821645814aea8c534f81d, type: 3}
+  boxSize: {x: 0.93, y: 0.24}
+  castDistance: 1.64
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -224,6 +226,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   projectilePrefab: {fileID: 6122572798316568362, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+  coolDownTime: 0.2
 --- !u!114 &3732061872553029042
 MonoBehaviour:
   m_ObjectHideFlags: 0
