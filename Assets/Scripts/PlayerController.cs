@@ -8,7 +8,8 @@ public class PlayerController : NetworkBehaviour
     public float speed = 8f;
     public float jumpingPower = 15f;
     public GameObject crosshair;
-
+    public Color primaryColor;
+    public Color secondaryColor;
 
 	private Collider2D playerCollider;
     private Rigidbody2D rigidBody;
@@ -65,8 +66,7 @@ public class PlayerController : NetworkBehaviour
 
 	private void SetupLocalPlayerCrosshair()
     {
-		var myCrosshair = Instantiate(crosshair);
-		myCrosshair.transform.parent = transform;
+		var myCrosshair = Instantiate(crosshair, gameObject.transform);
 	}
 
 

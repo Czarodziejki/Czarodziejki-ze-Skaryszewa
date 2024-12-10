@@ -5,15 +5,17 @@ using static UnityEngine.Rendering.DebugUI.Table;
 
 public class CrosshairController : MonoBehaviour
 {
-    private Quaternion spin;
     public float range;
     public float idleSpinVelocity;
     public float firingSpinVelocity;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+	private Quaternion spin;
+
+	// Start is called once before the first execution of Update after the MonoBehaviour is created
+	void Start()
     {
 		spin = Quaternion.identity;
+		transform.GetComponent<SpriteRenderer>().color = transform.parent.GetComponent<PlayerController>().primaryColor;
 	}
 
     // Update is called once per frame
