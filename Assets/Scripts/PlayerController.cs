@@ -10,7 +10,8 @@ public class PlayerController : NetworkBehaviour
     public GameObject crosshair;
     public Vector2 boxSize;
     public float castDistance;
-
+    public Color primaryColor;
+    public Color secondaryColor;
 
 	private Collider2D playerCollider;
     private Rigidbody2D rigidBody;
@@ -67,8 +68,7 @@ public class PlayerController : NetworkBehaviour
 
 	private void SetupLocalPlayerCrosshair()
     {
-		var myCrosshair = Instantiate(crosshair);
-		myCrosshair.transform.parent = transform;
+		var myCrosshair = Instantiate(crosshair, gameObject.transform);
 	}
 
 

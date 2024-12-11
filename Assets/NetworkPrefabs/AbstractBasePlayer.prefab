@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 2627723584724062344}
   - component: {fileID: -6889983283197482120}
   m_Layer: 3
-  m_Name: Player
+  m_Name: AbstractBasePlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -206,6 +206,8 @@ MonoBehaviour:
   crosshair: {fileID: 4651783735258460839, guid: 3260ea32c3d821645814aea8c534f81d, type: 3}
   boxSize: {x: 0.93, y: 0.24}
   castDistance: 1.64
+  primaryColor: {r: 1, g: 1, b: 1, a: 1}
+  secondaryColor: {r: 1, g: 1, b: 1, a: 1}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
