@@ -1,9 +1,7 @@
 using Mirror;
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using TMPro;
 
 public class BuildController : NetworkBehaviour
 { 
@@ -15,12 +13,19 @@ public class BuildController : NetworkBehaviour
     private float tileBuildRadius;
     [SyncVar(hook= nameof(OnClientInventoryUpdate))]
     public uint blocksInInventory;
+    private GameObject inventoryUIElement;
+    private TMP_Text inventoryCountUIElement;
 
     void Start()
     {
         if (!isLocalPlayer) return;
         cam = GetComponentInChildren<Camera>();
         tileBuildRadius = GameMapManager.Instance.tileBuildRadius;
+
+        inventoryUIElement = GameObject.Find("InventoryUIElement");
+        // InventoryUIElement is an empty object containg two objects: GrassBlockIcon (Image) and GrassBlockCount(TextMeshPro)
+        inventoryCountUIElement = inventoryUIElement.GetComponentInChildren<TMP_Text>();
+        inventoryCountUIElement.text = blocksInInventory.ToString();
     }
 
     private void FixedUpdate()
@@ -34,6 +39,17 @@ public class BuildController : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
         Debug.Log("Inventory: " + newBlocks);
+        inventoryCountUIElement.text = newBlocks.ToString();
+        if (newBlocks == 0)
+        {
+            // find a subobject GrassBlockIcon in InventoryUIElement and gray it out
+            inventoryUIElement.GetComponentInChildren<UnityEngine.UI.Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+        }
+        else if (oldBlocks == 0)
+        {
+            // undo the graying out
+            inventoryUIElement.GetComponentInChildren<UnityEngine.UI.Image>().color = new Color(1f, 1f, 1f, 1f);
+        }
     }
 
     [Client]
@@ -75,7 +91,12 @@ public class BuildController : NetworkBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = inRange ? Color.white : Color.red;
+        Color color = inRange ? Color.white : Color.red;
+        if (blocksInInventory == 0)
+        {
+            color.a = 0.1f;
+        }
+        Gizmos.color = color;
         Gizmos.DrawLine(blockPos, blockPos + new Vector3(1, 0, 0));
         Gizmos.DrawLine(blockPos, blockPos + new Vector3(0, 1, 0));
         Gizmos.DrawLine(blockPos + new Vector3(1, 0, 0), blockPos + new Vector3(1, 1, 0));
