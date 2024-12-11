@@ -7,13 +7,14 @@ using static UnityEditor.ShaderGraph.Internal.Texture2DShaderProperty;
 public enum TileType : int
 {
     None,
-    Grass
+    Grass,
+    Unbreakable
 }
 
 public class GameMapManager : NetworkBehaviour
 {
     public static GameMapManager Instance;
-    public TileBase grassTile;
+    public TileBase grassTile, unbreakableTile;
     private Tilemap tilemap;
     private Dictionary<TileType, TileBase> tileDictionary;
     private Vector2 tileSize = new Vector2(1.0f, 1.0f);
@@ -24,7 +25,8 @@ public class GameMapManager : NetworkBehaviour
             Instance = this;
         tileDictionary = new Dictionary<TileType, TileBase>
         {
-            { TileType.Grass, grassTile }
+            { TileType.Grass, grassTile },
+            { TileType.Unbreakable, unbreakableTile }
         };
 
         tilemap = GetComponentInChildren<Tilemap>();
@@ -47,6 +49,7 @@ public class GameMapManager : NetworkBehaviour
     [Server]
     public void TryDestroyTile(Vector3Int position)
     {
+        if (GetTileType(position) == TileType.Unbreakable) return;
         tilemap.SetTile(position, null);
         RpcDestroyTile(position);
     }

@@ -5011,6 +5011,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   grassTile: {fileID: 11400000, guid: ef3b4b9a68967da46a72b4cd61a51200, type: 2}
+  unbreakableTile: {fileID: 11400000, guid: ab938faaf200c46489e04d4abbfdaad1, type: 2}
 --- !u!1 &8623933266859404742
 GameObject:
   m_ObjectHideFlags: 0
