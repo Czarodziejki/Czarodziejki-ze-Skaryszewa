@@ -18,6 +18,7 @@ public class GameMapManager : NetworkBehaviour
     private Tilemap tilemap;
     private Dictionary<TileType, TileBase> tileDictionary;
     private Vector2 tileSize = new Vector2(1.0f, 1.0f);
+    public readonly float tileBuildRadius = 10f;
 
     private void Awake()
     {
@@ -57,7 +58,7 @@ public class GameMapManager : NetworkBehaviour
     [Server]
     public void TryBuildTile(Vector3Int position, TileType type)
     {
-        if (IsValidTileBuilPosition(position))
+        if (IsValidTileBuildPosition(position))
         {
             tilemap.SetTile(position, GetTile(type));
             RpcBuildTile(position, type);
@@ -78,7 +79,7 @@ public class GameMapManager : NetworkBehaviour
 
 
     [Server]
-    private bool IsValidTileBuilPosition(Vector3Int position)
+    private bool IsValidTileBuildPosition(Vector3Int position)
     {
         if (tilemap.GetTile(position) != null)
             return false;
