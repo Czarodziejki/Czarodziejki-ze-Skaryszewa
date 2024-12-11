@@ -13,7 +13,7 @@ public class BuildController : NetworkBehaviour
     bool modifyingBlock = false;
     private bool inRange = false;
     private float tileBuildRadius;
-    [SyncVar]
+    [SyncVar(hook= nameof(OnClientInventoryUpdate))]
     public uint blocksInInventory;
 
     void Start()
@@ -27,6 +27,13 @@ public class BuildController : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
         ProcessBlockPlacing();
+    }
+
+    [Client]
+    private void OnClientInventoryUpdate(uint oldBlocks, uint newBlocks)
+    {
+        if (!isLocalPlayer) return;
+        Debug.Log("Inventory: " + newBlocks);
     }
 
     [Client]
@@ -83,7 +90,6 @@ public class BuildController : NetworkBehaviour
         if (inRange && hasBlocks && GameMapManager.Instance.TryBuildTile(position, type))
         {
             blocksInInventory--;
-            Debug.Log("Inventory: " + blocksInInventory);
         }
     }
 
@@ -94,7 +100,6 @@ public class BuildController : NetworkBehaviour
         if (inRange && GameMapManager.Instance.TryDestroyTile(position))
         {
             blocksInInventory++;
-            Debug.Log("Inventory: " + blocksInInventory);
         }
     }
 

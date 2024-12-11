@@ -36,7 +36,9 @@ public class ShootingController : NetworkBehaviour
     private void CmdShootProjectile(Vector3 startPosition, Vector2 direction)
     {
         GameObject projectile = Instantiate(projectilePrefab, startPosition, Quaternion.identity);
-        projectile.GetComponent<Projectile>().Initialize(direction);
+        // Initialize the projectile with the direction and the player that shot it
+        GameObject player = GetComponent<NetworkIdentity>().gameObject;
+        projectile.GetComponent<Projectile>().Initialize(direction, player);
         NetworkServer.Spawn(projectile);
     }
 }
