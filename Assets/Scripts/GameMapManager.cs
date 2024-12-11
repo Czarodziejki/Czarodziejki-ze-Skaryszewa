@@ -48,21 +48,24 @@ public class GameMapManager : NetworkBehaviour
     }
 
     [Server]
-    public void TryDestroyTile(Vector3Int position)
+    public bool TryDestroyTile(Vector3Int position)
     {
-        if (GetTileType(position) == TileType.Unbreakable) return;
+        if (GetTileType(position) != TileType.Grass) return false;
         tilemap.SetTile(position, null);
         RpcDestroyTile(position);
+        return true;
     }
 
     [Server]
-    public void TryBuildTile(Vector3Int position, TileType type)
+    public bool TryBuildTile(Vector3Int position, TileType type)
     {
         if (IsValidTileBuildPosition(position))
         {
             tilemap.SetTile(position, GetTile(type));
             RpcBuildTile(position, type);
+            return true;
         }
+        return false;
     }
 
     [ClientRpc]

@@ -1,5 +1,7 @@
 using Mirror;
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,19 +13,19 @@ public class BuildController : NetworkBehaviour
     bool modifyingBlock = false;
     private bool inRange = false;
     private float tileBuildRadius;
+    [SyncVar]
+    public uint blocksInInventory;
 
     void Start()
     {
-        if (!isLocalPlayer)
-            return;
+        if (!isLocalPlayer) return;
         cam = GetComponentInChildren<Camera>();
         tileBuildRadius = GameMapManager.Instance.tileBuildRadius;
     }
 
     private void FixedUpdate()
     {
-        if (!isLocalPlayer)
-            return;
+        if (!isLocalPlayer) return;
         ProcessBlockPlacing();
     }
 
@@ -37,7 +39,7 @@ public class BuildController : NetworkBehaviour
         if (Input.GetKey(KeyCode.Mouse1) && !modifyingBlock && inRange)
         {
             modifyingBlock = true;
-            if(Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift))
             {
                 StartCoroutine(DestroyBlock(blockPos));
             }
@@ -76,18 +78,29 @@ public class BuildController : NetworkBehaviour
     [Command]
     private void CmdRequestPlaceTile(Vector3Int position, TileType type)
     {
-        if (Vector3.Distance(transform.position, position) <= GameMapManager.Instance.tileBuildRadius)
+        bool inRange = OnServerIsInRange(position);
+        bool hasBlocks = blocksInInventory > 0;
+        if (inRange && hasBlocks && GameMapManager.Instance.TryBuildTile(position, type))
         {
-            GameMapManager.Instance.TryBuildTile(position, type);
+            blocksInInventory--;
+            Debug.Log("Inventory: " + blocksInInventory);
         }
     }
 
     [Command]
     private void CmdRequestDestroyTile(Vector3Int position)
     {
-        if (Vector3.Distance(transform.position, position) <= GameMapManager.Instance.tileBuildRadius)
+        bool inRange = OnServerIsInRange(position);
+        if (inRange && GameMapManager.Instance.TryDestroyTile(position))
         {
-            GameMapManager.Instance.TryDestroyTile(position);
+            blocksInInventory++;
+            Debug.Log("Inventory: " + blocksInInventory);
         }
+    }
+
+    [Server]
+    private bool OnServerIsInRange(Vector3Int position)
+    {
+        return Vector3.Distance(transform.position, position) <= GameMapManager.Instance.tileBuildRadius;
     }
 }
