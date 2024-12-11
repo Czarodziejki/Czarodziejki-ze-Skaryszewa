@@ -18,7 +18,7 @@ public class GameMapManager : NetworkBehaviour
     private Tilemap tilemap;
     private Dictionary<TileType, TileBase> tileDictionary;
     private Vector2 tileSize = new Vector2(1.0f, 1.0f);
-    public readonly float tileBuildRadius = 10f;
+    public float tileBuildRadius;
 
     private void Awake()
     {
