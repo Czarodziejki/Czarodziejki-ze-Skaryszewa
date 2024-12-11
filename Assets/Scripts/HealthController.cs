@@ -16,9 +16,19 @@ public class HealthController : NetworkBehaviour
     }
 
 
+    [Server]
     public void Damage(int damage)
     {
         currentHealth -= damage;
+
+        RpcSetHealth(currentHealth);
+    }
+
+
+    [ClientRpc]
+    void RpcSetHealth(int newHealth)
+    {
+        currentHealth = newHealth;
 
         barController.SetValue((float)currentHealth / (float)maxHealth);
     }
