@@ -204,6 +204,8 @@ MonoBehaviour:
   speed: 12
   jumpingPower: 25
   crosshair: {fileID: 4651783735258460839, guid: 3260ea32c3d821645814aea8c534f81d, type: 3}
+  boxSize: {x: 0.93, y: 0.24}
+  castDistance: 1.64
   primaryColor: {r: 1, g: 1, b: 1, a: 1}
   secondaryColor: {r: 1, g: 1, b: 1, a: 1}
   groundLayer:
