@@ -7,16 +7,18 @@ using static UnityEditor.ShaderGraph.Internal.Texture2DShaderProperty;
 public enum TileType : int
 {
     None,
-    Grass
+    Grass,
+    Unbreakable
 }
 
 public class GameMapManager : NetworkBehaviour
 {
     public static GameMapManager Instance;
-    public TileBase grassTile;
+    public TileBase grassTile, unbreakableTile;
     private Tilemap tilemap;
     private Dictionary<TileType, TileBase> tileDictionary;
     private Vector2 tileSize = new Vector2(1.0f, 1.0f);
+    public float tileBuildRadius;
 
     private void Awake()
     {
@@ -24,7 +26,8 @@ public class GameMapManager : NetworkBehaviour
             Instance = this;
         tileDictionary = new Dictionary<TileType, TileBase>
         {
-            { TileType.Grass, grassTile }
+            { TileType.Grass, grassTile },
+            { TileType.Unbreakable, unbreakableTile }
         };
 
         tilemap = GetComponentInChildren<Tilemap>();
@@ -45,20 +48,24 @@ public class GameMapManager : NetworkBehaviour
     }
 
     [Server]
-    public void TryDestroyTile(Vector3Int position)
+    public bool TryDestroyTile(Vector3Int position)
     {
+        if (GetTileType(position) != TileType.Grass) return false;
         tilemap.SetTile(position, null);
         RpcDestroyTile(position);
+        return true;
     }
 
     [Server]
-    public void TryBuildTile(Vector3Int position, TileType type)
+    public bool TryBuildTile(Vector3Int position, TileType type)
     {
-        if (IsValidTileBuilPosition(position))
+        if (IsValidTileBuildPosition(position))
         {
             tilemap.SetTile(position, GetTile(type));
             RpcBuildTile(position, type);
+            return true;
         }
+        return false;
     }
 
     [ClientRpc]
@@ -75,7 +82,7 @@ public class GameMapManager : NetworkBehaviour
 
 
     [Server]
-    private bool IsValidTileBuilPosition(Vector3Int position)
+    private bool IsValidTileBuildPosition(Vector3Int position)
     {
         if (tilemap.GetTile(position) != null)
             return false;

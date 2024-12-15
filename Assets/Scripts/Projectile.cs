@@ -16,13 +16,17 @@ public class Projectile : NetworkBehaviour
 
     private Tilemap tilemap;
 
+    private GameObject shootingPlayer;  // the player that shot the projectile
+
     [Server]
-    public void Initialize(Vector2 startDirection)
+    public void Initialize(Vector2 startDirection, GameObject shootingPlayer)
     {
         direction = startDirection.normalized;
 
         // Rotate projectile so it's facing it's direction
         transform.rotation *= Quaternion.FromToRotation(new Vector3(1f, 0f, 0f), (Vector3)direction);
+
+        this.shootingPlayer = shootingPlayer;
     }
 
     private void Awake()
@@ -64,7 +68,8 @@ public class Projectile : NetworkBehaviour
             if (identity != null && identity.connectionToClient != null)
             {
                 int connectionId = identity.connectionToClient.connectionId;
-                Debug.Log($"Player hit with connectionId: {connectionId}");
+                int shooterConnectionId = shootingPlayer.GetComponent<NetworkIdentity>().connectionToClient.connectionId;
+                Debug.Log($"Player hit with connectionId: {connectionId} by the player with connectionId: {shooterConnectionId}");
             }
 
             var healthController = collision.collider.GetComponent<HealthController>();
@@ -76,7 +81,10 @@ public class Projectile : NetworkBehaviour
         {
             Vector3 worldPosition = collision.contacts[0].point + direction * 0.1f;
             Vector3Int tilePosition = collidedTilemap.WorldToCell(worldPosition);
-            GameMapManager.Instance.TryDestroyTile(tilePosition);
+            if (GameMapManager.Instance.TryDestroyTile(tilePosition))
+            {
+                shootingPlayer.GetComponent<BuildController>().blocksInInventory++;
+            }
         }
 
         NetworkServer.Destroy(gameObject);
