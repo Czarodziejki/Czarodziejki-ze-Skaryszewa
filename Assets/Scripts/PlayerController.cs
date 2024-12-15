@@ -21,6 +21,14 @@ public class PlayerController : NetworkBehaviour
     public Animator animator;
     private Camera playerCamera;
 
+    [SyncVar(hook = nameof(OnFlipChanged))]
+    private bool isFlipped;
+
+    void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
     void Start()
     {
         playerCamera = GetComponentInChildren<Camera>();
@@ -43,7 +51,6 @@ public class PlayerController : NetworkBehaviour
         SetupLocalPlayerCrosshair();
         rigidBody = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<Collider2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (playerCollider == null || rigidBody == null)
         {
@@ -121,9 +128,20 @@ public class PlayerController : NetworkBehaviour
     private void Flip()
     {
         if (horizontal < -0.01f)
-            spriteRenderer.flipX = false;
+            CmdSetFlipState(false);
         else if (horizontal > 0.01f)
-            spriteRenderer.flipX = true;
+            CmdSetFlipState(true);
+    }
+
+    [Command]
+    private void CmdSetFlipState(bool flipState)
+    {
+        isFlipped = flipState;
+    }
+
+    private void OnFlipChanged(bool oldValue, bool newValue)
+    {
+        spriteRenderer.flipX = newValue;
     }
 
     private void OnDrawGizmos()
