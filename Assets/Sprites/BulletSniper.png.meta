@@ -3,20 +3,8 @@ guid: 3444df7ffb28f924d8f55d2442046801
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7554897052345772394
-    second: pocisk1_0
-  - first:
-      213: -6424963824007219077
-    second: pocisk1_1
-  - first:
-      213: -4742628206789455649
-    second: pocisk1_2
-  - first:
-      213: 7126894211039156210
-    second: pocisk1_3
-  - first:
-      213: 8880637133369539426
-    second: pocisk1_4
+      213: 9138664981832011267
+    second: BulletSniper_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -125,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pocisk1_0
+      name: BulletSniper_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 108
-        height: 100
+        x: 10
+        y: 6
+        width: 80
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 90e4c7cace5e2aa489622d5769dd02a4
-      internalID: 725616559
+      spriteID: 30e066bd16f03de70800000000000000
+      internalID: 9138664981832011267
       vertices: []
       indices: 
       edges: []
@@ -150,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 906d5ca8f2b22294b98a05bc2008aa20
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -159,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      pocisk1_0: 725616559
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
