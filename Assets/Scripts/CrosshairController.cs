@@ -1,6 +1,7 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using static UnityEngine.Rendering.DebugUI.Table;
 
 public class CrosshairController : MonoBehaviour
@@ -10,19 +11,22 @@ public class CrosshairController : MonoBehaviour
     public float firingSpinVelocity;
 
 	private Quaternion spin;
+	private InputAction fireAction;
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
     {
 		spin = Quaternion.identity;
 		transform.GetComponent<SpriteRenderer>().color = transform.parent.GetComponent<PlayerController>().primaryColor;
-	}
+
+		fireAction = InputSystem.actions.FindAction("Attack");
+    }
 
     // Update is called once per frame
     void Update()
     {
         // Update position
-        Vector3 mousePos = Input.mousePosition;
+        Vector3 mousePos = Mouse.current.position.ReadValue();
         Vector3 parentPos = Camera.main.WorldToScreenPoint(transform.parent.gameObject.transform.position);
 		Vector3 aimDirection = Vector3.Normalize(mousePos - parentPos);
 		Vector3 scaledAimDirection = aimDirection * range;
@@ -30,7 +34,7 @@ public class CrosshairController : MonoBehaviour
 		transform.localPosition = scaledAimDirection;
 
 		// Update spin
-        var spinVelocity = Input.GetKey(KeyCode.Mouse0) ? firingSpinVelocity : idleSpinVelocity;
+        var spinVelocity = fireAction.IsPressed() ? firingSpinVelocity : idleSpinVelocity;
         spin = Quaternion.Euler(0, 0, spinVelocity) * spin;
         var totalRotation = spin;
 

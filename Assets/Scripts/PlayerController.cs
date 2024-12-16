@@ -1,6 +1,7 @@
 using Mirror;
 using Mirror.Examples.Common;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour
 {
@@ -23,6 +24,9 @@ public class PlayerController : NetworkBehaviour
 
     [SyncVar(hook = nameof(OnFlipChanged))]
     private bool isFlipped;
+
+    private InputAction moveAction, jumpAction;
+    private Vector2 previousMovementInput;
 
     void Awake()
     {
@@ -56,6 +60,9 @@ public class PlayerController : NetworkBehaviour
         {
             Debug.LogError("Rigidbody2D or Collider2D is missing on the player!");
         }
+
+        moveAction = InputSystem.actions.FindAction("Move");
+        jumpAction = InputSystem.actions.FindAction("Jump");
     }
 
     private void SetupLocalPlayerCamera()
@@ -84,10 +91,16 @@ public class PlayerController : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        horizontal = Input.GetAxisRaw("Horizontal");
+        Vector2 movement = moveAction.ReadValue<Vector2>();
+
+        horizontal = movement.x;
         animator.SetFloat("Speed", Mathf.Abs(horizontal));
 
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+        bool jump = jumpAction.triggered || (movement.y > 0 && previousMovementInput.y <= 0);
+
+        previousMovementInput = movement;
+
+        if (jump && IsGrounded())
         {
             animator.SetBool("IsJumping", true);
             rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocityX, jumpingPower);
