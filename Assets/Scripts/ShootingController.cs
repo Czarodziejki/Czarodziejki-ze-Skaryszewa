@@ -1,5 +1,6 @@
 using Mirror;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class ShootingController : NetworkBehaviour
@@ -10,20 +11,21 @@ public class ShootingController : NetworkBehaviour
     private Transform playerTransform;
     private float lastShootTime = 0f;   // Timestamp of the last shoot
 
-
+    private InputAction fireAction;
     private void Start()
     {
         playerTransform = GetComponent<Transform>();
+        fireAction = InputSystem.actions.FindAction("Attack");
     }
 
     private void Update()
     {
         // Checking time prevents spamming fire button
-        if (isLocalPlayer && Input.GetMouseButton(0) && Time.time - lastShootTime > coolDownTime)
+        if (isLocalPlayer && fireAction.IsPressed() && Time.time - lastShootTime > coolDownTime)
         {
             lastShootTime = Time.time;
 
-            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             mouseWorldPosition.z = 0f;
             Vector2 shootingDirection = (mouseWorldPosition - playerTransform.position).normalized;
             Vector2 startPoint = playerTransform.position;

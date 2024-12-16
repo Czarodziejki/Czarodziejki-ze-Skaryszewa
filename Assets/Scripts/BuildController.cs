@@ -2,6 +2,7 @@ using Mirror;
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class BuildController : NetworkBehaviour
 { 
@@ -15,6 +16,7 @@ public class BuildController : NetworkBehaviour
     public uint blocksInInventory;
     private GameObject inventoryUIElement;
     private TMP_Text inventoryCountUIElement;
+    private InputAction buildAction, modifierAction;
 
     void Start()
     {
@@ -26,9 +28,12 @@ public class BuildController : NetworkBehaviour
         // InventoryUIElement is an empty object containg two objects: GrassBlockIcon (Image) and GrassBlockCount(TextMeshPro)
         inventoryCountUIElement = inventoryUIElement.GetComponentInChildren<TMP_Text>();
         inventoryCountUIElement.text = blocksInInventory.ToString();
+
+        buildAction = InputSystem.actions.FindAction("Build");
+        modifierAction = InputSystem.actions.FindAction("Modifier");
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (!isLocalPlayer) return;
         ProcessBlockPlacing();
@@ -55,14 +60,14 @@ public class BuildController : NetworkBehaviour
     [Client]
     private void ProcessBlockPlacing()
     {
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         blockPos.y = Mathf.Round(mousePos.y - .5f);
         blockPos.x = Mathf.Round(mousePos.x - .5f);
         inRange = Vector3.Distance(transform.position, blockPos) <= tileBuildRadius;
-        if (Input.GetKey(KeyCode.Mouse1) && !modifyingBlock && inRange)
+        if (buildAction.IsPressed() && !modifyingBlock && inRange)
         {
             modifyingBlock = true;
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (modifierAction.IsPressed())
             {
                 StartCoroutine(DestroyBlock(blockPos));
             }
