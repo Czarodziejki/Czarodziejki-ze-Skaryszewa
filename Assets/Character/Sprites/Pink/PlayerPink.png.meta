@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3444df7ffb28f924d8f55d2442046801
+guid: 6b1415be0a53f094a883746ba2529b19
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 9138664981832011267
-    second: BulletSniper_0
+      213: 1637875537208002065
+    second: PlayerPink_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BulletSniper_0
+      name: PlayerPink_0
       rect:
         serializedVersion: 2
-        x: 10
-        y: 6
-        width: 80
-        height: 80
+        x: 18
+        y: 3
+        width: 60
+        height: 88
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 30e066bd16f03de70800000000000000
-      internalID: 9138664981832011267
+      spriteID: 116c59d8f17eab610800000000000000
+      internalID: 1637875537208002065
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      BulletSniper_0: 9138664981832011267
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

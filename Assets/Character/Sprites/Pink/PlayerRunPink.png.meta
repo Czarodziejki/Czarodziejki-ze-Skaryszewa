@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: c437d5db9c637154ca68e0a97e0c8831
+guid: acd9c0bb739bcaa4cbd4fb594cb83365
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7649413404834822264
-    second: CHARACTER_0
+      213: -7565681779107757012
+    second: PlayerRunPink_0
+  - first:
+      213: -5638282267624277095
+    second: PlayerRunPink_1
+  - first:
+      213: 2356874522474682781
+    second: PlayerRunPink_2
+  - first:
+      213: 2462818431287319542
+    second: PlayerRunPink_3
+  - first:
+      213: 1298486126561105628
+    second: PlayerRunPink_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +125,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CHARACTER_0
+      name: PlayerRunPink_0
       rect:
         serializedVersion: 2
-        x: 18
-        y: 3
-        width: 60
-        height: 88
+        x: 21
+        y: 5
+        width: 56
+        height: 86
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +140,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8787a4f96fc282a60800000000000000
-      internalID: 7649413404834822264
+      spriteID: c2403a0b18c410790800000000000000
+      internalID: -7565681779107757012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayerRunPink_1
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 4
+        width: 56
+        height: 87
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99bfed6862cc0c1b0800000000000000
+      internalID: -5638282267624277095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayerRunPink_2
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 5
+        width: 56
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d99954414ec45b020800000000000000
+      internalID: 2356874522474682781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayerRunPink_3
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 5
+        width: 56
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fb5a2f8050bd2220800000000000000
+      internalID: 2462818431287319542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayerRunPink_4
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 5
+        width: 56
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd6927f9046250210800000000000000
+      internalID: 1298486126561105628
       vertices: []
       indices: 
       edges: []
@@ -147,8 +247,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      CHARACTER_0: 7649413404834822264
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

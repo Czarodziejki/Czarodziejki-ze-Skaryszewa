@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6889983283197482120, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 8eb4d83ae36297f42b01f3328a42e0f0, type: 2}
     - target: {fileID: 2243633192739916953, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -55,6 +59,14 @@ PrefabInstance:
     - target: {fileID: 3890295508702063332, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
       propertyPath: m_Name
       value: RedPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 4535344644045153820, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 2550226583136457656, guid: 2541544ddbbae7a48b350dcb97f6b569, type: 3}
+    - target: {fileID: 4535344644045153820, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5568257073709482352, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
       propertyPath: primaryColor.b
