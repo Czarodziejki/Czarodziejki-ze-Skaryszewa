@@ -3,12 +3,17 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class BaseWeapon : NetworkBehaviour
-{
-    public GameObject projectilePrefab;
+{ 
     public float coolDownTime;      // Minimal time between weapon uses in seconds
+    public float projectileSpeed;
+    public int damage;
 
-    private Transform playerTransform;
+	protected GameObject projectilePrefab;
+
+	private Transform playerTransform;
     private float lastShootTime = 0f;   // Timestamp of the last shoot
+
+    private const float projectileOffset = 2.5f;
 
 
     protected void Start()
@@ -34,7 +39,7 @@ public class BaseWeapon : NetworkBehaviour
             mouseWorldPosition.z = 0f;
             Vector2 shootingDirection = (mouseWorldPosition - playerTransform.position).normalized;
             Vector2 startPoint = playerTransform.position;
-            startPoint += shootingDirection * 2.5f;
+            startPoint += shootingDirection * projectileOffset;
             CmdShootProjectile(startPoint, shootingDirection);
 
             return true;
@@ -48,9 +53,9 @@ public class BaseWeapon : NetworkBehaviour
     private void CmdShootProjectile(Vector3 startPosition, Vector2 direction)
     {
         GameObject projectile = Instantiate(projectilePrefab, startPosition, Quaternion.identity);
-        // Initialize the projectile with the direction and the player that shot it
-        GameObject player = GetComponent<NetworkIdentity>().gameObject;
-        projectile.GetComponent<Projectile>().Initialize(direction, player);
+		// Initialize the projectile with the direction and the player that shot it
+		GameObject player = GetComponent<NetworkIdentity>().gameObject;
+        projectile.GetComponent<Projectile>().Initialize(direction, player, projectileSpeed, damage);
         NetworkServer.Spawn(projectile);
     }
 }

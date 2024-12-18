@@ -2,13 +2,12 @@ using UnityEngine;
 
 public class WeaponWithLimitedAmmo: BaseWeapon
 {
-    public int actualAmmo { get; private set; }
     public int maxAmmo;
+	private int currentAmmo;
 
-
-    protected new void Start()
+	protected new void Start()
     {
-        actualAmmo = maxAmmo;
+		currentAmmo = maxAmmo;
 
         base.Start();
     }
@@ -16,9 +15,9 @@ public class WeaponWithLimitedAmmo: BaseWeapon
 
     public override bool TryToUseWeapon()
     {
-        if (actualAmmo > 0 && base.TryToUseWeapon())
+        if (currentAmmo > 0 && base.TryToUseWeapon())
         {
-            --actualAmmo;
+            --currentAmmo;
 
             return true;
         }

@@ -352,8 +352,9 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  projectilePrefab: {fileID: 0}
-  coolDownTime: 0
+  coolDownTime: 0.3
+  projectileSpeed: 20
+  damage: 8
 --- !u!114 &510819309919490130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,8 +370,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  projectilePrefab: {fileID: 0}
-  coolDownTime: 0
+  coolDownTime: 0.1
+  projectileSpeed: 25
+  damage: 2
+  maxAmmo: 150
 --- !u!114 &-3473317808712288086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,8 +389,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  projectilePrefab: {fileID: 0}
-  coolDownTime: 0
+  coolDownTime: 1.5
+  projectileSpeed: 40
+  damage: 45
+  maxAmmo: 10
 --- !u!1 &9166938841906237671
 GameObject:
   m_ObjectHideFlags: 0
