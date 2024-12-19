@@ -100,6 +100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fef8f003868b4104abbcd26df2bc7854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 1
+  range: 0.8
   idleSpinVelocity: 0.3
   firingSpinVelocity: 3

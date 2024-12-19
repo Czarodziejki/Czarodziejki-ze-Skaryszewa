@@ -20,6 +20,9 @@ GameObject:
   - component: {fileID: 2627723584724062344}
   - component: {fileID: -6889983283197482120}
   - component: {fileID: 1144461348585777461}
+  - component: {fileID: 9020713271465857214}
+  - component: {fileID: 510819309919490130}
+  - component: {fileID: -3473317808712288086}
   m_Layer: 3
   m_Name: AbstractBasePlayer
   m_TagString: Player
@@ -229,8 +232,6 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  projectilePrefab: {fileID: 6122572798316568362, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
-  coolDownTime: 0.2
 --- !u!114 &3732061872553029042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,6 +337,62 @@ MonoBehaviour:
   syncInterval: 0
   clientAuthority: 1
   animator: {fileID: -6889983283197482120}
+--- !u!114 &9020713271465857214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3890295508702063332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 028079796d651a04d921f69c3677f78f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  coolDownTime: 0.3
+  projectileSpeed: 20
+  damage: 8
+--- !u!114 &510819309919490130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3890295508702063332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 234f26c83f8992245b4a6eebb08f22f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  coolDownTime: 0.1
+  projectileSpeed: 25
+  damage: 2
+  maxAmmo: 150
+--- !u!114 &-3473317808712288086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3890295508702063332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0df2ed7dab76248b478a08b65559ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  coolDownTime: 1.5
+  projectileSpeed: 40
+  damage: 45
+  maxAmmo: 10
 --- !u!1 &9166938841906237671
 GameObject:
   m_ObjectHideFlags: 0

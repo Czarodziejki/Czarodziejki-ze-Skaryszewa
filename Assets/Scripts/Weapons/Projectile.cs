@@ -1,25 +1,25 @@
 using Mirror;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
+
 
 public class Projectile : NetworkBehaviour
 {
-    public float speed = 10f;
     public float lifetime = 15f;
-    public int damage = 5;
 
     [SyncVar]
     private Vector2 direction;
 
     private float timeAlive = 0f;
+    private float speed = 10f;
+    private int damage = 5;
 
     private Tilemap tilemap;
 
     private GameObject shootingPlayer;  // the player that shot the projectile
 
     [Server]
-    public void Initialize(Vector2 startDirection, GameObject shootingPlayer)
+    public void Initialize(Vector2 startDirection, GameObject shootingPlayer, float speed, int damage)
     {
         direction = startDirection.normalized;
 
@@ -27,6 +27,8 @@ public class Projectile : NetworkBehaviour
         transform.rotation *= Quaternion.FromToRotation(new Vector3(1f, 0f, 0f), (Vector3)direction);
 
         this.shootingPlayer = shootingPlayer;
+        this.speed = speed;
+        this.damage = damage;
     }
 
     private void Awake()
