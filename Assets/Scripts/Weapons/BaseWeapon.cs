@@ -8,9 +8,9 @@ public class BaseWeapon : NetworkBehaviour
     public float projectileSpeed;
     public int damage;
 
-	protected GameObject projectilePrefab;
-
-	private Transform playerTransform;
+    protected GameObject projectilePrefab;
+    protected Transform playerTransform;
+    
     private float lastShootTime = 0f;   // Timestamp of the last shoot
 
     private const float projectileOffset = 2.5f;

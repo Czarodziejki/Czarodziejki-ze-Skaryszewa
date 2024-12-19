@@ -15,7 +15,13 @@ public class WeaponWithLimitedAmmo: BaseWeapon
 
     public override bool TryToUseWeapon()
     {
-        if (currentAmmo > 0 && base.TryToUseWeapon())
+        if (currentAmmo == 0)
+        {
+            playerTransform.GetComponent<ShootingController>().EquipWeapon<DefaultWeapon>();
+			return false;
+        }
+
+        if (base.TryToUseWeapon())
         {
             --currentAmmo;
 

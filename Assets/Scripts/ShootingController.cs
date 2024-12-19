@@ -9,11 +9,16 @@ public class ShootingController : NetworkBehaviour
 
     private InputAction fireAction;
 
+    public void EquipWeapon<WeaponType>() where WeaponType : BaseWeapon
+    {
+		weapon = gameObject.GetComponent<WeaponType>();
+	}
+
     private void Start()
     {
         if (isLocalPlayer)
         {
-            weapon = gameObject.GetComponent<DefaultWeapon>();
+			EquipWeapon<DefaultWeapon>();
             fireAction = InputSystem.actions.FindAction("Attack");
         }
     }
