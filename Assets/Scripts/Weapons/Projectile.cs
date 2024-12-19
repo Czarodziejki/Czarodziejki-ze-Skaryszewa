@@ -11,10 +11,10 @@ public class Projectile : NetworkBehaviour
     private Vector2 direction;
 
     private float timeAlive = 0f;
-	private float speed = 10f;
-	private int damage = 5;
+    private float speed = 10f;
+    private int damage = 5;
 
-	private Tilemap tilemap;
+    private Tilemap tilemap;
 
     private GameObject shootingPlayer;  // the player that shot the projectile
 
