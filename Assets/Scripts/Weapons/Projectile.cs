@@ -57,9 +57,36 @@ public class Projectile : NetworkBehaviour
         timeAlive += Time.deltaTime;
         if (timeAlive >= lifetime)
         {
+            PrepareToDestroy();
             NetworkServer.Destroy(gameObject);
         }
     }
+
+    [Server]
+    private void PrepareToDestroy()
+    {
+        void DetachTrail()
+        {
+            // Set parent of the trail to null so that it persists after the projectile is destroyed
+            var trail = gameObject.GetComponentInChildren<TrailRenderer>();
+            trail.transform.parent = null;
+            // Adjust the parameters to create an absorption-like effect
+            trail.time = 0.3f;
+            trail.widthMultiplier *= 0.4f;
+            trail.widthCurve = new AnimationCurve(new(0.0f, 1.0f), new(1.0f, 0.0f));
+        }
+
+        [ClientRpc]
+        void DetachTrailOnClients()
+        {
+            DetachTrail();
+        }
+
+        DetachTrail();
+        DetachTrailOnClients();
+    }
+
+    
 
     [Server]
     private void OnCollisionEnter2D(Collision2D collision)
@@ -89,6 +116,7 @@ public class Projectile : NetworkBehaviour
             }
         }
 
+        PrepareToDestroy();
         NetworkServer.Destroy(gameObject);
     }
 }

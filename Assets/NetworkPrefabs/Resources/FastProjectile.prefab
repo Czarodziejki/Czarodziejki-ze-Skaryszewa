@@ -64,6 +64,18 @@ PrefabInstance:
       propertyPath: lifetime
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 4925702408316590373, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_Parameters.shadowBias
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4925702408316590373, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_Parameters.widthMultiplier
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4925702408316590373, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[2].value
+      value: 0.39814574
+      objectReference: {fileID: 0}
     - target: {fileID: 5943770173789329444, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
       propertyPath: m_Sprite
       value: 
