@@ -11,10 +11,15 @@ public class PlayerController : NetworkBehaviour
     public GameObject crosshair;
     public Vector2 boxSize;
     public float castDistance;
-    public Color primaryColor;
-    public Color secondaryColor;
 
-	private Collider2D playerCollider;
+    [ColorUsage(true, true)]
+    public Color primaryColor;
+    [ColorUsage(true, true)]
+    public Color secondaryColor;
+    [ColorUsage(true, true)]
+    public Color ternaryColor;
+
+    private Collider2D playerCollider;
     private Rigidbody2D rigidBody;
     private SpriteRenderer spriteRenderer;
 

@@ -16,6 +16,7 @@ public class Projectile : NetworkBehaviour
 
     private Tilemap tilemap;
 
+    [SyncVar]
     private GameObject shootingPlayer;  // the player that shot the projectile
 
     [Server]
@@ -23,12 +24,34 @@ public class Projectile : NetworkBehaviour
     {
         direction = startDirection.normalized;
 
-        // Rotate projectile so it's facing it's direction
+        // Rotate projectile so it's facing its direction
         transform.rotation *= Quaternion.FromToRotation(new Vector3(1f, 0f, 0f), (Vector3)direction);
 
         this.shootingPlayer = shootingPlayer;
         this.speed = speed;
         this.damage = damage;
+    }
+
+    [ClientRpc]
+    public void SetColors()
+    {
+        // Set sprite color
+        var playerController = shootingPlayer.GetComponent<PlayerController>();
+        GetComponent<SpriteRenderer>().color = playerController.secondaryColor;
+
+        // Set colors of the trails
+        var materialList = GetComponentInChildren<TrailRenderer>().materials;
+        if (materialList == null || materialList.Length == 0)
+        {
+            Debug.LogError("Trail material list should not be empty!");
+        }
+
+        materialList[0].SetColor("_Color1", playerController.secondaryColor);
+        materialList[0].SetColor("_Color2", playerController.ternaryColor);
+
+        // Random texture animation offset
+        float timeOffset = Random.Range(0.0f, 1.0f);
+        materialList[0].SetFloat("_TimeOffset", timeOffset);
     }
 
     private void Awake()
@@ -71,8 +94,8 @@ public class Projectile : NetworkBehaviour
             var trail = gameObject.GetComponentInChildren<TrailRenderer>();
             trail.transform.parent = null;
             // Adjust the parameters to create an absorption-like effect
-            trail.time = 0.3f;
-            trail.widthMultiplier *= 0.4f;
+            trail.time = 0.2f;
+            trail.widthMultiplier *= 0.3f;
             trail.widthCurve = new AnimationCurve(new(0.0f, 1.0f), new(1.0f, 0.0f));
         }
 
