@@ -18,7 +18,7 @@ public class GameMapManager : NetworkBehaviour
     public TileBase grassTile, unbreakableTile;
     public int grassMaxHealth = 20;
 
-    private Tilemap tilemap;
+    public Tilemap tilemap;
 
     private Dictionary<TileType, TileBase> tileDictionary;
     private Dictionary<TileType, int> tileMaxHealth;
@@ -28,6 +28,7 @@ public class GameMapManager : NetworkBehaviour
 
     private Vector2 tileSize = new Vector2(1.0f, 1.0f);
     public float tileBuildRadius;
+    private CrackingController crackingController;
 
     private void Awake()
     {
@@ -46,8 +47,7 @@ public class GameMapManager : NetworkBehaviour
         };
 
         tilesHealthPoints = new Dictionary<Vector3Int, int>();
-
-        tilemap = GetComponentInChildren<Tilemap>();
+        crackingController = GetComponent<CrackingController>();
     }
 
     private TileBase GetTile(TileType tileType)
@@ -72,6 +72,7 @@ public class GameMapManager : NetworkBehaviour
         if (GetTileType(position) != TileType.Grass) return false;
         tilemap.SetTile(position, null);
         tilesHealthPoints.Remove(position);
+        crackingController.DeleteCracks(position);
         RpcDestroyTile(position);
         return true;
     }
@@ -91,9 +92,10 @@ public class GameMapManager : NetworkBehaviour
     [Server]
     public bool DamageTile(Vector3Int position, int damage)
     {
+        TileType type = GetTileType(position);
+
         if (!tilesHealthPoints.ContainsKey(position))
         {
-            TileType type = GetTileType(position);
             if (!tileMaxHealth.ContainsKey(type))
                 return false;   // Tile cannot be damaged
 
@@ -102,6 +104,7 @@ public class GameMapManager : NetworkBehaviour
             if (newHealth > 0)
             {
                 tilesHealthPoints.Add(position, newHealth);
+                crackingController.SetDestructionLevel(position, (float)(tileMaxHealth[type] - newHealth) / (float)tileMaxHealth[type]);
                 return false;
             }
                 
@@ -114,10 +117,10 @@ public class GameMapManager : NetworkBehaviour
         if (actHealth > 0)
         {
             tilesHealthPoints[position] = actHealth;
+            crackingController.SetDestructionLevel(position, (float)(tileMaxHealth[type] - actHealth) / (float)tileMaxHealth[type]);
             return false;
         }
             
-        tilesHealthPoints.Remove(position);
         return TryDestroyTile(position);
     }
 
