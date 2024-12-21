@@ -213,6 +213,7 @@ MonoBehaviour:
   castDistance: 1.64
   primaryColor: {r: 1, g: 1, b: 1, a: 1}
   secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+  ternaryColor: {r: 0, g: 0, b: 0, a: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -353,7 +354,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   coolDownTime: 0.3
-  projectileSpeed: 20
+  projectileSpeed: 30
   damage: 8
 --- !u!114 &510819309919490130
 MonoBehaviour:
@@ -371,7 +372,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   coolDownTime: 0.1
-  projectileSpeed: 25
+  projectileSpeed: 35
   damage: 2
   maxAmmo: 150
 --- !u!114 &-3473317808712288086
@@ -390,7 +391,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   coolDownTime: 1.5
-  projectileSpeed: 40
+  projectileSpeed: 50
   damage: 45
   maxAmmo: 10
 --- !u!1 &9166938841906237671

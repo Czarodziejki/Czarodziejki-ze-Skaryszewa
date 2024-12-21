@@ -43,7 +43,6 @@ public class BuildController : NetworkBehaviour
     private void OnClientInventoryUpdate(uint oldBlocks, uint newBlocks)
     {
         if (!isLocalPlayer) return;
-        Debug.Log("Inventory: " + newBlocks);
         inventoryCountUIElement.text = newBlocks.ToString();
         if (newBlocks == 0)
         {
