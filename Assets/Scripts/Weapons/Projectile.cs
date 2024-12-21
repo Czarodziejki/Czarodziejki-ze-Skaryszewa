@@ -83,7 +83,7 @@ public class Projectile : NetworkBehaviour
         {
             Vector3 worldPosition = collision.contacts[0].point + direction * 0.1f;
             Vector3Int tilePosition = collidedTilemap.WorldToCell(worldPosition);
-            if (GameMapManager.Instance.TryDestroyTile(tilePosition))
+            if (GameMapManager.Instance.DamageTile(tilePosition, damage))
             {
                 shootingPlayer.GetComponent<BuildController>().blocksInInventory++;
             }
