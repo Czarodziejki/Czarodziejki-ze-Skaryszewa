@@ -11,13 +11,14 @@ public class CrackingController : NetworkBehaviour
     public Tilemap cracksTilemap;
 
     [Server]
-    public void SetDestructionLevel(Vector3Int position, float destructionLevel)
+    public void SetCracksLevel(Vector3Int position, float cracksLevel)
     {
         var actTile = cracksTilemap.GetTile(position);
-        var (newTile, index) = GetTile(destructionLevel);
+        var (newTile, index) = GetTile(cracksLevel);
 
         if (actTile != newTile)
         {
+            Debug.LogError("New cracks");
             cracksTilemap.SetTile(position, newTile);
             RpcSetTile(position, index);
         }
@@ -51,12 +52,14 @@ public class CrackingController : NetworkBehaviour
         destructionLevel = Math.Clamp(destructionLevel, 0f, 1f);
 
         float scaledDestLvl = destructionLevel * (crackLevels.Length);
-        int index = (int)MathF.Floor(scaledDestLvl);
+        int index = (int)MathF.Ceiling(scaledDestLvl);
+        //index = Math.Min(index, crackLevels.Length - 1);
 
-        if (index <= 0)
+        if (index == 0)
             return (null, -1);
 
-        index -= 1;
+        --index;
+        Debug.LogError("Destruction index: " + index);
         return (crackLevels[index], index);
     }
 }

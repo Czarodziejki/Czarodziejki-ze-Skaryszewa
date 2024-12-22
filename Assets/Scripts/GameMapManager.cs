@@ -3,6 +3,7 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using Mirror;
 using Unity.Mathematics;
+using System;
 
 
 public enum TileType : int
@@ -104,7 +105,9 @@ public class GameMapManager : NetworkBehaviour
             if (newHealth > 0)
             {
                 tilesHealthPoints.Add(position, newHealth);
-                crackingController.SetDestructionLevel(position, (float)(tileMaxHealth[type] - newHealth) / (float)tileMaxHealth[type]);
+                int maxHealth = tileMaxHealth[type];
+                Debug.LogError("New Health: " + newHealth);
+                crackingController.SetCracksLevel(position, (float)(maxHealth - newHealth) / (float)maxHealth);
                 return false;
             }
                 
@@ -117,7 +120,9 @@ public class GameMapManager : NetworkBehaviour
         if (actHealth > 0)
         {
             tilesHealthPoints[position] = actHealth;
-            crackingController.SetDestructionLevel(position, (float)(tileMaxHealth[type] - actHealth) / (float)tileMaxHealth[type]);
+            int maxHealth = tileMaxHealth[type];
+            Debug.LogError("Act health: " + actHealth);
+            crackingController.SetCracksLevel(position, (float)(maxHealth - actHealth) / (float)maxHealth);
             return false;
         }
             
