@@ -106,7 +106,6 @@ public class GameMapManager : NetworkBehaviour
             {
                 tilesHealthPoints.Add(position, newHealth);
                 int maxHealth = tileMaxHealth[type];
-                Debug.LogError("New Health: " + newHealth);
                 crackingController.SetCracksLevel(position, (float)(maxHealth - newHealth) / (float)maxHealth);
                 return false;
             }
@@ -121,7 +120,6 @@ public class GameMapManager : NetworkBehaviour
         {
             tilesHealthPoints[position] = actHealth;
             int maxHealth = tileMaxHealth[type];
-            Debug.LogError("Act health: " + actHealth);
             crackingController.SetCracksLevel(position, (float)(maxHealth - actHealth) / (float)maxHealth);
             return false;
         }

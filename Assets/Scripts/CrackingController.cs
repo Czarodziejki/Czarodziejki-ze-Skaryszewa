@@ -18,7 +18,6 @@ public class CrackingController : NetworkBehaviour
 
         if (actTile != newTile)
         {
-            Debug.LogError("New cracks");
             cracksTilemap.SetTile(position, newTile);
             RpcSetTile(position, index);
         }
@@ -53,13 +52,11 @@ public class CrackingController : NetworkBehaviour
 
         float scaledDestLvl = destructionLevel * (crackLevels.Length);
         int index = (int)MathF.Ceiling(scaledDestLvl);
-        //index = Math.Min(index, crackLevels.Length - 1);
 
         if (index == 0)
             return (null, -1);
 
         --index;
-        Debug.LogError("Destruction index: " + index);
         return (crackLevels[index], index);
     }
 }
