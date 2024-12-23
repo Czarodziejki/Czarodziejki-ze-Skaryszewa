@@ -7,11 +7,7 @@ public class Projectile : NetworkBehaviour
 {
     public float lifetime = 15f;
 
-    [SyncVar]
-    private Vector2 direction;
-
     private float timeAlive = 0f;
-    private float speed = 10f;
     private int damage = 5;
 
     private Tilemap tilemap;
@@ -19,16 +15,14 @@ public class Projectile : NetworkBehaviour
     [SyncVar]
     private GameObject shootingPlayer;  // the player that shot the projectile
 
+    private Rigidbody2D rigidbody;
+
     [Server]
     public void Initialize(Vector2 startDirection, GameObject shootingPlayer, float speed, int damage)
     {
-        direction = startDirection.normalized;
-
-        // Rotate projectile so it's facing its direction
-        transform.rotation *= Quaternion.FromToRotation(new Vector3(1f, 0f, 0f), (Vector3)direction);
+        rigidbody.linearVelocity = startDirection.normalized * speed;
 
         this.shootingPlayer = shootingPlayer;
-        this.speed = speed;
         this.damage = damage;
     }
 
@@ -54,25 +48,25 @@ public class Projectile : NetworkBehaviour
         materialList[0].SetFloat("_TimeOffset", timeOffset);
     }
 
+    Vector2 GetDirection()
+    {
+        return rigidbody.linearVelocity.normalized;
+    }
+
     private void Awake()
     {
         tilemap = GameMapManager.Instance.GetComponentInChildren<Tilemap>();
+        rigidbody = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
     {
         if (isServer)
         {
-            MoveProjectile();
             CheckLifetime();
         }
     }
 
-    [Server]
-    private void MoveProjectile()
-    {
-        transform.position += (Vector3)direction * speed * Time.deltaTime;
-    }
 
     [Server]
     private void CheckLifetime()
@@ -112,11 +106,11 @@ public class Projectile : NetworkBehaviour
     
 
     [Server]
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.collider.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
-            NetworkIdentity identity = collision.collider.GetComponent<NetworkIdentity>();
+            NetworkIdentity identity = collision.GetComponent<NetworkIdentity>();
             if (identity != null && identity.connectionToClient != null)
             {
                 int connectionId = identity.connectionToClient.connectionId;
@@ -124,14 +118,15 @@ public class Projectile : NetworkBehaviour
                 Debug.Log($"Player hit with connectionId: {connectionId} by the player with connectionId: {shooterConnectionId}");
             }
 
-            var healthController = collision.collider.GetComponent<HealthController>();
+            var healthController = collision.GetComponent<HealthController>();
             healthController.Damage(damage);
         }
 
-        Tilemap collidedTilemap = collision.collider.GetComponentInParent<Tilemap>();
+        Tilemap collidedTilemap = collision.GetComponentInParent<Tilemap>();
         if(collidedTilemap == tilemap)
         {
-            Vector3 worldPosition = collision.contacts[0].point + direction * 0.1f;
+            Vector2 contactPoint = collision.ClosestPoint(transform.position);
+            Vector3 worldPosition = contactPoint + GetDirection() * 0.1f;
             Vector3Int tilePosition = collidedTilemap.WorldToCell(worldPosition);
             if (GameMapManager.Instance.DamageTile(tilePosition, damage))
             {
