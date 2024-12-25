@@ -3,13 +3,12 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using System;
 
 public class BuildController : NetworkBehaviour
 { 
     private Camera cam;
-    private Vector3 mousePos, blockPos;
-    readonly float blockPlaceTime = 0f;
-    bool modifyingBlock = false;
+    private Vector3 mousePos, blockPos, lineStartPos;
     private bool inRange = false;
     private float tileBuildRadius;
     [SyncVar(hook= nameof(OnClientInventoryUpdate))]
@@ -17,6 +16,7 @@ public class BuildController : NetworkBehaviour
     private GameObject inventoryUIElement;
     private TMP_Text inventoryCountUIElement;
     private InputAction buildAction, modifierAction;
+    private bool buildHeld, modifierHeld;
 
     void Start()
     {
@@ -30,13 +30,88 @@ public class BuildController : NetworkBehaviour
         inventoryCountUIElement.text = blocksInInventory.ToString();
 
         buildAction = InputSystem.actions.FindAction("Build");
+        buildAction.performed += OnBuildPress;
+        buildAction.canceled += OnBuildRelease;
+        buildHeld = buildAction.IsPressed();
+        if (buildHeld) lineStartPos = UpdateMousePos();
+
         modifierAction = InputSystem.actions.FindAction("Modifier");
+        modifierAction.performed += OnModifierPress;
+        modifierAction.canceled += OnModifierRelease;
+        modifierHeld = modifierAction.IsPressed();
+    }
+
+    [Client]
+    private void OnModifierRelease(InputAction.CallbackContext context)
+    {
+        if (!isLocalPlayer) return;
+        if (!modifierHeld)
+        {
+            Debug.Log("OnModifierRelease called while modifierHeld is already false");
+            return;
+        }
+        modifierHeld = false;
+
+        if (!buildHeld) return;
+
+        DrawBlockLine(lineStartPos, UpdateMousePos(), true);
+        lineStartPos = mousePos;
+    }
+
+    [Client]
+    private void OnModifierPress(InputAction.CallbackContext context)
+    {
+        if (!isLocalPlayer) return;
+        if (modifierHeld)
+        {
+            Debug.Log("OnModifierPress called while modifierHeld is already true");
+            return;
+        }
+        modifierHeld = true;
+
+        if (!buildHeld) return;
+
+        DrawBlockLine(lineStartPos, UpdateMousePos(), false);
+        lineStartPos = mousePos;
+    }
+
+    [Client]
+    private void OnBuildRelease(InputAction.CallbackContext context)
+    {
+        if (!isLocalPlayer) return;
+        if (!buildHeld)
+        {
+            Debug.Log("OnBuildRelease called while buildHeld is already false");
+            return;
+        }
+        buildHeld = false;
+
+        DrawBlockLine(lineStartPos, UpdateMousePos(), modifierHeld);
+    }
+
+    [Client]
+    private void OnBuildPress(InputAction.CallbackContext context)
+    {
+        if (!isLocalPlayer) return;
+        if (buildHeld)
+        {
+            Debug.Log("OnBuildPress called while buildHeld is already true");
+            return;
+        }
+        buildHeld = true;
+
+        lineStartPos = UpdateMousePos();
     }
 
     private void Update()
     {
         if (!isLocalPlayer) return;
-        ProcessBlockPlacing();
+        UpdateMousePos();
+        if (buildHeld)
+        {
+            DrawBlockLine(lineStartPos, mousePos, modifierHeld);
+            lineStartPos = mousePos;
+        }
     }
 
     [Client]
@@ -56,41 +131,57 @@ public class BuildController : NetworkBehaviour
         }
     }
 
+    //[Client]
+    //private void ProcessBlockPlacing()
+    //{
+    //    UpdateMousePos();
+    //    if (buildAction.IsPressed() && inRange)
+    //    {
+    //        if (modifierAction.IsPressed())
+    //        {
+    //            StartCoroutine(DestroyBlock(blockPos));
+    //        }
+    //        else
+    //        {
+    //            StartCoroutine(PlaceBlock(blockPos));
+    //        }
+    //    }
+    //}
+
     [Client]
-    private void ProcessBlockPlacing()
+    private Vector3 UpdateMousePos()
     {
         mousePos = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         blockPos.y = Mathf.Round(mousePos.y - .5f);
         blockPos.x = Mathf.Round(mousePos.x - .5f);
         inRange = Vector3.Distance(transform.position, blockPos) <= tileBuildRadius;
-        if (buildAction.IsPressed() && !modifyingBlock && inRange)
+        return mousePos;
+    }
+
+    [Client]
+    private void DrawBlockLine(Vector3 start, Vector3 end, bool destroy = false)
+    {
+        // TODO: Implement Bresenham's line algorithm
+        if (destroy)
         {
-            modifyingBlock = true;
-            if (modifierAction.IsPressed())
-            {
-                StartCoroutine(DestroyBlock(blockPos));
-            }
-            else
-            {
-                StartCoroutine(PlaceBlock(blockPos));
-            }
+            DestroyBlock(end);
+        }
+        else
+        {
+            PlaceBlock(end);
         }
     }
 
     [Client]
-    IEnumerator PlaceBlock(Vector2 pos)
+    void PlaceBlock(Vector2 pos)
     {
-        yield return new WaitForSeconds(blockPlaceTime);
         CmdRequestPlaceTile(new Vector3Int((int)pos.x, (int)pos.y, 0), TileType.Grass);
-        modifyingBlock = false;
     }
 
     [Client]
-    IEnumerator DestroyBlock(Vector2 pos)
+    void DestroyBlock(Vector2 pos)
     {
-        yield return new WaitForSeconds(blockPlaceTime);
         CmdRequestDestroyTile(new Vector3Int((int)pos.x, (int)pos.y, 0));
-        modifyingBlock = false;
     }
 
     private void OnDrawGizmos()
