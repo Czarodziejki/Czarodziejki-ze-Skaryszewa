@@ -131,23 +131,6 @@ public class BuildController : NetworkBehaviour
         }
     }
 
-    //[Client]
-    //private void ProcessBlockPlacing()
-    //{
-    //    UpdateMousePos();
-    //    if (buildAction.IsPressed() && inRange)
-    //    {
-    //        if (modifierAction.IsPressed())
-    //        {
-    //            StartCoroutine(DestroyBlock(blockPos));
-    //        }
-    //        else
-    //        {
-    //            StartCoroutine(PlaceBlock(blockPos));
-    //        }
-    //    }
-    //}
-
     [Client]
     private Vector3 UpdateBlockPos()
     {
@@ -161,27 +144,108 @@ public class BuildController : NetworkBehaviour
     [Client]
     private void DrawBlockLine(Vector3 start, Vector3 end, bool destroy = false)
     {
-        // TODO: Implement Bresenham's line algorithm
-        if (destroy)
+        int x0 = (int)start.x;
+        int y0 = (int)start.y;
+        int x1 = (int)end.x;
+        int y1 = (int)end.y;
+
+        if (x0 == x1 && y0 == y1)
         {
-            DestroyBlock(end);
+            ModifyBlock(x0, y0, destroy);
+            return;
+        }
+
+        if (Math.Abs(y1 - y0) < Math.Abs(x1 - x0))
+        {
+            if (x0 > x1)
+            {
+                DrawBlockLineLow(x1, y1, x0, y0, destroy);
+            }
+            else
+            {
+                DrawBlockLineLow(x0, y0, x1, y1, destroy);
+            }
         }
         else
         {
-            PlaceBlock(end);
+            if (y0 > y1)
+            {
+                DrawBlockLineHigh(x1, y1, x0, y0, destroy);
+            }
+            else
+            {
+                DrawBlockLineHigh(x0, y0, x1, y1, destroy);
+            }
         }
     }
 
     [Client]
-    void PlaceBlock(Vector2 pos)
+    private void DrawBlockLineLow(int x0, int y0, int x1, int y1, bool destroy = false)
     {
-        CmdRequestPlaceTile(new Vector3Int((int)pos.x, (int)pos.y, 0), TileType.Grass);
+        int dx = x1 - x0;
+        int dy = y1 - y0;
+        int yi = 1;
+
+        if (dy < 0)
+        {
+            yi = -1;
+            dy = -dy;
+        }
+
+        int D = 2 * dy - dx;
+        int y = y0;
+
+        for (int x = x0; x <= x1; x++)
+        {
+            ModifyBlock(x, y, destroy);
+            if (D > 0)
+            {
+                y += yi;
+                D -= 2 * dx;
+            }
+            D += 2 * dy;
+        }
     }
 
     [Client]
-    void DestroyBlock(Vector2 pos)
+    private void DrawBlockLineHigh(int x0, int y0, int x1, int y1, bool destroy = false)
     {
-        CmdRequestDestroyTile(new Vector3Int((int)pos.x, (int)pos.y, 0));
+        int dx = x1 - x0;
+        int dy = y1 - y0;
+        int xi = 1;
+
+        if (dx < 0)
+        {
+            xi = -1;
+            dx = -dx;
+        }
+
+        int D = 2 * dx - dy;
+        int x = x0;
+
+        for (int y = y0; y <= y1; y++)
+        {
+            ModifyBlock(x, y, destroy);
+            if (D > 0)
+            {
+                x += xi;
+                D -= 2 * dy;
+            }
+            D += 2 * dx;
+        }
+    }
+
+    [Client]
+    void ModifyBlock(int x, int y, bool destroy = false)
+    {
+        if (destroy)
+        {
+            CmdRequestDestroyTile(new Vector3Int(x, y, 0));
+        }
+        else
+        {
+            CmdRequestPlaceTile(new Vector3Int(x, y, 0), TileType.Grass);
+        }
     }
 
     private void OnDrawGizmos()
