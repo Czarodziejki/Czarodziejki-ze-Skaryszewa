@@ -8,7 +8,7 @@ using System;
 public class BuildController : NetworkBehaviour
 { 
     private Camera cam;
-    private Vector3 mousePos, blockPos, lineStartPos;
+    private Vector3 mousePos, blockPos, startBlockPos;
     private bool inRange = false;
     private float tileBuildRadius;
     [SyncVar(hook= nameof(OnClientInventoryUpdate))]
@@ -33,7 +33,7 @@ public class BuildController : NetworkBehaviour
         buildAction.performed += OnBuildPress;
         buildAction.canceled += OnBuildRelease;
         buildHeld = buildAction.IsPressed();
-        if (buildHeld) lineStartPos = UpdateMousePos();
+        if (buildHeld) startBlockPos = UpdateBlockPos();
 
         modifierAction = InputSystem.actions.FindAction("Modifier");
         modifierAction.performed += OnModifierPress;
@@ -54,8 +54,8 @@ public class BuildController : NetworkBehaviour
 
         if (!buildHeld) return;
 
-        DrawBlockLine(lineStartPos, UpdateMousePos(), true);
-        lineStartPos = mousePos;
+        DrawBlockLine(startBlockPos, UpdateBlockPos(), true);
+        startBlockPos = blockPos;
     }
 
     [Client]
@@ -71,8 +71,8 @@ public class BuildController : NetworkBehaviour
 
         if (!buildHeld) return;
 
-        DrawBlockLine(lineStartPos, UpdateMousePos(), false);
-        lineStartPos = mousePos;
+        DrawBlockLine(startBlockPos, UpdateBlockPos(), false);
+        startBlockPos = blockPos;
     }
 
     [Client]
@@ -86,7 +86,7 @@ public class BuildController : NetworkBehaviour
         }
         buildHeld = false;
 
-        DrawBlockLine(lineStartPos, UpdateMousePos(), modifierHeld);
+        DrawBlockLine(startBlockPos, UpdateBlockPos(), modifierHeld);
     }
 
     [Client]
@@ -100,17 +100,17 @@ public class BuildController : NetworkBehaviour
         }
         buildHeld = true;
 
-        lineStartPos = UpdateMousePos();
+        startBlockPos = UpdateBlockPos();
     }
 
     private void Update()
     {
         if (!isLocalPlayer) return;
-        UpdateMousePos();
+        UpdateBlockPos();
         if (buildHeld)
         {
-            DrawBlockLine(lineStartPos, mousePos, modifierHeld);
-            lineStartPos = mousePos;
+            DrawBlockLine(startBlockPos, blockPos, modifierHeld);
+            startBlockPos = blockPos;
         }
     }
 
@@ -149,13 +149,13 @@ public class BuildController : NetworkBehaviour
     //}
 
     [Client]
-    private Vector3 UpdateMousePos()
+    private Vector3 UpdateBlockPos()
     {
         mousePos = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         blockPos.y = Mathf.Round(mousePos.y - .5f);
         blockPos.x = Mathf.Round(mousePos.x - .5f);
         inRange = Vector3.Distance(transform.position, blockPos) <= tileBuildRadius;
-        return mousePos;
+        return blockPos;
     }
 
     [Client]
