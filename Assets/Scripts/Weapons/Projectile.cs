@@ -1,21 +1,41 @@
 using Mirror;
+using Mirror.Examples.Common.Controllers.Player;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 
 public class Projectile : NetworkBehaviour
 {
     public float lifetime = 15f;
+    public float explosionParticleSpeedCoefficient = 0.2f;
+    public GameObject explosionParticleSystemPrefab;
 
     private float timeAlive = 0f;
-    private int damage = 5;
+    private int damage = 0;
 
     private Tilemap tilemap;
+    private new Rigidbody2D rigidbody;
 
     [SyncVar]
     private GameObject shootingPlayer;  // the player that shot the projectile
+    [SyncVar]
+    private float speed = 0f;
 
-    private Rigidbody2D rigidbody;
+    bool collisionDetected = false;
+    Vector2 detectedCollisionPoint;
+    Vector2 explosionParticleOrigin;
+    Quaternion explosionParticleDirection;
+
+    private Vector2 Direction
+    {
+        get
+        {
+            return rigidbody.linearVelocity.normalized;
+        }  
+    }
 
     [Server]
     public void Initialize(Vector2 startDirection, GameObject shootingPlayer, float speed, int damage)
@@ -23,6 +43,7 @@ public class Projectile : NetworkBehaviour
         rigidbody.linearVelocity = startDirection.normalized * speed;
 
         this.shootingPlayer = shootingPlayer;
+        this.speed = speed;
         this.damage = damage;
     }
 
@@ -34,23 +55,14 @@ public class Projectile : NetworkBehaviour
         GetComponent<SpriteRenderer>().color = playerController.secondaryColor;
 
         // Set colors of the trails
-        var materialList = GetComponentInChildren<TrailRenderer>().materials;
-        if (materialList == null || materialList.Length == 0)
-        {
-            Debug.LogError("Trail material list should not be empty!");
-        }
+        var trailMaterial = GetComponentInChildren<TrailRenderer>().material;
 
-        materialList[0].SetColor("_Color1", playerController.secondaryColor);
-        materialList[0].SetColor("_Color2", playerController.ternaryColor);
+        trailMaterial.SetColor("_Color1", playerController.secondaryColor);
+        trailMaterial.SetColor("_Color2", playerController.ternaryColor);
 
         // Random texture animation offset
-        float timeOffset = Random.Range(0.0f, 1.0f);
-        materialList[0].SetFloat("_TimeOffset", timeOffset);
-    }
-
-    Vector2 GetDirection()
-    {
-        return rigidbody.linearVelocity.normalized;
+        float timeOffset = UnityEngine.Random.Range(0.0f, 1.0f);
+        trailMaterial.SetFloat("_TimeOffset", timeOffset);
     }
 
     private void Awake()
@@ -67,47 +79,21 @@ public class Projectile : NetworkBehaviour
         }
     }
 
-
     [Server]
     private void CheckLifetime()
     {
         timeAlive += Time.deltaTime;
         if (timeAlive >= lifetime)
         {
-            PrepareToDestroy();
             NetworkServer.Destroy(gameObject);
         }
     }
-
-    [Server]
-    private void PrepareToDestroy()
-    {
-        void DetachTrail()
-        {
-            // Set parent of the trail to null so that it persists after the projectile is destroyed
-            var trail = gameObject.GetComponentInChildren<TrailRenderer>();
-            trail.transform.parent = null;
-            // Adjust the parameters to create an absorption-like effect
-            trail.time = 0.2f;
-            trail.widthMultiplier *= 0.3f;
-            trail.widthCurve = new AnimationCurve(new(0.0f, 1.0f), new(1.0f, 0.0f));
-        }
-
-        [ClientRpc]
-        void DetachTrailOnClients()
-        {
-            DetachTrail();
-        }
-
-        DetachTrail();
-        DetachTrailOnClients();
-    }
-
     
-
     [Server]
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        collisionDetected = true;
+        detectedCollisionPoint = collision.ClosestPoint(transform.position);
         if (collision.CompareTag("Player"))
         {
             NetworkIdentity identity = collision.GetComponent<NetworkIdentity>();
@@ -124,17 +110,73 @@ public class Projectile : NetworkBehaviour
 
         Tilemap collidedTilemap = collision.GetComponentInParent<Tilemap>();
         if(collidedTilemap == tilemap)
-        {
-            Vector2 contactPoint = collision.ClosestPoint(transform.position);
-            Vector3 worldPosition = contactPoint + GetDirection() * 0.1f;
+        {          
+            Vector3 worldPosition = detectedCollisionPoint + Direction * 0.1f;
             Vector3Int tilePosition = collidedTilemap.WorldToCell(worldPosition);
             if (GameMapManager.Instance.DamageTile(tilePosition, damage))
             {
                 shootingPlayer.GetComponent<BuildController>().blocksInInventory++;
             }
         }
-
-        PrepareToDestroy();
+        CalculateParticleExplosion();
         NetworkServer.Destroy(gameObject);
+    }
+
+    [Server]
+    void CalculateParticleExplosion()
+    {
+        Quaternion arcAdjustment = Quaternion.Euler(0, 0, -0.5f * explosionParticleSystemPrefab.GetComponent<ParticleSystem>().shape.arc);
+        var origin = detectedCollisionPoint - Direction * 0.5f;
+        int layerMask = LayerMask.GetMask("Tilemap", "Player");
+        RaycastHit2D hit = Physics2D.Raycast(origin, Direction, 1.0f, layerMask);
+        if (!hit)
+        {
+            explosionParticleOrigin = detectedCollisionPoint;
+            explosionParticleDirection = arcAdjustment * Quaternion.FromToRotation(new(1, 0, 0), -Direction);
+            SetParticleExplosionParams(explosionParticleOrigin, explosionParticleDirection);
+            return;
+        }    
+
+        var reflectedDirection = Vector2.Reflect(Direction, hit.normal);
+        explosionParticleDirection = arcAdjustment * Quaternion.FromToRotation(new(1, 0, 0), reflectedDirection);
+        explosionParticleOrigin = hit.point + hit.normal * 0.25f;
+        SetParticleExplosionParams(explosionParticleOrigin, explosionParticleDirection);
+    }
+
+    [ClientRpc]
+    void SetParticleExplosionParams(Vector2 origin, Quaternion direction)
+    {
+        collisionDetected = true;
+        explosionParticleOrigin = origin;
+        explosionParticleDirection = direction;
+    }
+
+    public override void OnStopClient()
+    {
+        // Set parent of the trail to null so that it persists after the projectile is destroyed
+        var trail = gameObject.GetComponentInChildren<TrailRenderer>();
+        trail.transform.parent = null;
+        // Adjust the parameters to create an absorption-like effect
+        trail.time = 0.2f;
+        trail.widthMultiplier *= 0.3f;
+        trail.widthCurve = new AnimationCurve(new(0.0f, 1.0f), new(1.0f, 0.0f));
+
+        // Emit explosion particles
+        if (!collisionDetected)
+            return;
+
+        GameObject particleSystem = Instantiate(explosionParticleSystemPrefab, explosionParticleOrigin, explosionParticleDirection);
+
+        var playerController = shootingPlayer.GetComponent<PlayerController>();
+        var particleSettings = particleSystem.GetComponent<ParticleSystem>().main;
+        particleSettings.startColor = playerController.secondaryColor;
+        particleSettings.startSpeedMultiplier = explosionParticleSpeedCoefficient * speed;
+
+        var particleRenderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+        particleRenderer.material.SetColor("_Color", playerController.secondaryColor);
+        particleRenderer.trailMaterial.SetColor("_Color1", playerController.secondaryColor);
+        particleRenderer.trailMaterial.SetColor("_Color2", playerController.ternaryColor);
+
+        Destroy(particleSystem, particleSettings.startLifetimeMultiplier);
     }
 }
