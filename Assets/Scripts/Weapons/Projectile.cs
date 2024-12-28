@@ -1,10 +1,6 @@
 using Mirror;
-using Mirror.Examples.Common.Controllers.Player;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
 
 public class Projectile : NetworkBehaviour
