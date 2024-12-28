@@ -169,7 +169,6 @@ public class Projectile : NetworkBehaviour
 
         var playerController = shootingPlayer.GetComponent<PlayerController>();
         var particleSettings = particleSystem.GetComponent<ParticleSystem>().main;
-        particleSettings.startColor = playerController.secondaryColor;
         particleSettings.startSpeedMultiplier = explosionParticleSpeedCoefficient * speed;
 
         var particleRenderer = particleSystem.GetComponent<ParticleSystemRenderer>();

@@ -1,4 +1,5 @@
 using Mirror;
+using Mirror.Examples.Common.Controllers.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,13 +8,14 @@ public class BaseWeapon : NetworkBehaviour
     public float coolDownTime;      // Minimal time between weapon uses in seconds
     public float projectileSpeed;
     public int damage;
+    public float projectileOffset = 2.5f;
+    public GameObject burstParticleSystem;
 
     protected GameObject projectilePrefab;
     protected Transform playerTransform;
+    protected ParticleSystem burstParticleSystemController;
     
     private float lastShootTime = 0f;   // Timestamp of the last shoot
-
-    private const float projectileOffset = 2.5f;
 
 
     protected void Start()
@@ -25,8 +27,16 @@ public class BaseWeapon : NetworkBehaviour
 
         if (projectilePrefab == null)
             Debug.LogError("Projectile is null");
-    }
 
+        if (burstParticleSystem == null)
+            Debug.LogError("Burst particle system is null");
+
+        burstParticleSystemController = burstParticleSystem.GetComponent<ParticleSystem>();
+        if (burstParticleSystemController == null)
+            Debug.LogError("Burst particle system does not have a ParticleSystem component");
+
+        SetColors();
+    }
 
     public virtual bool TryToUseWeapon()
     {
@@ -48,6 +58,21 @@ public class BaseWeapon : NetworkBehaviour
         return false;
     }
 
+    [ClientRpc]
+    protected virtual void EmitBurstParticles(Vector3 startPosition, Vector2 direction)
+    {
+        burstParticleSystem.transform.SetPositionAndRotation(
+            startPosition,
+            Quaternion.Euler(0, 0, -0.5f * burstParticleSystemController.shape.arc) * Quaternion.FromToRotation(new(1, 0, 0), direction));
+        burstParticleSystemController.Play();
+    }
+
+    [Client]
+    private void SetColors()
+    {
+        var particleRenderer = burstParticleSystemController.GetComponent<ParticleSystemRenderer>();
+        particleRenderer.material.SetColor("_Color", playerTransform.GetComponent<PlayerController>().ternaryColor);
+    }
 
     [Command]
     private void CmdShootProjectile(Vector3 startPosition, Vector2 direction)
@@ -57,6 +82,6 @@ public class BaseWeapon : NetworkBehaviour
 		GameObject player = GetComponent<NetworkIdentity>().gameObject;
         projectile.GetComponent<Projectile>().Initialize(direction, player, projectileSpeed, damage);
         NetworkServer.Spawn(projectile);
-        projectile.GetComponent<Projectile>().SetColors();
+        EmitBurstParticles(startPosition, direction);
     }
 }

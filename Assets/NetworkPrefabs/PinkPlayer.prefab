@@ -82,23 +82,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5568257073709482352, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
       propertyPath: ternaryColor.b
-      value: 11.984089
+      value: 5.19747
       objectReference: {fileID: 0}
     - target: {fileID: 5568257073709482352, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
       propertyPath: ternaryColor.g
-      value: 1.5686283
+      value: 3.222197
       objectReference: {fileID: 0}
     - target: {fileID: 5568257073709482352, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
       propertyPath: ternaryColor.r
-      value: 11.984318
+      value: 11.984312
       objectReference: {fileID: 0}
     - target: {fileID: 5568257073709482352, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
       propertyPath: secondaryColor.b
-      value: 4.349536
+      value: 4.005928
       objectReference: {fileID: 0}
     - target: {fileID: 5568257073709482352, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
       propertyPath: secondaryColor.g
-      value: 0.7631522
+      value: 0.31091386
       objectReference: {fileID: 0}
     - target: {fileID: 5568257073709482352, guid: fe6554e4916c9d14b88314b8e582e691, type: 3}
       propertyPath: secondaryColor.r
