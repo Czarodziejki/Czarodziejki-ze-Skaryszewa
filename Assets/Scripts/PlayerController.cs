@@ -87,7 +87,7 @@ public class PlayerController : NetworkBehaviour
 
 	private void SetupLocalPlayerCrosshair()
     {
-		var myCrosshair = Instantiate(crosshair, gameObject.transform);
+		Instantiate(crosshair, gameObject.transform);
 	}
 
 
