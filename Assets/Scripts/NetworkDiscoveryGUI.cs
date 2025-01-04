@@ -8,11 +8,8 @@ public class NetworkDiscoveryGUI : MonoBehaviour
     public NetworkDiscovery networkDiscovery;
     readonly Dictionary<long, ServerResponse> discoveredServers = new Dictionary<long, ServerResponse>();
 
-
     private bool showServers = false;
-    private float buttonHeight = 50;
 
-    private GUIStyle titleStyle;
     private void Awake()
     {
         networkDiscovery = GetComponent<NetworkDiscovery>();
