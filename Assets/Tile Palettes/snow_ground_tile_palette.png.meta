@@ -1,31 +1,10 @@
 fileFormatVersion: 2
-guid: 35e4ca6ab0a60fb4da7976e6a83dfc0f
+guid: 8f60815daa225f9439059099983f2f78
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8819563588566900265
-    second: PlayerJumpPink_0
-  - first:
-      213: -1392371964683949523
-    second: PlayerJumpPink_1
-  - first:
-      213: -88094737794052758
-    second: PlayerJumpPink_2
-  - first:
-      213: 3491703347170806256
-    second: PlayerJumpPink_3
-  - first:
-      213: 3574431525439619010
-    second: PlayerJumpPink_4
-  - first:
-      213: -6127120399445415050
-    second: PlayerJumpPink_5
-  - first:
-      213: 5730613343119999375
-    second: PlayerJumpPink_6
-  - first:
-      213: -7659004129967478769
-    second: PlayerJumpPink_7
+      213: -6671627570322925000
+    second: snow_ground_tile_palette_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -72,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -96,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -134,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PlayerJumpPink_0
+      name: snow_ground_tile_palette_0
       rect:
         serializedVersion: 2
-        x: 18
-        y: 103
-        width: 60
-        height: 88
+        x: 0
+        y: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -149,162 +128,272 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7d1208de4ad9a9580800000000000000
-      internalID: -8819563588566900265
+      spriteID: 83a1335921e9963a0800000000000000
+      internalID: -6671627570322925000
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerJumpPink_1
+      name: snow_ground_tile_palette_1
       rect:
         serializedVersion: 2
-        x: 119
-        y: 102
-        width: 59
-        height: 90
+        x: 32
+        y: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: d2aecc1431d4dace0800000000000000
-      internalID: -1392371964683949523
+      spriteID: b1c4dda4127abcd438a9a959d69c7f27
+      internalID: 1442539724
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerJumpPink_2
+      name: snow_ground_tile_palette_2
       rect:
         serializedVersion: 2
-        x: 220
-        y: 103
-        width: 57
-        height: 91
+        x: 64
+        y: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: a6d443f7d4607cef0800000000000000
-      internalID: -88094737794052758
+      spriteID: 2ac715cba3c740441a6dd808fa45726c
+      internalID: -457156094
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerJumpPink_3
+      name: snow_ground_tile_palette_3
       rect:
         serializedVersion: 2
-        x: 321
-        y: 104
-        width: 56
-        height: 91
+        x: 96
+        y: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 0f98825c1b5057030800000000000000
-      internalID: 3491703347170806256
+      spriteID: e25812905057d2347b5418211d98c2c5
+      internalID: -520067631
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerJumpPink_4
+      name: snow_ground_tile_palette_4
       rect:
         serializedVersion: 2
-        x: 20
-        y: 4
-        width: 59
-        height: 91
+        x: 0
+        y: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 2cf39c3c88eea9130800000000000000
-      internalID: 3574431525439619010
+      spriteID: eba962ba0903a754d974e9fa969371e4
+      internalID: -103318738
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerJumpPink_5
+      name: snow_ground_tile_palette_5
       rect:
         serializedVersion: 2
-        x: 118
-        y: 4
-        width: 65
-        height: 92
+        x: 32
+        y: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 67ba107a57818faa0800000000000000
-      internalID: -6127120399445415050
+      spriteID: 4a5b1556be32a3f409daf61fe55b3884
+      internalID: 1848435865
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerJumpPink_6
+      name: snow_ground_tile_palette_6
       rect:
         serializedVersion: 2
-        x: 218
-        y: 3
-        width: 61
-        height: 92
+        x: 64
+        y: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: f8108c5397a378f40800000000000000
-      internalID: 5730613343119999375
+      spriteID: c148fb74f55915c4e85f40a81af03c8b
+      internalID: -1358393628
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerJumpPink_7
+      name: snow_ground_tile_palette_7
       rect:
         serializedVersion: 2
-        x: 320
-        y: 2
-        width: 58
-        height: 92
+        x: 96
+        y: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: f08e90ca250c5b590800000000000000
-      internalID: -7659004129967478769
+      spriteID: a4b79c70df1c11442bdc675647621674
+      internalID: -780891143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: snow_ground_tile_palette_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11ccc23187b68e447a33ba2e63e4c9b6
+      internalID: 930909752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: snow_ground_tile_palette_9
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 019ea477b7a1f0d408181cb0183d5c65
+      internalID: -63409182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: snow_ground_tile_palette_10
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa93fb01a24d05043afe5714e265b1a3
+      internalID: 460986544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: snow_ground_tile_palette_11
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9f78b505551af148884d063f85953a1
+      internalID: 2066353985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: snow_ground_tile_palette_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd0e7934a2246134ca7498e386d84da9
+      internalID: -876019593
       vertices: []
       indices: 
       edges: []
@@ -313,7 +402,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: e3ed282c06e0d7343bde8e0486f69086
     internalID: 0
     vertices: []
     indices: 
@@ -323,14 +412,19 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      PlayerJumpPink_0: -8819563588566900265
-      PlayerJumpPink_1: -1392371964683949523
-      PlayerJumpPink_2: -88094737794052758
-      PlayerJumpPink_3: 3491703347170806256
-      PlayerJumpPink_4: 3574431525439619010
-      PlayerJumpPink_5: -6127120399445415050
-      PlayerJumpPink_6: 5730613343119999375
-      PlayerJumpPink_7: -7659004129967478769
+      snow_ground_tile_palette_0: -6671627570322925000
+      snow_ground_tile_palette_1: 1442539724
+      snow_ground_tile_palette_10: 460986544
+      snow_ground_tile_palette_11: 2066353985
+      snow_ground_tile_palette_12: -876019593
+      snow_ground_tile_palette_2: -457156094
+      snow_ground_tile_palette_3: -520067631
+      snow_ground_tile_palette_4: -103318738
+      snow_ground_tile_palette_5: 1848435865
+      snow_ground_tile_palette_6: -1358393628
+      snow_ground_tile_palette_7: -780891143
+      snow_ground_tile_palette_8: 930909752
+      snow_ground_tile_palette_9: -63409182
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
