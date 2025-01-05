@@ -17,4 +17,14 @@ public class SpectatorController : BasePlayerController
 
         transform.position += new Vector3(movement.x, movement.y) * movementSpeedCoef;
     }
+
+    public void OnGUI()
+    {
+        if (!isLocalPlayer)
+            return;
+
+        GUILayout.BeginArea(new Rect(10, 10f, 140f, 40f));
+        GUI.Box(new Rect(10, 10, 100, 30), "Spectator mode");
+        GUILayout.EndArea();
+    }
 }
