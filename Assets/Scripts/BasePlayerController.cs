@@ -1,11 +1,18 @@
 using Mirror;
-using Mirror.BouncyCastle.Security;
-using Mirror.Examples.Common;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class BasePlayerController : NetworkBehaviour
 {
+    protected InputAction moveAction;
+
+
+    protected void Start()
+    {
+        moveAction = InputSystem.actions.FindAction("Move");
+    }
+
     public void SetupLocalPlayerCamera()
     {
         Camera camera = GetComponentInChildren<Camera>();

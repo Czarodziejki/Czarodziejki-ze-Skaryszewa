@@ -29,7 +29,7 @@ public class PlayerController : BasePlayerController
     [SyncVar(hook = nameof(OnFlipChanged))]
     private bool isFlipped;
 
-    private InputAction moveAction, jumpAction;
+    private InputAction jumpAction;
     private Vector2 previousMovementInput;
 
     void Awake()
@@ -37,8 +37,10 @@ public class PlayerController : BasePlayerController
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    void Start()
+    new void Start()
     {
+        base.Start();
+
         SetupLocalPlayerCamera();
         SetupLocalPlayerCrosshair();
         rigidBody = GetComponent<Rigidbody2D>();
@@ -49,7 +51,6 @@ public class PlayerController : BasePlayerController
             Debug.LogError("Rigidbody2D or Collider2D is missing on the player!");
         }
 
-        moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
     }
 
