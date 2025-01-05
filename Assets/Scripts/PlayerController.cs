@@ -3,7 +3,7 @@ using Mirror.Examples.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : NetworkBehaviour
+public class PlayerController : BasePlayerController
 {
     private float horizontal;
     public float speed = 8f;
@@ -25,7 +25,6 @@ public class PlayerController : NetworkBehaviour
 
     public LayerMask groundLayer;
     public Animator animator;
-    private Camera playerCamera;
 
     [SyncVar(hook = nameof(OnFlipChanged))]
     private bool isFlipped;
@@ -40,22 +39,6 @@ public class PlayerController : NetworkBehaviour
 
     void Start()
     {
-        playerCamera = GetComponentInChildren<Camera>();
-        if (!isLocalPlayer)
-        {
-            if (playerCamera != null)
-            {
-                playerCamera.enabled = false;
-
-                var audioListener = playerCamera.GetComponent<AudioListener>();
-                if (audioListener != null)
-                {
-                    audioListener.enabled = false;
-                }
-            }
-
-            return;
-        }
         SetupLocalPlayerCamera();
         SetupLocalPlayerCrosshair();
         rigidBody = GetComponent<Rigidbody2D>();
@@ -70,20 +53,6 @@ public class PlayerController : NetworkBehaviour
         jumpAction = InputSystem.actions.FindAction("Jump");
     }
 
-    private void SetupLocalPlayerCamera()
-    {
-        if (playerCamera != null)
-        {
-            playerCamera.enabled = true;
-            var audioListener = playerCamera.GetComponent<AudioListener>();
-            if (audioListener != null)
-            {
-                audioListener.enabled = true;
-            }
-            playerCamera.tag = "MainCamera";
-            Camera.SetupCurrent(playerCamera);
-        }
-    }
 
 	private void SetupLocalPlayerCrosshair()
     {
