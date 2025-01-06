@@ -624,7 +624,7 @@ MonoBehaviour:
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
-  - {fileID: 7402533721660197922, guid: 789ad6af058e6b441b03caf0851db9e6, type: 3}
+  - {fileID: 884548099962710154, guid: ec2fa7e39f830f74192ffda6248817cb, type: 3}
   - {fileID: 6122572798316568362, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
   - {fileID: 7973805836510998114, guid: 28fe9eee444c19d4fac4159bf36c7f99, type: 3}
   - {fileID: 9084563842192943459, guid: 7520691e6fa472144a4c688627429b74, type: 3}
@@ -651,7 +651,7 @@ MonoBehaviour:
   GameplayScene: Assets/Scenes/SampleScene.unity
   _allPlayersReady: 0
   clientIndex: 0
-  mapPrefab: {fileID: 7402533721660197922, guid: 789ad6af058e6b441b03caf0851db9e6, type: 3}
+  mapPrefab: {fileID: 884548099962710154, guid: ec2fa7e39f830f74192ffda6248817cb, type: 3}
   gameMapManager: {fileID: 0}
   playerPrefabVariants:
   - {fileID: 8558821589367696018, guid: bf962fa515cd78d44a975d87163c28d7, type: 3}
