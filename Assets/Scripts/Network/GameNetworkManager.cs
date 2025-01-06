@@ -29,7 +29,6 @@ public class GameNetworkManager : NetworkRoomManager
     public override GameObject OnRoomServerCreateGamePlayer(NetworkConnectionToClient conn, GameObject roomPlayer)
     {
         RoomPlayer roomPlayerComponent = roomPlayer.GetComponent<RoomPlayer>();
-        Debug.Log($"ColorID: {roomPlayerComponent.ColorID}");
         int playerIndex = roomPlayerComponent.ColorID % playerPrefabVariants.Length;
         Transform startPos = GetStartPosition();
         return startPos != null
