@@ -3,8 +3,6 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using Mirror;
 using Unity.Mathematics;
-using System;
-using UnityEngine.UIElements;
 
 
 public enum TileType : int
