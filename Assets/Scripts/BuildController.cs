@@ -1,9 +1,10 @@
 using Mirror;
-using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 public class BuildController : NetworkBehaviour
 { 
@@ -238,13 +239,14 @@ public class BuildController : NetworkBehaviour
     [Client]
     void ModifyBlock(int x, int y, bool destroy = false)
     {
+        Vector3Int pos = new Vector3Int(x, y, 0);
         if (destroy)
         {
-            CmdRequestDestroyTile(new Vector3Int(x, y, 0));
+            CmdRequestDestroyTile(pos);
         }
-        else
+        else if (GameMapManager.Instance.OnClientIsValidBuildPosition(pos))
         {
-            CmdRequestPlaceTile(new Vector3Int(x, y, 0), TileType.Breakable);
+            CmdRequestPlaceTile(pos, TileType.Breakable);
         }
     }
 
