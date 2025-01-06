@@ -4,12 +4,14 @@ using UnityEngine.InputSystem;
 
 public class SpectatorController : BasePlayerController
 {
-    public float movementSpeedCoef = 0.5f;
+    public float movementSpeedCoef = 0.3f;
+
+    private bool activated = false;
 
 
     void Update()
     {
-        if (!isLocalPlayer)
+        if (!isLocalPlayer || !activated)
             return;
 
         Vector2 movement = moveAction.ReadValue<Vector2>();
@@ -23,8 +25,25 @@ public class SpectatorController : BasePlayerController
         if (!isLocalPlayer)
             return;
 
-        GUILayout.BeginArea(new Rect(10, 10f, 140f, 40f));
-        GUI.Box(new Rect(10, 10, 100, 30), "Spectator mode");
-        GUILayout.EndArea();
+        if (activated)
+        {
+            GUILayout.BeginArea(new Rect(10, 10f, 140f, 40f));
+            GUI.Box(new Rect(10, 10, 100, 30), "Spectator mode");
+            GUILayout.EndArea();
+        }
+        else
+        {
+            float messageWidth = 200;
+            var style = new GUIStyle(GUI.skin.box)
+            {
+                fontSize = 24
+            };
+
+            GUI.Box(new Rect((Screen.width-messageWidth)/2.0f, 20, messageWidth, 50), "You died", style);
+
+            float buttonWidth = 100;
+            if (GUI.Button(new Rect((Screen.width-buttonWidth)/2.0f, 75, 100, 30), "Spectator mode"))
+                activated = true;
+        }
     }
 }
