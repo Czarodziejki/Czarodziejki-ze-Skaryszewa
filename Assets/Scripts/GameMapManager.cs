@@ -9,15 +9,16 @@ using System;
 public enum TileType : int
 {
     None,
-    Grass,
+    Breakable,
     Unbreakable
 }
 
 public class GameMapManager : NetworkBehaviour
 {
     public static GameMapManager Instance;
-    public TileBase grassTile, unbreakableTile;
-    public int grassMaxHealth = 20;
+    public TileBase breakableTile;
+    public List<TileBase> unbreakableTiles;
+    public int breakableTileMaxHealth = 20;
 
     public Tilemap tilemap;
 
@@ -38,13 +39,16 @@ public class GameMapManager : NetworkBehaviour
 
         tileDictionary = new Dictionary<TileType, TileBase>
         {
-            { TileType.Grass, grassTile },
-            { TileType.Unbreakable, unbreakableTile }
+            { TileType.Breakable, breakableTile }
         };
+        foreach (TileBase unbreakableTile in unbreakableTiles)
+        {
+            tileDictionary.Add(TileType.Unbreakable, unbreakableTile);
+        }
 
         tileMaxHealth = new Dictionary<TileType, int>
         {
-            { TileType.Grass, grassMaxHealth }
+            { TileType.Breakable, breakableTileMaxHealth }
         };
 
         tilesHealthPoints = new Dictionary<Vector3Int, int>();
@@ -70,7 +74,7 @@ public class GameMapManager : NetworkBehaviour
     [Server]
     public bool TryDestroyTile(Vector3Int position)
     {
-        if (GetTileType(position) != TileType.Grass) return false;
+        if (GetTileType(position) != TileType.Breakable) return false;
         tilemap.SetTile(position, null);
         tilesHealthPoints.Remove(position);
         crackingController.DeleteCracks(position);

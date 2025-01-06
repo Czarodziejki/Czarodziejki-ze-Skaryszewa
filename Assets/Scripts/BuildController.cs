@@ -244,7 +244,7 @@ public class BuildController : NetworkBehaviour
         }
         else
         {
-            CmdRequestPlaceTile(new Vector3Int(x, y, 0), TileType.Grass);
+            CmdRequestPlaceTile(new Vector3Int(x, y, 0), TileType.Breakable);
         }
     }
 
