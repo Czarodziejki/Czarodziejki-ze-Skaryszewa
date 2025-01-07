@@ -8,6 +8,10 @@ public class GameNetworkManager : NetworkRoomManager
 {
     public GameObject mapPrefab;
     public GameMapManager gameMapManager;
+
+    public GameObject[] playerPrefabVariants;
+    public Texture2D[] playerTextures;
+
     private void SpawnMap()
     {
         GameObject mapInstance = Instantiate(mapPrefab, Vector3.zero, Quaternion.identity);
@@ -20,6 +24,16 @@ public class GameNetworkManager : NetworkRoomManager
         base.OnRoomServerSceneChanged(sceneName);
         if(sceneName == GameplayScene)
             SpawnMap();
+    }
+
+    public override GameObject OnRoomServerCreateGamePlayer(NetworkConnectionToClient conn, GameObject roomPlayer)
+    {
+        RoomPlayer roomPlayerComponent = roomPlayer.GetComponent<RoomPlayer>();
+        int playerIndex = roomPlayerComponent.ColorID % playerPrefabVariants.Length;
+        Transform startPos = GetStartPosition();
+        return startPos != null
+            ? Instantiate(playerPrefabVariants[playerIndex], startPos.position, startPos.rotation)
+            : Instantiate(playerPrefabVariants[playerIndex], Vector3.zero, Quaternion.identity);
     }
 
     public override void OnGUI()
@@ -55,7 +69,6 @@ public class GameNetworkManager : NetworkRoomManager
                 }
             }
             GUILayout.EndArea();
-            GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width, Screen.height * 0.5f), "PLAYERS");
         }
     }
 }
