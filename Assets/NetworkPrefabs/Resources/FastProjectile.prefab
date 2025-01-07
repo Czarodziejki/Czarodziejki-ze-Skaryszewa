@@ -8,6 +8,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_LightCookieSprite
+      value: 
+      objectReference: {fileID: 8243874888172102519, guid: 11e5e0afa20f0df4c8986650057f60fa, type: 3}
+    - target: {fileID: 1814862657362653138, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_LightCookieSprite
+      value: 
+      objectReference: {fileID: 8243874888172102519, guid: 11e5e0afa20f0df4c8986650057f60fa, type: 3}
+    - target: {fileID: 1814862657362653138, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_LocalBounds.m_Extent.x
+      value: 0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 1814862657362653138, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_LocalBounds.m_Extent.y
+      value: 0.26
+      objectReference: {fileID: 0}
     - target: {fileID: 3100068472667883354, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -133,8 +133,8 @@ Material:
     - __dirty: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color1: {r: 5.9921565, g: 0.3666879, b: 0, a: 1}
-    - _Color2: {r: 11.984315, g: 7.0684104, b: 0.50876784, a: 0}
+    - _Color1: {r: 5.9921575, g: 0.31091386, b: 4.005928, a: 1}
+    - _Color2: {r: 11.984312, g: 3.222197, b: 5.19747, a: 0}
     - _DissolveSpeed: {r: -0.5, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
