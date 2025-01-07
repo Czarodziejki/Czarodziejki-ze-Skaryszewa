@@ -57,7 +57,8 @@ public class PlayerController : BasePlayerController
 
 	private void SetupLocalPlayerCrosshair()
     {
-		Instantiate(crosshair, gameObject.transform);
+        if (isLocalPlayer)
+		    Instantiate(crosshair, gameObject.transform);
 	}
 
 

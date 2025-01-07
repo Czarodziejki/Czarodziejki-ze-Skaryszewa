@@ -9,7 +9,7 @@ public class SpectatorController : BasePlayerController
     private GameObject darkOverlay;
 
 
-    private new void Awake()
+    private void Awake()
     {
         darkOverlay = GameObject.Find("DarkOverlay");
         if (darkOverlay == null)
