@@ -467,17 +467,28 @@ MonoBehaviour:
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
-  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
@@ -620,14 +631,16 @@ MonoBehaviour:
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 8558821589367696018, guid: bf962fa515cd78d44a975d87163c28d7, type: 3}
+  playerPrefab: {fileID: 8558821589367696018, guid: bf962fa515cd78d44a975d87163c28d7,
+    type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
-  - {fileID: 7402533721660197922, guid: 789ad6af058e6b441b03caf0851db9e6, type: 3}
+  - {fileID: 884548099962710154, guid: ec2fa7e39f830f74192ffda6248817cb, type: 3}
   - {fileID: 6122572798316568362, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
   - {fileID: 7973805836510998114, guid: 28fe9eee444c19d4fac4159bf36c7f99, type: 3}
   - {fileID: 9084563842192943459, guid: 7520691e6fa472144a4c688627429b74, type: 3}
+  - {fileID: 2013165257586759971, guid: ffb4c4d8475ae0843be3a6abefe94905, type: 3}
   - {fileID: 6787894561041403779, guid: ef598db5e436343448cca59c528448eb, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
@@ -646,13 +659,24 @@ MonoBehaviour:
   timeInterpolationGui: 0
   showRoomGUI: 1
   minPlayers: 1
-  roomPlayerPrefab: {fileID: 6599499001468285073, guid: c22f9152d125d204d81875cd62b2a5ab, type: 3}
+  roomPlayerPrefab: {fileID: 6599499001468285073, guid: c22f9152d125d204d81875cd62b2a5ab,
+    type: 3}
   RoomScene: Assets/Scenes/LobbyScene.unity
   GameplayScene: Assets/Scenes/SampleScene.unity
   _allPlayersReady: 0
   clientIndex: 0
-  mapPrefab: {fileID: 7402533721660197922, guid: 789ad6af058e6b441b03caf0851db9e6, type: 3}
+  mapPrefab: {fileID: 884548099962710154, guid: ec2fa7e39f830f74192ffda6248817cb,
+    type: 3}
   gameMapManager: {fileID: 0}
+  playerPrefabVariants:
+  - {fileID: 8558821589367696018, guid: bf962fa515cd78d44a975d87163c28d7, type: 3}
+  - {fileID: 2013165257586759971, guid: ffb4c4d8475ae0843be3a6abefe94905, type: 3}
+  playerColors:
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 1, g: 0, b: 1, a: 0}
+  playerTextures:
+  - {fileID: 2800000, guid: 2541544ddbbae7a48b350dcb97f6b569, type: 3}
+  - {fileID: 2800000, guid: 6b1415be0a53f094a883746ba2529b19, type: 3}
 --- !u!4 &2005144875
 Transform:
   m_ObjectHideFlags: 0

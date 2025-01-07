@@ -82,6 +82,7 @@ public class BaseWeapon : NetworkBehaviour
 		GameObject player = GetComponent<NetworkIdentity>().gameObject;
         projectile.GetComponent<Projectile>().Initialize(direction, player, projectileSpeed, damage);
         NetworkServer.Spawn(projectile);
+        projectile.GetComponent<Projectile>().SetColors();
         EmitBurstParticles(startPosition, direction);
     }
 }
