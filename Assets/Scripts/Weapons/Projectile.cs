@@ -37,10 +37,11 @@ public class Projectile : NetworkBehaviour
     public void Initialize(Vector2 startDirection, GameObject shootingPlayer, float speed, int damage)
     {
         rigidbody.linearVelocity = startDirection.normalized * speed;
+        transform.rotation = Quaternion.FromToRotation(new(1, 0, 0), startDirection);
 
         this.shootingPlayer = shootingPlayer;
         this.speed = speed;
-        this.damage = damage;
+        this.damage = damage;        
     }
 
     [ClientRpc]

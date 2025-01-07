@@ -628,6 +628,7 @@ MonoBehaviour:
   - {fileID: 6122572798316568362, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
   - {fileID: 7973805836510998114, guid: 28fe9eee444c19d4fac4159bf36c7f99, type: 3}
   - {fileID: 9084563842192943459, guid: 7520691e6fa472144a4c688627429b74, type: 3}
+  - {fileID: 2013165257586759971, guid: ffb4c4d8475ae0843be3a6abefe94905, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -652,6 +653,15 @@ MonoBehaviour:
   clientIndex: 0
   mapPrefab: {fileID: 884548099962710154, guid: ec2fa7e39f830f74192ffda6248817cb, type: 3}
   gameMapManager: {fileID: 0}
+  playerPrefabVariants:
+  - {fileID: 8558821589367696018, guid: bf962fa515cd78d44a975d87163c28d7, type: 3}
+  - {fileID: 2013165257586759971, guid: ffb4c4d8475ae0843be3a6abefe94905, type: 3}
+  playerColors:
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 1, g: 0, b: 1, a: 0}
+  playerTextures:
+  - {fileID: 2800000, guid: 2541544ddbbae7a48b350dcb97f6b569, type: 3}
+  - {fileID: 2800000, guid: 6b1415be0a53f094a883746ba2529b19, type: 3}
 --- !u!4 &2005144875
 Transform:
   m_ObjectHideFlags: 0
