@@ -3,7 +3,7 @@ using Mirror.Examples.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : NetworkBehaviour
+public class PlayerController : BasePlayerController
 {
     private float horizontal;
     public float speed = 8f;
@@ -25,12 +25,11 @@ public class PlayerController : NetworkBehaviour
 
     public LayerMask groundLayer;
     public Animator animator;
-    private Camera playerCamera;
 
     [SyncVar(hook = nameof(OnFlipChanged))]
     private bool isFlipped;
 
-    private InputAction moveAction, jumpAction;
+    private InputAction jumpAction;
     private Vector2 previousMovementInput;
 
     void Awake()
@@ -38,24 +37,10 @@ public class PlayerController : NetworkBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    void Start()
+    new void Start()
     {
-        playerCamera = GetComponentInChildren<Camera>();
-        if (!isLocalPlayer)
-        {
-            if (playerCamera != null)
-            {
-                playerCamera.enabled = false;
+        base.Start();
 
-                var audioListener = playerCamera.GetComponent<AudioListener>();
-                if (audioListener != null)
-                {
-                    audioListener.enabled = false;
-                }
-            }
-
-            return;
-        }
         SetupLocalPlayerCamera();
         SetupLocalPlayerCrosshair();
         rigidBody = GetComponent<Rigidbody2D>();
@@ -66,28 +51,14 @@ public class PlayerController : NetworkBehaviour
             Debug.LogError("Rigidbody2D or Collider2D is missing on the player!");
         }
 
-        moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
     }
 
-    private void SetupLocalPlayerCamera()
-    {
-        if (playerCamera != null)
-        {
-            playerCamera.enabled = true;
-            var audioListener = playerCamera.GetComponent<AudioListener>();
-            if (audioListener != null)
-            {
-                audioListener.enabled = true;
-            }
-            playerCamera.tag = "MainCamera";
-            Camera.SetupCurrent(playerCamera);
-        }
-    }
 
 	private void SetupLocalPlayerCrosshair()
     {
-		Instantiate(crosshair, gameObject.transform);
+        if (isLocalPlayer)
+		    Instantiate(crosshair, gameObject.transform);
 	}
 
 
