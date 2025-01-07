@@ -5,7 +5,18 @@ public class SpectatorController : BasePlayerController
 {
     public float movementSpeedCoef = 0.3f;
 
-    private bool activated = false;
+    private bool activated = true;
+    private GameObject darkOverlay;
+
+
+    private new void Start()
+    {
+        base.Start();
+
+        darkOverlay = GameObject.Find("DarkOverlay");
+        if (darkOverlay == null)
+            Debug.LogError("DarkOverlay is null");
+    }
 
 
     void Update()
@@ -18,6 +29,7 @@ public class SpectatorController : BasePlayerController
 
         transform.position += new Vector3(movement.x, movement.y) * movementSpeedCoef;
     }
+
 
     public void OnGUI()
     {
@@ -40,9 +52,22 @@ public class SpectatorController : BasePlayerController
 
             GUI.Box(new Rect((Screen.width-messageWidth)/2.0f, 20, messageWidth, 50), "You died", style);
 
-            float buttonWidth = 120;
-            if (GUI.Button(new Rect((Screen.width-buttonWidth)/2.0f, 85, 100, 30), "Spectator mode"))
+            float buttonWidth = 140;
+            if (GUI.Button(new Rect((Screen.width-buttonWidth)/2.0f, 85, buttonWidth, 30), "Spectator mode"))
+            {
                 activated = true;
+                darkOverlay.GetComponent<OverlayController>().StartFadeOut(1.0f, 0.0f);
+            }
         }
+    }
+
+
+    public void ShowDeathMessage()
+    {
+        if (!isLocalPlayer)
+            return;
+
+        activated = false;
+        darkOverlay.GetComponent<OverlayController>().StartFadeIn(1, 0.8f);
     }
 }

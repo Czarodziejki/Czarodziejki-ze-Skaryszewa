@@ -1,5 +1,4 @@
 using Mirror;
-using Mirror.Examples.Tanks;
 using UnityEngine;
 
 
@@ -51,7 +50,9 @@ public class HealthController : NetworkBehaviour
 
         NetworkServer.ReplacePlayerForConnection(networkIdentity.connectionToClient, spectator, ReplacePlayerOptions.KeepActive);
 
-        RpcSetCamera(spectator.GetComponent<NetworkIdentity>().netId);
+        var spectatorID = spectator.GetComponent<NetworkIdentity>().netId;
+        RpcSetCamera(spectatorID);
+        TargetShowDeathScreen(spectator.GetComponent<NetworkIdentity>().connectionToClient, spectatorID);
         RpcDeactivateGameObject(networkIdentity.netId);
 
         gameObject.SetActive(false);
@@ -78,4 +79,14 @@ public class HealthController : NetworkBehaviour
             identity.gameObject.SetActive(false);
     }
 
+
+    [TargetRpc]
+    private void TargetShowDeathScreen(NetworkConnectionToClient target, uint spectattorID)
+    {
+        if (NetworkClient.spawned.TryGetValue(spectattorID, out NetworkIdentity identity))
+        {
+            GameObject spectator = identity.gameObject;
+            spectator.GetComponent<SpectatorController>().ShowDeathMessage();
+        }
+    }
 }
