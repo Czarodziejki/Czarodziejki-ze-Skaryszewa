@@ -1,6 +1,5 @@
-using Mirror;
 using UnityEngine;
-using UnityEngine.InputSystem;
+
 
 public class SpectatorController : BasePlayerController
 {
@@ -36,13 +35,13 @@ public class SpectatorController : BasePlayerController
             float messageWidth = 200;
             var style = new GUIStyle(GUI.skin.box)
             {
-                fontSize = 24
+                fontSize = 40
             };
 
             GUI.Box(new Rect((Screen.width-messageWidth)/2.0f, 20, messageWidth, 50), "You died", style);
 
-            float buttonWidth = 100;
-            if (GUI.Button(new Rect((Screen.width-buttonWidth)/2.0f, 75, 100, 30), "Spectator mode"))
+            float buttonWidth = 120;
+            if (GUI.Button(new Rect((Screen.width-buttonWidth)/2.0f, 85, 100, 30), "Spectator mode"))
                 activated = true;
         }
     }
