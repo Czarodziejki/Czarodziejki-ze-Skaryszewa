@@ -77,7 +77,7 @@ public class OverlayController : MonoBehaviour
             yield break;
         }
 
-        while (overlay.color.a < targetAlpha)
+        while (overlay.color.a > targetAlpha)
         {
             overlay.color = new Color(
                 overlay.color.r,
@@ -85,8 +85,6 @@ public class OverlayController : MonoBehaviour
                 overlay.color.b,
                 overlay.color.a - (Time.deltaTime / t) * alphaToGo
             );
-
-            Debug.Log($"New alpha {overlay.color.a}");
 
             yield return null;
         }

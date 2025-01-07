@@ -56,7 +56,7 @@ public class SpectatorController : BasePlayerController
             if (GUI.Button(new Rect((Screen.width-buttonWidth)/2.0f, 85, buttonWidth, 30), "Spectator mode"))
             {
                 activated = true;
-                darkOverlay.GetComponent<OverlayController>().StartFadeOut(1.0f, 0.0f);
+                darkOverlay.GetComponent<OverlayController>().StartFadeOut(0.5f);
             }
         }
     }
