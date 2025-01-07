@@ -3,7 +3,6 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using Mirror;
 using Unity.Mathematics;
-using System;
 
 
 public enum TileType : int
@@ -155,5 +154,11 @@ public class GameMapManager : NetworkBehaviour
         return !isOccupied;
     }
 
-    
+    [Client]
+    public bool OnClientIsValidBuildPosition(Vector3Int position)
+    {
+        int layerMask = LayerMask.GetMask("Player");
+        bool isOccupied = Physics2D.OverlapBox(tilemap.GetCellCenterWorld(position), tileSize, 0f, layerMask);
+        return !isOccupied;
+    }
 }
