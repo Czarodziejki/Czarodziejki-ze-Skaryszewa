@@ -45,8 +45,9 @@ public class SpectatorController : BasePlayerController
             float messageWidth = 200;
             var style = new GUIStyle(GUI.skin.box)
             {
-                fontSize = 40
+                fontSize = 40,
             };
+            style.normal.textColor = Color.red;
 
             GUI.Box(new Rect((Screen.width-messageWidth)/2.0f, 20, messageWidth, 50), "You died", style);
 
