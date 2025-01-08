@@ -1,5 +1,6 @@
 using Mirror;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 
@@ -8,6 +9,8 @@ public class Projectile : NetworkBehaviour
     public float lifetime = 15f;
     public float explosionParticleSpeedCoefficient = 0.2f;
     public GameObject explosionParticleSystemPrefab;
+    public GameObject trail;
+    public GameObject pointLight;
 
     private float timeAlive = 0f;
     private int damage = 0;
@@ -49,10 +52,11 @@ public class Projectile : NetworkBehaviour
     {
         // Set sprite color
         var playerController = shootingPlayer.GetComponent<PlayerController>();
-        GetComponent<SpriteRenderer>().color = playerController.secondaryColor;
+        GetComponent<Light2D>().color = playerController.secondaryColor; // Volumetric sprite light (instead of sprite renderer)
+        pointLight.GetComponent<Light2D>().color = playerController.secondaryColor; // Point light illuminating the foreground
 
         // Set colors of the trails
-        var trailMaterial = GetComponentInChildren<TrailRenderer>().material;
+        var trailMaterial = trail.GetComponent<TrailRenderer>().material;
 
         trailMaterial.SetColor("_Color1", playerController.secondaryColor);
         trailMaterial.SetColor("_Color2", playerController.ternaryColor);
@@ -71,7 +75,7 @@ public class Projectile : NetworkBehaviour
     private void Update()
     {
         if (isServer)
-        {
+        {    
             CheckLifetime();
         }
     }

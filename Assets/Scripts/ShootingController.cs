@@ -18,7 +18,7 @@ public class ShootingController : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-			EquipWeapon<SniperWeapon>();
+			EquipWeapon<DefaultWeapon>();
             fireAction = InputSystem.actions.FindAction("Attack");
         }
     }
