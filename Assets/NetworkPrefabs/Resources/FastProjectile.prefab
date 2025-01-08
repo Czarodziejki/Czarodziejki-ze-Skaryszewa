@@ -9,9 +9,25 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
       propertyPath: m_LightCookieSprite
       value: 
       objectReference: {fileID: 8243874888172102519, guid: 11e5e0afa20f0df4c8986650057f60fa, type: 3}
+    - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_PointLightInnerRadius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_PointLightOuterRadius
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1814862657362653138, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_Intensity
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1814862657362653138, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
       propertyPath: m_LightCookieSprite
       value: 
