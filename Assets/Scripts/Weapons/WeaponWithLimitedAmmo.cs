@@ -18,7 +18,7 @@ public class WeaponWithLimitedAmmo: BaseWeapon
         if (currentAmmo == 0)
         {
             playerTransform.GetComponent<ShootingController>().EquipWeapon(WeaponType.DefaultWeapon);
-			return false;
+            return false;
         }
 
         if (base.TryToUseWeapon())

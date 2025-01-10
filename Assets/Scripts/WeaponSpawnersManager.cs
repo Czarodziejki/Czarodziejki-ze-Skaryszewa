@@ -24,10 +24,14 @@ public class WeaponSpawnersManager: NetworkBehaviour
 
     public void WeaponWasCollected(WeaponSpawnerController spawner)
     {
+        if (!isServer)
+            return;
+
         StartCoroutine(WaitAndSpawnWeapon(spawner));
     }
 
 
+    [Server]
     private void SpawnWeapon(WeaponSpawnerController spawner)
     {
         GameObject weapon = GetWeaponToSpawn(spawner);
@@ -40,6 +44,7 @@ public class WeaponSpawnersManager: NetworkBehaviour
     }
 
 
+    [Server]
     private GameObject GetWeaponToSpawn(WeaponSpawnerController spawner)
     {
         if (spawner.possibleWeapons.Length == 0)

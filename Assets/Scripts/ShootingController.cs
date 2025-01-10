@@ -1,5 +1,6 @@
 using Mirror;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 
@@ -21,6 +22,9 @@ public class ShootingController : NetworkBehaviour
 
     public void EquipWeapon(WeaponType weaponType)
     {
+        if (!isLocalPlayer)
+            return;
+
         weapon = weaponRepository[weaponType];
 
         if (weapon is WeaponWithLimitedAmmo w)
@@ -28,6 +32,19 @@ public class ShootingController : NetworkBehaviour
             w.ResetAmmo();
         }
     }
+
+    //[TargetRpc]
+    //public void RpcEquipWeapon(NetworkConnectionToClient target, WeaponType weaponType)
+    //{
+    //    weapon = weaponRepository[weaponType];
+
+    //    if (weapon is WeaponWithLimitedAmmo w)
+    //    {
+    //        w.ResetAmmo();
+    //    }
+    //}
+
+
 
     private void Start()
     {

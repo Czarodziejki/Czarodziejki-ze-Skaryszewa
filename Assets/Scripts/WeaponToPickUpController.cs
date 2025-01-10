@@ -17,14 +17,18 @@ public class WeaponToPickUpController : NetworkBehaviour
     }
 
 
-    [Server]
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<ShootingController>().EquipWeapon(weaponType);
-            spawnersManager.WeaponWasCollected(spawner);
-            NetworkServer.Destroy(gameObject);
+            var shootingController = collision.gameObject.GetComponent<ShootingController>();
+            shootingController.EquipWeapon(weaponType);
+
+            if (isServer)
+            {
+                spawnersManager.WeaponWasCollected(spawner);
+                NetworkServer.Destroy(gameObject);
+            }
         }
     }
 }
