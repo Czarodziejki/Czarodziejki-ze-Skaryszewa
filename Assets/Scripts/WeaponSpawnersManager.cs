@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class WeaponSpawnersManager: NetworkBehaviour
 {
-    private WeaponSpawnerController[] spawnersControllers;
+    private WeaponSpawnerData[] spawnersControllers;
     private System.Random rnd;
 
     private void Start()
@@ -14,7 +14,7 @@ public class WeaponSpawnersManager: NetworkBehaviour
         if (!isServer)
             return;
 
-        spawnersControllers = GetComponentsInChildren<WeaponSpawnerController>();
+        spawnersControllers = GetComponentsInChildren<WeaponSpawnerData>();
         rnd = new System.Random();
 
         foreach (var spawner in spawnersControllers)
@@ -22,7 +22,7 @@ public class WeaponSpawnersManager: NetworkBehaviour
     }
 
 
-    public void WeaponWasCollected(WeaponSpawnerController spawner)
+    public void WeaponWasCollected(WeaponSpawnerData spawner)
     {
         if (!isServer)
             return;
@@ -32,7 +32,7 @@ public class WeaponSpawnersManager: NetworkBehaviour
 
 
     [Server]
-    private void SpawnWeapon(WeaponSpawnerController spawner)
+    private void SpawnWeapon(WeaponSpawnerData spawner)
     {
         GameObject weapon = GetWeaponToSpawn(spawner);
         if (weapon == null)
@@ -45,7 +45,7 @@ public class WeaponSpawnersManager: NetworkBehaviour
 
 
     [Server]
-    private GameObject GetWeaponToSpawn(WeaponSpawnerController spawner)
+    private GameObject GetWeaponToSpawn(WeaponSpawnerData spawner)
     {
         if (spawner.possibleWeapons.Length == 0)
             return null;
@@ -55,7 +55,7 @@ public class WeaponSpawnersManager: NetworkBehaviour
     }
 
 
-    private IEnumerator WaitAndSpawnWeapon(WeaponSpawnerController spawner)
+    private IEnumerator WaitAndSpawnWeapon(WeaponSpawnerData spawner)
     {
         yield return new WaitForSeconds(spawner.spawnTime);
 

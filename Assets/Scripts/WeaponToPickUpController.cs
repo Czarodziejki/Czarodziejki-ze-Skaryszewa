@@ -7,10 +7,10 @@ public class WeaponToPickUpController : NetworkBehaviour
     public WeaponType weaponType;
 
     private WeaponSpawnersManager spawnersManager;
-    private WeaponSpawnerController spawner;
+    private WeaponSpawnerData spawner;
 
 
-    public void Initialize(WeaponSpawnersManager manager, WeaponSpawnerController spawner)
+    public void Initialize(WeaponSpawnersManager manager, WeaponSpawnerData spawner)
     {
         spawnersManager = manager;
         this.spawner = spawner;

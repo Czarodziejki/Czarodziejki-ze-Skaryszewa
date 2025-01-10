@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class WeaponSpawnerController : MonoBehaviour
+public class WeaponSpawnerData : MonoBehaviour
 {
     public float spawnTime = 5.0f;
     public GameObject[] possibleWeapons;
