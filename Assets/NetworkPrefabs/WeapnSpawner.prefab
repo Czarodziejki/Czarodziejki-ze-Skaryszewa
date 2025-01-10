@@ -132,6 +132,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49563654edaa86c47b105d216c14fcdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnTime: 5
+  spawnTime: 30
   possibleWeapons:
   - {fileID: 1632252176323868055, guid: 59ee57b3e2cefcf44b5a7b5501ae946d, type: 3}
