@@ -3,14 +3,8 @@ guid: e92b8c878f64fca43bb64ac6950b5a21
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2756775943549882264
-    second: stand2_0
-  - first:
-      213: -4997588484144981148
-    second: stand2_1
-  - first:
-      213: 6729633291180221968
-    second: stand2_2
+      213: 284838291558489780
+    second: weaponSpawner_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -106,67 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: weapondSawner
-      rect:
-        serializedVersion: 2
-        x: 149
-        y: 243
-        width: 33
-        height: 13
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 89f02a85d19024620800000000000000
-      internalID: 2756775943549882264
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: stand2_1
+      name: weaponSpawner_0
       rect:
         serializedVersion: 2
         x: 61
-        y: 58
+        y: 62
         width: 138
-        height: 163
+        height: 159
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 46b94f480cff4aab0800000000000000
-      internalID: -4997588484144981148
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: stand2_2
-      rect:
-        serializedVersion: 2
-        x: 226
-        y: 113
-        width: 12
-        height: 19
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 016a07db2d5746d50800000000000000
-      internalID: 6729633291180221968
+      spriteID: 4bed5c2cae2f3f300800000000000000
+      internalID: 284838291558489780
       vertices: []
       indices: 
       edges: []
@@ -175,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: e7414a2d6dc184c4490f497853e14324
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -184,10 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      stand2_1: -4997588484144981148
-      stand2_2: 6729633291180221968
-      weapondSawner: 2756775943549882264
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
