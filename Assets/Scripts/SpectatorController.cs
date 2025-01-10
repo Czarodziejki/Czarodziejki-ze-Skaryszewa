@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class SpectatorController : BasePlayerController
@@ -7,6 +8,22 @@ public class SpectatorController : BasePlayerController
 
     private bool activated = true;
     private GameObject darkOverlay;
+
+    private InputAction zoomAction;
+    private Camera mainCamera;
+
+    public const float zoomSpeed = 20f; // Speed of zooming
+    public const float minZoom = 5f;    // Minimum zoom distance
+    public const float maxZoom = 20f;   // Maximum zoom distance
+
+
+    private new void Start()
+    {
+        base.Start();
+
+        zoomAction = InputSystem.actions.FindAction("Zoom");
+        mainCamera = GetComponentInChildren<Camera>();
+    }
 
 
     private void Awake()
@@ -22,10 +39,8 @@ public class SpectatorController : BasePlayerController
         if (!isLocalPlayer || !activated)
             return;
 
-        Vector2 movement = moveAction.ReadValue<Vector2>();
-        var transform = GetComponent<Transform>();
-
-        transform.position += new Vector3(movement.x, movement.y) * movementSpeedCoef;
+        MoveCamera();
+        ZoomCamera();
     }
 
 
@@ -45,8 +60,9 @@ public class SpectatorController : BasePlayerController
             float messageWidth = 200;
             var style = new GUIStyle(GUI.skin.box)
             {
-                fontSize = 40
+                fontSize = 40,
             };
+            style.normal.textColor = Color.red;
 
             GUI.Box(new Rect((Screen.width-messageWidth)/2.0f, 20, messageWidth, 50), "You died", style);
 
@@ -67,5 +83,32 @@ public class SpectatorController : BasePlayerController
 
         activated = false;
         darkOverlay.GetComponent<OverlayController>().StartFadeIn(1, 0.8f);
+    }
+
+
+    private void ZoomCamera()
+    {
+        float scrollInput = zoomAction.ReadValue<Vector2>().y;
+        if (scrollInput == 0.0f)
+            return;
+
+
+        if (mainCamera.orthographic)
+        {
+            mainCamera.orthographicSize -= scrollInput * zoomSpeed * Time.deltaTime;
+            mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, minZoom, maxZoom);
+        }
+        else
+        {
+            mainCamera.fieldOfView -= scrollInput * zoomSpeed * Time.deltaTime;
+            mainCamera.fieldOfView = Mathf.Clamp(mainCamera.fieldOfView, minZoom, maxZoom);
+        }
+    }
+
+
+    private void MoveCamera()
+    {
+        Vector2 movement = moveAction.ReadValue<Vector2>();
+        GetComponent<Transform>().position += new Vector3(movement.x, movement.y) * movementSpeedCoef;
     }
 }
