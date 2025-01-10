@@ -34,10 +34,7 @@ public class WeaponSpawnersManager: NetworkBehaviour
         if (weapon == null)
             return;
 
-        var spawnerTransform = spawner.GetComponent<Transform>();
-        Vector3 weaponPosition = spawnerTransform.position + new Vector3(0, 1);
-
-        GameObject instantiatedWeapon = Instantiate(weapon, weaponPosition, Quaternion.identity);
+        GameObject instantiatedWeapon = Instantiate(weapon, spawner.weaponPosition, Quaternion.identity);
         NetworkServer.Spawn(instantiatedWeapon);
         instantiatedWeapon.GetComponent<WeaponToPickUpController>().Initialize(this, spawner);
     }
