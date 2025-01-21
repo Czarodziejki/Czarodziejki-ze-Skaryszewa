@@ -30,19 +30,17 @@ body {
     margin: 0;
 }
 
-.title-container {
-    height: calc(90vh - 2rem);
-}
-
-.main-container, .title-container {
+.main-container {
     margin: 1rem;
 
     display: flex;
     align-items: center;
     justify-content: center;
+
+    min-height: calc(90vh - 2rem);
 }
 
-.title-container h1 {
+.main-container h1 {
     font-size: 15vw;
     color: rgb(var(--primary-color));
     text-align: center;
