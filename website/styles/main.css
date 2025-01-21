@@ -43,10 +43,10 @@ body {
     font-weight: 100;
 }
 
-/* .description-container {
-    color: rgb(var(--primary-color));
-    text-shadow: rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em;
-} */
+.description-container {
+    font-size: 2em;
+    width: 100vh
+}
 
 .header {
     position: fixed;
@@ -69,15 +69,7 @@ body {
     z-index: -1;
     background-color: rgb(var(--secondary-color));
     height: 100%;
-
-    /* GRADIENT EDGE */
-    /* filter: drop-shadow(0 0.5em 0.5em rgb(var(--secondary-color))); */
-
-    /* SOLID EDGE */
-    border-width: 0 0 0.15em 0;
-    border-color: rgb(var(--primary-color));
-    border-style: solid;
-    filter: drop-shadow(0 0 0.5em rgb(var(--primary-color)));
+    filter: drop-shadow(0 0.5em 0.5em rgb(var(--secondary-color)));
 }
 
 .header .logo {
