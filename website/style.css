@@ -1,0 +1,131 @@
+@font-face {
+    font-family: "Medodica";
+    src:
+        local("Medodica"),
+        url("fonts/medodica.regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "VT323";
+    src:
+        local("VT323"),
+        url("fonts/VT323-Regular.ttf") format("truetype");
+}
+
+body {
+    font-family: "VT323";
+    font-smooth: never;
+    -webkit-font-smoothing : none;
+
+    --primary-color: 255, 255, 255;
+    --secondary-color: 248, 119, 233;
+
+    background: repeat-x local url("img/mountains_background.png");
+    background-size: auto 100%;
+    image-rendering: pixelated;
+    height: calc(100vh - 1em);
+}
+
+.title-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title-container h1 {
+    font-size: 15vw;
+    color: rgb(var(--primary-color));
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+    text-shadow: rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em;
+    font-weight: 100;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    height: 10vh;
+}
+
+.header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background-color: rgb(var(--secondary-color));
+    height: 100%;
+
+    /* GRADIENT EDGE */
+    /* filter: drop-shadow(0 0.5em 0.5em rgb(var(--secondary-color))); */
+
+    /* SOLID EDGE */
+    border-width: 0 0 0.15em 0;
+    border-color: rgb(var(--primary-color));
+    border-style: solid;
+    filter: drop-shadow(0 0 0.5em rgb(var(--primary-color)));
+}
+
+.header .logo {
+    height: 7vh;
+    margin-left: 1em;
+}
+
+.header .logo img {
+    height: 100%;
+}
+
+.header .menu ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.header .menu li {
+    margin: 0 1em;
+}
+
+.header a {
+    color: rgb(var(--primary-color));
+    text-decoration: none;
+    font-size: 1.5em;
+}
+
+.header a:hover {
+    filter: drop-shadow(0 0 0.1em rgb(var(--primary-color)));
+}
+
+.play-button {
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+button {
+    font-family: "VT323";
+    font-size: 1.5em;
+    color: black;
+    background-color: rgb(var(--primary-color));
+    /* add curved border */
+    border-radius: 0.5em;
+    border-color: rgb(var(--secondary-color));
+    border-width: 0.15em;
+    padding: 0.5em 1em;
+    cursor: pointer;
+}
+
+button:hover {
+    filter: drop-shadow(0 0 0.5em rgb(var(--secondary-color)));
+}
