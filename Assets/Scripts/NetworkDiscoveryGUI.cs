@@ -13,8 +13,10 @@ public class NetworkDiscoveryGUI : MonoBehaviour
     private void Awake()
     {
         networkDiscovery = GetComponent<NetworkDiscovery>();
+#if UNITY_EDITOR
         UnityEditor.Events.UnityEventTools.AddPersistentListener(networkDiscovery.OnServerFound, OnDiscoveredServer);
         UnityEditor.Undo.RecordObjects(new Object[] { this, networkDiscovery }, "Set NetworkDiscovery");
+#endif
     }
 
     public void OnGUI()
