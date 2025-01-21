@@ -2,14 +2,14 @@
     font-family: "Medodica";
     src:
         local("Medodica"),
-        url("fonts/medodica.regular.otf") format("opentype");
+        url("../fonts/medodica.regular.otf") format("opentype");
 }
 
 @font-face {
     font-family: "VT323";
     src:
         local("VT323"),
-        url("fonts/VT323-Regular.ttf") format("truetype");
+        url("../fonts/VT323-Regular.ttf") format("truetype");
 }
 
 body {
@@ -20,7 +20,7 @@ body {
     --primary-color: 255, 255, 255;
     --secondary-color: 248, 119, 233;
 
-    background: repeat-x local url("img/mountains_background.png");
+    background: repeat-x local url("../img/mountains_background.png");
     background-size: auto 100%;
     image-rendering: pixelated;
     height: calc(100vh - 1em);
