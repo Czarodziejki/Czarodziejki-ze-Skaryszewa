@@ -23,22 +23,33 @@ body {
     background: repeat-x local url("../img/mountains_background.png");
     background-size: auto 100%;
     image-rendering: pixelated;
-    height: calc(100vh - 1em);
+
+    min-height: 100vh;
+    height: 100%;
+
+    margin: 0;
 }
 
-.main-container {
-    height: 100%;
+.title-container {
+    height: calc(90vh - 2rem);
+}
+
+.main-container, .title-container {
+    margin: 1rem;
+
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.main-container h1 {
+.title-container h1 {
     font-size: 15vw;
     color: rgb(var(--primary-color));
     text-align: center;
-    margin-top: auto;
-    margin-bottom: auto;
+
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+
     text-shadow: rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em;
     font-weight: 100;
 }
@@ -48,8 +59,12 @@ body {
     width: 100vh
 }
 
+.long-description-container {
+    font-size: 1.5em;
+    width: 95%;
+}
+
 .header {
-    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -58,17 +73,8 @@ body {
     display: flex;
     align-items: center;
     height: 10vh;
-}
 
-.header::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: -1;
     background-color: rgb(var(--secondary-color));
-    height: 100%;
     filter: drop-shadow(0 0.5em 0.5em rgb(var(--secondary-color)));
 }
 
@@ -103,11 +109,9 @@ body {
 }
 
 .play-button {
-    position: fixed;
-    bottom: 5%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }
 
 button {
