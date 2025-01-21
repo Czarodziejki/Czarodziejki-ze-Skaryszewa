@@ -26,14 +26,14 @@ body {
     height: calc(100vh - 1em);
 }
 
-.title-container {
+.main-container {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.title-container h1 {
+.main-container h1 {
     font-size: 15vw;
     color: rgb(var(--primary-color));
     text-align: center;
@@ -42,6 +42,11 @@ body {
     text-shadow: rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em;
     font-weight: 100;
 }
+
+/* .description-container {
+    color: rgb(var(--primary-color));
+    text-shadow: rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em;
+} */
 
 .header {
     position: fixed;
