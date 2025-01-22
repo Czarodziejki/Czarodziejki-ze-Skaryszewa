@@ -226,6 +226,7 @@ MonoBehaviour:
   syncMode: 1
   syncInterval: 0
   blocksInInventory: 50
+  tileRegenTime: 5
 --- !u!114 &5568257073709482352
 MonoBehaviour:
   m_ObjectHideFlags: 0

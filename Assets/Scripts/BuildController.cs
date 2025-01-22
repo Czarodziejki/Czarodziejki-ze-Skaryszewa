@@ -3,19 +3,24 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
 using System;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using System.Collections;
 
 public class BuildController : NetworkBehaviour
-{ 
+{
     private Camera cam;
     private Vector3 mousePos, blockPos, startBlockPos;
     private bool inRange = false;
     private float tileBuildRadius;
-    [SyncVar(hook= nameof(OnClientInventoryUpdate))]
+    [SyncVar(hook = nameof(OnClientInventoryUpdate))]
     public uint blocksInInventory;
     private GameObject inventoryUIElement;
     private TMP_Text inventoryCountUIElement;
     private InputAction buildAction, modifierAction;
     private bool buildHeld, modifierHeld;
+    [SerializeField]
+    private float tileRegenTime = 5.0f;
+    Coroutine tileRegenCoroutine;
 
     void Start()
     {
@@ -38,6 +43,17 @@ public class BuildController : NetworkBehaviour
         modifierAction.performed += OnModifierPress;
         modifierAction.canceled += OnModifierRelease;
         modifierHeld = modifierAction.IsPressed();
+
+        if (isServer)
+            tileRegenCoroutine = StartCoroutine(OnServerTileRegen());
+    }
+
+    private void OnDestroy()
+    {
+        if (isServer && tileRegenCoroutine != null)
+        {
+            StopCoroutine(tileRegenCoroutine);
+        }
     }
 
     [Client]
@@ -287,5 +303,15 @@ public class BuildController : NetworkBehaviour
     private bool OnServerIsInRange(Vector3Int position)
     {
         return Vector3.Distance(transform.position, position) <= GameMapManager.Instance.tileBuildRadius;
+    }
+
+    [Server]
+    private IEnumerator OnServerTileRegen()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(tileRegenTime);
+            blocksInInventory++;
+        }
     }
 }
