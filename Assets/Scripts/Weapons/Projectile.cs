@@ -116,7 +116,7 @@ public class Projectile : NetworkBehaviour
             GameMapManager manager = GameMapManager.Instance;
             float tileSize = Math.Max(manager.tileSize.x, manager.tileSize.y);
 
-            RaycastHit2D hit = Physics2D.CircleCast(transform.position, 0.5f, Direction, tileSize * 2.0f);
+            RaycastHit2D hit = Physics2D.CircleCast((Vector2)transform.position - Direction, 0.5f, Direction, tileSize * 2.0f, LayerMask.GetMask("Tilemap"));
             if (hit.collider != null)
             {
                 Vector2 worldPosition = hit.point - hit.normal * (tileSize * 0.5f);
