@@ -12,8 +12,8 @@ public class BuildController : NetworkBehaviour
     private Vector3 mousePos, blockPos, startBlockPos;
     private bool inRange = false;
     private float tileBuildRadius;
-    [SerializeField, SyncVar(hook = nameof(OnClientInventoryUpdate))]
-    private uint blocksInInventory;
+    [SyncVar(hook = nameof(OnClientInventoryUpdate))]
+    public uint blocksInInventory;
     private GameObject inventoryUIElement;
     private TMP_Text inventoryCountUIElement;
     private InputAction buildAction, modifierAction;
@@ -297,7 +297,7 @@ public class BuildController : NetworkBehaviour
         bool inRange = OnServerIsInRange(position);
         if (inRange && GameMapManager.Instance.TryDestroyTile(position))
         {
-            OnTileDestroyed();
+            blocksInInventory++;
         }
     }
 
@@ -308,19 +308,13 @@ public class BuildController : NetworkBehaviour
     }
 
     [Server]
-    public void OnTileDestroyed()
-    {
-        if (blocksInInventory < maxBlocksInInventory)
-            blocksInInventory++;
-    }
-
-    [Server]
     private IEnumerator OnServerTileRegen()
     {
         while (true)
         {
             yield return new WaitForSeconds(tileRegenTime);
-            OnTileDestroyed();
+            if (blocksInInventory < maxBlocksInInventory)
+                blocksInInventory++;
         }
     }
 }

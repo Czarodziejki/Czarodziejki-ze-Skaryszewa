@@ -116,7 +116,7 @@ public class Projectile : NetworkBehaviour
             Vector3Int tilePosition = collidedTilemap.WorldToCell(worldPosition);
             if (GameMapManager.Instance.DamageTile(tilePosition, damage))
             {
-                shootingPlayer.GetComponent<BuildController>().OnTileDestroyed();
+                shootingPlayer.GetComponent<BuildController>().blocksInInventory++;
             }
         }
         CalculateParticleExplosion();
