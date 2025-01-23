@@ -46,13 +46,12 @@ public class BuildController : NetworkBehaviour
         modifierAction.canceled += OnModifierRelease;
         modifierHeld = modifierAction.IsPressed();
 
-        if (isServer)
-            tileRegenCoroutine = StartCoroutine(OnServerTileRegen());
+        tileRegenCoroutine = StartCoroutine(OnTileRegen());
     }
 
     private void OnDestroy()
     {
-        if (isServer && tileRegenCoroutine != null)
+        if (tileRegenCoroutine != null)
         {
             StopCoroutine(tileRegenCoroutine);
         }
@@ -307,14 +306,21 @@ public class BuildController : NetworkBehaviour
         return Vector3.Distance(transform.position, position) <= GameMapManager.Instance.tileBuildRadius;
     }
 
-    [Server]
-    private IEnumerator OnServerTileRegen()
+    [Command]
+    private void CmdRegenTile()
+    {
+        if (blocksInInventory < maxBlocksInInventory)
+        {
+            blocksInInventory++;
+        }
+    }
+
+    private IEnumerator OnTileRegen()
     {
         while (true)
         {
             yield return new WaitForSeconds(tileRegenTime);
-            if (blocksInInventory < maxBlocksInInventory)
-                blocksInInventory++;
+            CmdRegenTile();
         }
     }
 }
