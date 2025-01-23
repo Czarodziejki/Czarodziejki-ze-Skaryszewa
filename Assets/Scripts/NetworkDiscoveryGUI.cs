@@ -69,6 +69,12 @@ public class NetworkDiscoveryGUI : MonoBehaviour
             networkDiscovery.StartDiscovery();
             showServers = true;
         }
+        GUILayout.Space(50);
+        if (GUILayout.Button("Exit Game", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(100)))
+        {
+            Debug.Log("Exiting Game...");
+            Application.Quit();
+        }
         GUILayout.EndVertical();
         GUILayout.EndArea();
     }
