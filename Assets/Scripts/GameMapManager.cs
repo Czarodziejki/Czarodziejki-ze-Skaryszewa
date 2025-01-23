@@ -27,7 +27,7 @@ public class GameMapManager : NetworkBehaviour
     // Stores only damaged tiles
     private Dictionary<Vector3Int, int> tilesHealthPoints;
 
-    private Vector2 tileSize = new Vector2(1.0f, 1.0f);
+    public Vector2 tileSize { get; } = new Vector2(1.0f, 1.0f);
     public float tileBuildRadius;
     private CrackingController crackingController;
 
