@@ -1,4 +1,5 @@
 using Mirror;
+using System;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
@@ -111,14 +112,27 @@ public class Projectile : NetworkBehaviour
 
         Tilemap collidedTilemap = collision.GetComponentInParent<Tilemap>();
         if(collidedTilemap == tilemap)
-        {          
-            Vector3 worldPosition = detectedCollisionPoint + Direction * 0.1f;
-            Vector3Int tilePosition = collidedTilemap.WorldToCell(worldPosition);
-            if (GameMapManager.Instance.DamageTile(tilePosition, damage))
+        {
+            GameMapManager manager = GameMapManager.Instance;
+            float tileSize = Math.Max(manager.tileSize.x, manager.tileSize.y);
+
+            RaycastHit2D hit = Physics2D.CircleCast((Vector2)transform.position - Direction, 0.5f, Direction, tileSize * 2.0f, LayerMask.GetMask("Tilemap"));
+            if (hit.collider != null)
             {
-                shootingPlayer.GetComponent<BuildController>().blocksInInventory++;
+                Vector2 worldPosition = hit.point - hit.normal * (tileSize * 0.5f);
+                Vector3Int tilePosition = collidedTilemap.WorldToCell(worldPosition);
+                
+                if (manager.GetTileType(tilePosition) == TileType.None)
+                {
+                    worldPosition -= (Direction + hit.normal).normalized * (tileSize * 0.5f);
+                    tilePosition = collidedTilemap.WorldToCell(worldPosition);
+                }
+
+                if (manager.DamageTile(tilePosition, damage))
+                    shootingPlayer.GetComponent<BuildController>().blocksInInventory++;
             }
         }
+
         CalculateParticleExplosion();
         NetworkServer.Destroy(gameObject);
     }
