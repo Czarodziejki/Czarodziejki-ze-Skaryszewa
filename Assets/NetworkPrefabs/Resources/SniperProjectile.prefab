@@ -10,11 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
       propertyPath: m_Intensity
-      value: 3
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
       propertyPath: m_FalloffIntensity
-      value: 0.5
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
       propertyPath: m_LightCookieSprite
@@ -27,6 +27,26 @@ PrefabInstance:
     - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
       propertyPath: m_PointLightOuterRadius
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_ShapeLightFalloffSize
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_LocalBounds.m_Center.x
+      value: -0.00024986267
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_LocalBounds.m_Center.y
+      value: -0.0001001358
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_LocalBounds.m_Extent.x
+      value: 14.50045
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494642518341818039, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_LocalBounds.m_Extent.y
+      value: 14.5009
       objectReference: {fileID: 0}
     - target: {fileID: 1814862657362653138, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
       propertyPath: m_Intensity

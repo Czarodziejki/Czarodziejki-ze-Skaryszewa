@@ -3886,13 +3886,13 @@ ParticleSystem:
       properties: 0
       emitProbability: 1
   LightsModule:
-    enabled: 1
-    ratio: 0
-    light: {fileID: 0}
-    randomDistribution: 1
+    enabled: 0
+    ratio: 1
+    light: {fileID: -796341500357356744, guid: bb147100fdc3e794cbb09b68594def59, type: 3}
+    randomDistribution: 0
     color: 1
     range: 1
-    intensity: 1
+    intensity: 0
     rangeCurve:
       serializedVersion: 2
       minMaxState: 0
