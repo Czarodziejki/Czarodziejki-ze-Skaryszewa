@@ -49,7 +49,7 @@ public class BaseWeapon : NetworkBehaviour
             mouseWorldPosition.z = 0f;
             Vector2 shootingDirection = (mouseWorldPosition - playerTransform.position).normalized;
             Vector2 startPoint = playerTransform.position;
-            startPoint += shootingDirection * projectileOffset;
+            //startPoint += shootingDirection * projectileOffset;
             CmdShootProjectile(startPoint, shootingDirection);
 
             return true;
