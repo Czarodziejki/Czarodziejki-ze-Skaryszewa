@@ -94,6 +94,9 @@ public class Projectile : NetworkBehaviour
     [Server]
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.gameObject == shootingPlayer)
+            return;
+
         collisionDetected = true;
         detectedCollisionPoint = collision.ClosestPoint(transform.position);
         if (collision.CompareTag("Player"))
