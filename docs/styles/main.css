@@ -143,3 +143,7 @@ button:hover {
 .gallery img:active, .gallery video:active {
     transform: scale(1);
 }
+
+p {
+    color: black;
+}
