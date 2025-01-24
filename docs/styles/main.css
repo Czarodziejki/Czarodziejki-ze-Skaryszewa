@@ -121,3 +121,25 @@ button {
 button:hover {
     filter: drop-shadow(0 0 0.5em rgb(var(--secondary-color)));
 }
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    width: 95vw;
+    margin: 0 auto;
+    gap: 1em;
+}
+
+.gallery img, .gallery video {
+    max-width: 100%;
+    height: auto;
+    transition: transform .2s; /* Animation */
+}
+
+.gallery img:hover, .gallery video:hover {
+    transform: scale(1.1);
+}
+
+.gallery img:active, .gallery video:active {
+    transform: scale(1);
+}

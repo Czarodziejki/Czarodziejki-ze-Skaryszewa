@@ -25,7 +25,19 @@
             </div>
         </div>
         <div class="main-container">
-            Strona w budowie
+            <div class="gallery">
+                <img src="img/gallery/screen1.png" alt="Screenshot 1" onclick="window.open(this.src, '_blank');">
+                <img src="img/gallery/screen2.png" alt="Screenshot 2" onclick="window.open(this.src, '_blank');">
+                <!-- embed video that will play on a loop automatically -->
+                <video autoplay loop muted onclick="window.open(this.querySelector('source').src, '_blank');">
+                    <source src="img/gallery/vid1.mp4" type="video/mp4">
+                    Twoja przeglądarka nie obsługuje odtwarzacza wideo.
+                </video>
+                <video autoplay loop muted onclick="window.open(this.querySelector('source').src, '_blank');">
+                    <source src="img/gallery/vid2.mp4" type="video/mp4">
+                    Twoja przeglądarka nie obsługuje odtwarzacza wideo.
+                </video>
+            </div>
         </div>
     </body>
 </html>
