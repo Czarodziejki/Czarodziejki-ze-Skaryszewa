@@ -1,6 +1,7 @@
 using Mirror;
 using Mirror.Discovery;
 using System.Collections.Generic;
+using System.Security.Principal;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,6 +12,9 @@ public class GameNetworkManager : NetworkRoomManager
 
     public GameObject[] playerPrefabVariants;
     public Texture2D[] playerTextures;
+
+    public List<NetworkConnectionToClient> alivePlayers = new List<NetworkConnectionToClient>();
+    public List<NetworkConnectionToClient> deadPlayers = new List<NetworkConnectionToClient>();
 
     private void SpawnMap()
     {
@@ -31,6 +35,7 @@ public class GameNetworkManager : NetworkRoomManager
         RoomPlayer roomPlayerComponent = roomPlayer.GetComponent<RoomPlayer>();
         int playerIndex = roomPlayerComponent.ColorID % playerPrefabVariants.Length;
         Transform startPos = GetStartPosition();
+        alivePlayers.Add(conn);
         return startPos != null
             ? Instantiate(playerPrefabVariants[playerIndex], startPos.position, startPos.rotation)
             : Instantiate(playerPrefabVariants[playerIndex], Vector3.zero, Quaternion.identity);
@@ -98,5 +103,32 @@ public class GameNetworkManager : NetworkRoomManager
         result.SetPixels(pix);
         result.Apply();
         return result;
+    }
+
+    [Server]
+    public void OnPlayerKilled(NetworkConnectionToClient conn)
+    {
+        alivePlayers.Remove(conn);
+        deadPlayers.Add(conn);
+
+        CheckGameEnd();
+    }
+
+    [Server]
+    private void CheckGameEnd()
+    {
+        if(alivePlayers.Count == 1)
+        {
+            ServerChangeScene(RoomScene);
+            for (int i = deadPlayers.Count - 1; i >= 0; i--)
+            {
+                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().place = i + 2;
+                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
+            }
+            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().place = 1;
+            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
+            alivePlayers.Clear();
+            deadPlayers.Clear();
+        }
     }
 }

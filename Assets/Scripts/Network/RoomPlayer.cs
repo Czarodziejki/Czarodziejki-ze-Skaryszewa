@@ -1,12 +1,41 @@
 using Mirror;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class RoomPlayer : NetworkRoomPlayer
 {
     [SyncVar]
     public int ColorID;
+
+    [SyncVar]
+    public bool showResults = false;
+    [SyncVar]
+    public int place = -1;
+    private InputAction fireAction;
+
+    static bool localShowResults = false;
+
+    private void Start()
+    {
+        base.Start();
+        if (isLocalPlayer)
+        {
+            fireAction = InputSystem.actions.FindAction("Attack");
+        }
+    }
+
+    public void Update()
+    {
+        if (isLocalPlayer)
+        {
+            if(showResults && fireAction.IsPressed())
+                showResults = false;
+
+            localShowResults = showResults;
+        }
+    }
 
     public override void OnGUI()
     {
@@ -22,11 +51,18 @@ public class RoomPlayer : NetworkRoomPlayer
             if (!Utils.IsSceneActive(room.RoomScene))
                 return;
 
-            DrawPlayerState();
-            if (NetworkClient.active && isLocalPlayer)
+            if (localShowResults)
             {
-                DrawPlayerSelection();
-                DrawPlayerReadyButton();
+                DrawResults();
+            }
+            else
+            {
+                DrawPlayerState();
+                if (NetworkClient.active && isLocalPlayer)
+                {
+                    DrawPlayerSelection();
+                    DrawPlayerReadyButton();
+                }
             }
         }
     }
@@ -44,7 +80,7 @@ public class RoomPlayer : NetworkRoomPlayer
         float spacing = Screen.width * 0.05f;
 
         GUIStyle area = new GUIStyle();
-        if(readyToBegin)
+        if (readyToBegin)
             area.normal.background = MakeTex(2, 2, new Color(0.439f, 1.0f, 0.518f));
         else
             area.normal.background = MakeTex(2, 2, new Color(0.831f, 0.071f, 0.071f));
@@ -100,7 +136,7 @@ public class RoomPlayer : NetworkRoomPlayer
     void DrawPlayerSelection()
     {
         GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
-        
+
         float size = Screen.height * 0.4f;
         float arrowsHeight = Screen.height * 0.05f;
         float spacing = 20.0f;
@@ -171,5 +207,38 @@ public class RoomPlayer : NetworkRoomPlayer
     public void CmdChangeColorID(int newColorID)
     {
         ColorID = newColorID;
+    }
+
+    private void DrawResults()
+    {
+        if (!isLocalPlayer) return;
+
+        string resultText = "";
+        switch (place)
+        {
+            case 1:
+                resultText = "You won!!!";
+                break;
+            case 2:
+                resultText = "2nd place";
+                break;
+            case 3:
+                resultText = "3rd place";
+                break;
+            case 4:
+                resultText = "4th place";
+                break;
+        }
+
+        GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
+        labelStyle.fontSize = 70;
+        labelStyle.font = Resources.Load<Font>("Fonts/VT323-Regular");
+        labelStyle.normal.textColor = Color.black;
+        labelStyle.alignment = TextAnchor.MiddleCenter;
+
+        GUIStyle area = new GUIStyle();
+        GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height));
+        GUILayout.Label(resultText, labelStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+        GUILayout.EndArea();
     }
 }
