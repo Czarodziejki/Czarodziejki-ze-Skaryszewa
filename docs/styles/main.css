@@ -133,15 +133,25 @@ button:hover {
 .gallery img, .gallery video {
     max-width: 100%;
     height: auto;
+    border-style: solid;
+    border-color: black;
+    border-width: 0.05em;
     transition: transform .2s; /* Animation */
 }
 
-.gallery img:hover, .gallery video:hover {
-    transform: scale(1.1);
+@media (hover: hover) {
+    .gallery img:hover, .gallery video:hover {
+        transform: scale(1.04);
+        filter: drop-shadow(0 0 0.5em black);
+    }
+    
+    .gallery img:active, .gallery video:active {
+        transform: scale(1);
+    }
 }
 
 .gallery img:active, .gallery video:active {
-    transform: scale(1);
+    filter: drop-shadow(0 0 0.5em black) drop-shadow(0 0 0.5em black); 
 }
 
 p {
