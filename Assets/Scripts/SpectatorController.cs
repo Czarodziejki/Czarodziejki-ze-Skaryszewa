@@ -51,23 +51,37 @@ public class SpectatorController : BasePlayerController
 
         if (activated)
         {
-            GUILayout.BeginArea(new Rect(10, 10f, 140f, 40f));
-            GUI.Box(new Rect(10, 10, 100, 30), "Spectator mode");
-            GUILayout.EndArea();
+            var style = new GUIStyle(GUI.skin.box)
+            {
+                font = Resources.Load<Font>("Fonts/VT323-Regular"),
+                fontSize = 40,
+            };
+
+            GUI.Label(new Rect(10, 10, Screen.width * 0.2f, 60.0f), "Spectator mode", style);
         }
         else
         {
             float messageWidth = 200;
             var style = new GUIStyle(GUI.skin.box)
             {
+                font = Resources.Load<Font>("Fonts/VT323-Regular"),
                 fontSize = 40,
             };
             style.normal.textColor = Color.red;
 
             GUI.Box(new Rect((Screen.width-messageWidth)/2.0f, 20, messageWidth, 50), "You died", style);
 
+            GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+            buttonStyle.font = Resources.Load<Font>("Fonts/VT323-Regular");
+            buttonStyle.normal.textColor = Color.black;
+            buttonStyle.hover.textColor = Color.black;
+            buttonStyle.active.textColor = Color.black;
+            buttonStyle.normal.background = MakeTex(2, 2, new Color(0.9607844f, 0.7294118f, 0.9215687f));
+            buttonStyle.hover.background = MakeTex(2, 2, new Color(1f, 0.8820755f, 0.980345f));
+            buttonStyle.active.background = MakeTex(2, 2, new Color(0.9811321f, 0.513706f, 0.9019072f));
+            buttonStyle.alignment = TextAnchor.MiddleCenter;
             float buttonWidth = 140;
-            if (GUI.Button(new Rect((Screen.width-buttonWidth)/2.0f, 85, buttonWidth, 30), "Spectator mode"))
+            if (GUI.Button(new Rect((Screen.width-buttonWidth)/2.0f, 85, buttonWidth, 30), "Spectator mode", buttonStyle))
             {
                 activated = true;
                 darkOverlay.GetComponent<OverlayController>().StartFadeOut(0.5f);
@@ -110,5 +124,17 @@ public class SpectatorController : BasePlayerController
     {
         Vector2 movement = moveAction.ReadValue<Vector2>();
         GetComponent<Transform>().position += new Vector3(movement.x, movement.y) * movementSpeedCoef;
+    }
+    private Texture2D MakeTex(int width, int height, Color col)
+    {
+        Color[] pix = new Color[width * height];
+        for (int i = 0; i < pix.Length; i++)
+        {
+            pix[i] = col;
+        }
+        Texture2D result = new Texture2D(width, height);
+        result.SetPixels(pix);
+        result.Apply();
+        return result;
     }
 }
