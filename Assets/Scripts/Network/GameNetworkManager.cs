@@ -66,8 +66,9 @@ public class GameNetworkManager : NetworkRoomManager
 
         if (Utils.IsSceneActive(RoomScene))
         {
-            GUILayout.BeginArea(new Rect(Screen.width - 150f, 10f, 140f, 30f));
-            if (GUILayout.Button("Return to main menu", buttonStyle))
+            GUILayout.BeginArea(new Rect(Screen.width - 400f, 10f, 390f, 60f));
+            buttonStyle.fontSize = 30;
+            if (GUILayout.Button("Return to main menu", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true)))
             {
                 ReturnToMainMenu();
             }

@@ -11,6 +11,7 @@ public class NetworkDiscoveryGUI : MonoBehaviour
     public GameObject serversPopup;
     public Transform serversList;
     public GameObject buttonPrefab;
+    public GameObject NoLanMessage;
     readonly Dictionary<long, ServerResponse> discoveredServers = new Dictionary<long, ServerResponse>();
 
     private bool shouldReloadServers = false;
@@ -47,10 +48,20 @@ public class NetworkDiscoveryGUI : MonoBehaviour
     {
         foreach (Transform child in serversList)
         {
+            if(child.gameObject == NoLanMessage)
+            {
+                continue;
+            }
             Destroy(child.gameObject);
+        }
+        if(discoveredServers.Values.Count == 0)
+        {
+            NoLanMessage.SetActive(true);
+            return;
         }
         foreach (ServerResponse info in discoveredServers.Values)
         {
+            NoLanMessage.SetActive(false);
             GameObject serverButton = Instantiate(buttonPrefab, serversList);
             serverButton.GetComponentInChildren<TMP_Text>().text = info.EndPoint.Address.ToString();
 
@@ -69,6 +80,7 @@ public class NetworkDiscoveryGUI : MonoBehaviour
     {
         discoveredServers.Clear();
         networkDiscovery.StartDiscovery();
+        NoLanMessage.SetActive(true);
         PopulateServers();
         serversPopup.SetActive(true);
     }
