@@ -10,6 +10,7 @@ public class BaseWeapon : NetworkBehaviour
     public int damage;
     public float projectileOffset = 2.5f;
     public GameObject burstParticleSystem;
+    public AudioSource sound;
 
     protected GameObject projectilePrefab;
     protected Transform playerTransform;
@@ -84,5 +85,13 @@ public class BaseWeapon : NetworkBehaviour
         NetworkServer.Spawn(projectile);
         projectile.GetComponent<Projectile>().SetColors();
         EmitBurstParticles(startPosition, direction);
+
+        PlayWeaponSound();
+    }
+
+    [ClientRpc]
+    private void PlayWeaponSound()
+    {
+        sound.Play();
     }
 }
