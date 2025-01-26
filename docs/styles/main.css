@@ -191,3 +191,8 @@ p {
 .mousekey {
     text-shadow: 0 0 0.1em rgb(var(--primary-color)), 0 0 0.1em rgb(var(--primary-color)), 0 0 0.1em rgb(var(--primary-color)), 0 0 0.1em rgb(var(--primary-color));
 }
+
+.player-image {
+    width: 30vh;
+    height: 30vh;
+}
