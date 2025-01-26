@@ -33,6 +33,11 @@ body {
     min-height: calc(90vh - 2rem);
 }
 
+.translucent-overlay {
+    /* add a translucent background color */
+    background-color: #ffffff80;
+}
+
 .main-container h1 {
     font-size: 15vw;
     color: rgb(var(--primary-color));
@@ -53,6 +58,8 @@ body {
 .long-description-container {
     font-size: 1.5em;
     width: 95%;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 .header {
@@ -156,4 +163,31 @@ button:hover {
 
 p {
     color: black;
+}
+
+.key, .mousekey {
+    display: inline-block;
+    min-width: 1em;
+    height: 1em;
+    /* make text inside center */
+    text-align: center;
+    /* make the centerline align with the centerline of the text */
+    line-height: 1em;
+    font-size: 1.5em;
+    color: black;
+    
+    padding: 0.1em;
+    
+    border-radius: 0.1em;
+    border-color: black;
+    margin: 0.1em;
+}
+
+.key {
+    background-color: white;
+    border-style: solid;
+}
+
+.mousekey {
+    text-shadow: 0 0 0.1em rgb(var(--primary-color)), 0 0 0.1em rgb(var(--primary-color)), 0 0 0.1em rgb(var(--primary-color)), 0 0 0.1em rgb(var(--primary-color));
 }
