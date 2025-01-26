@@ -2,6 +2,7 @@ using Mirror;
 using Mirror.Discovery;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Principal;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -129,8 +130,8 @@ public class GameNetworkManager : NetworkRoomManager
             orderedPlayersColorID[0] = playersProperties[alivePlayers[0]].Item2;
             for (int i = 0; i < deadPlayers.Count; i++)
             {
-                orderedPlayersNames[i + 1] = playersProperties[deadPlayers[i]].Item1;
-                orderedPlayersColorID[i + 1] = playersProperties[deadPlayers[i]].Item2;
+                orderedPlayersNames[i + 1] = playersProperties[deadPlayers[deadPlayers.Count - 1 - i]].Item1;
+                orderedPlayersColorID[i + 1] = playersProperties[deadPlayers[deadPlayers.Count - 1 - i]].Item2;
             }
             for (int i = deadPlayers.Count - 1; i >= 0; i--)
             {
