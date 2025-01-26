@@ -22,20 +22,9 @@ public class RoomPlayer : NetworkRoomPlayer
     public string[] orderedPlayersNames;
     [SyncVar]
     public int[] orderedPlayersColorID;
-    private InputAction fireAction;
     public GameObject lobbyCanvas;
 
     static bool localShowResults = false;
-
-    private void Start()
-    {
-        base.Start();
-        if (isLocalPlayer)
-        {
-            fireAction = InputSystem.actions.FindAction("Attack");
-        }
-    }
-
     public override void OnClientEnterRoom()
     {
         if (isLocalPlayer)
@@ -48,8 +37,8 @@ public class RoomPlayer : NetworkRoomPlayer
     {
         if (isLocalPlayer)
         {
-            if (showResults && fireAction.IsPressed())
-                showResults = false;
+            if (Keyboard.current.tabKey.wasPressedThisFrame)
+                showResults = !showResults;
 
             localShowResults = showResults;
             if(lobbyCanvas != null)
