@@ -8,9 +8,10 @@ public class CrosshairController : MonoBehaviour
     public float range;
     public float idleSpinVelocity;
     public float firingSpinVelocity;
-	public GameObject pointLight;
+	public GameObject shadowCastingLight;
+    public GameObject foregroundLight;
 
-	private Quaternion spin;
+    private Quaternion spin;
 	private InputAction fireAction;
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -19,7 +20,8 @@ public class CrosshairController : MonoBehaviour
 		spin = Quaternion.identity;
 		var color = transform.parent.GetComponent<PlayerController>().primaryColor;
         GetComponent<SpriteRenderer>().color = color;
-        pointLight.GetComponent<Light2D>().color = color;
+        shadowCastingLight.GetComponent<Light2D>().color = color;
+        foregroundLight.GetComponent<Light2D>().color = color;
 
         fireAction = InputSystem.actions.FindAction("Attack");
     }
@@ -50,6 +52,6 @@ public class CrosshairController : MonoBehaviour
 		totalRotation = matchQuaternion * totalRotation;
 		transform.localRotation = totalRotation;
 
-        pointLight.transform.rotation = Quaternion.identity;
+        shadowCastingLight.transform.rotation = Quaternion.identity;
     }
 }

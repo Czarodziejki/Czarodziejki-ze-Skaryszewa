@@ -82,9 +82,10 @@ public class RoomPlayer : NetworkRoomPlayer
         labelStyle.fontSize = 70;
         labelStyle.font = Resources.Load<Font>("Fonts/VT323-Regular");
         labelStyle.normal.textColor = Color.black;
+        labelStyle.hover.textColor = Color.black;
         labelStyle.alignment = TextAnchor.MiddleCenter;
 
-        float areaHeight = Screen.height * 0.2f;
+        float areaHeight = Screen.height * 0.13f;
         float areaWidth = Screen.width * 0.2f;
         float spacing = Screen.width * 0.05f;
 
@@ -92,7 +93,7 @@ public class RoomPlayer : NetworkRoomPlayer
         if (readyToBegin)
             area.normal.background = MakeTex(2, 2, new Color(0.439f, 1.0f, 0.518f));
         else
-            area.normal.background = MakeTex(2, 2, new Color(0.831f, 0.071f, 0.071f));
+            area.normal.background = MakeTex(2, 2, new Color(1f, 0.416f, 0.416f));
 
         GUILayout.BeginArea(new Rect((index + 1) * spacing + (index * areaWidth), Screen.height * 0.1f, areaWidth, areaHeight));
         GUILayout.BeginVertical(area);
@@ -104,12 +105,12 @@ public class RoomPlayer : NetworkRoomPlayer
         }
         else
             GUILayout.Label(Name, labelStyle, GUILayout.ExpandWidth(true));
-
+        GUILayout.Space(10);
         if (((isServer && index > 0) || isServerOnly) && GUILayout.Button("REMOVE", new GUIStyle(GUI.skin.button)
         {
             fontSize = 50,
             font = Resources.Load<Font>("Fonts/VT323-Regular"),
-        }, GUILayout.ExpandWidth(true), GUILayout.Height(areaHeight * 0.2f)))
+        }, GUILayout.ExpandWidth(true), GUILayout.Height(areaHeight * 0.3f)))
         {
             GUILayout.Space(50);
             GetComponent<NetworkIdentity>().connectionToClient.Disconnect();
