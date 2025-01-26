@@ -56,6 +56,9 @@ public class HealthController : NetworkBehaviour
         RpcDeactivateGameObject(networkIdentity.netId);
 
         gameObject.SetActive(false);
+
+        GameNetworkManager manager = NetworkManager.singleton as GameNetworkManager;
+        manager.OnPlayerKilled(spectator.GetComponent<NetworkIdentity>().connectionToClient);
     }
 
 
