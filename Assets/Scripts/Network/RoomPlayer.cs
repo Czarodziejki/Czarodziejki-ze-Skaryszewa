@@ -23,6 +23,7 @@ public class RoomPlayer : NetworkRoomPlayer
     [SyncVar]
     public int[] orderedPlayersColorID;
     private InputAction fireAction;
+    public GameObject lobbyCanvas;
 
     static bool localShowResults = false;
 
@@ -35,6 +36,14 @@ public class RoomPlayer : NetworkRoomPlayer
         }
     }
 
+    public override void OnClientEnterRoom()
+    {
+        if (isLocalPlayer)
+        {
+            lobbyCanvas = GameObject.Find("LobbyCanvas");
+        }
+    }
+
     public void Update()
     {
         if (isLocalPlayer)
@@ -43,6 +52,8 @@ public class RoomPlayer : NetworkRoomPlayer
                 showResults = false;
 
             localShowResults = showResults;
+            if(lobbyCanvas != null)
+                lobbyCanvas.SetActive(!localShowResults);
         }
     }
 
@@ -265,7 +276,7 @@ public class RoomPlayer : NetworkRoomPlayer
         GUILayout.BeginArea(podiumBlockRect);
         GUILayout.BeginVertical();
         GUILayout.Label(label, labelStyle);
-        if(orderedPlayersNames.Length >= place)
+        if (orderedPlayersNames.Length >= place)
             GUILayout.Label(orderedPlayersNames[place - 1], labelStyle);
         GUILayout.EndVertical();
         GUILayout.EndArea();
