@@ -2826,6 +2826,7 @@ MonoBehaviour:
   playerPrefabVariants:
   - {fileID: 8558821589367696018, guid: bf962fa515cd78d44a975d87163c28d7, type: 3}
   - {fileID: 2013165257586759971, guid: ffb4c4d8475ae0843be3a6abefe94905, type: 3}
+  - {fileID: 5204409105843196082, guid: eae997468073ae04e8b9745dac304496, type: 3}
   playerTextures:
   - {fileID: 2800000, guid: 86c0ecdec75e54e41b3ff3565a61ece9, type: 3}
   - {fileID: 2800000, guid: 2d3354ef6604957429675e11356ec8cc, type: 3}
