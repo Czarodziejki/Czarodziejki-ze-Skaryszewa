@@ -1,4 +1,5 @@
 using Mirror;
+using Mirror.BouncyCastle.Asn1.Cmp;
 using System;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -14,7 +15,7 @@ public class Projectile : NetworkBehaviour
     public GameObject pointLight;
 
     private float timeAlive = 0f;
-    private int damage = 0;
+    protected int damage = 0;
 
     private Tilemap tilemap;
     private new Rigidbody2D rigidbody;
@@ -57,11 +58,11 @@ public class Projectile : NetworkBehaviour
         pointLight.GetComponent<Light2D>().color = playerController.secondaryColor; // Point light illuminating the foreground
 
         // Set colors of the trails
-        var trailMaterial = trail.GetComponent<TrailRenderer>().material;
+        var trailMaterial = trail.GetComponent<TrailRenderer>().sharedMaterial;
 
         trailMaterial.SetColor("_Color1", playerController.secondaryColor);
         trailMaterial.SetColor("_Color2", playerController.ternaryColor);
-
+        
         // Random texture animation offset
         float timeOffset = UnityEngine.Random.Range(0.0f, 1.0f);
         trailMaterial.SetFloat("_TimeOffset", timeOffset);
@@ -99,6 +100,17 @@ public class Projectile : NetworkBehaviour
 
         collisionDetected = true;
         detectedCollisionPoint = collision.ClosestPoint(transform.position);
+
+        HandleCollision(collision);
+
+        CalculateParticleExplosion();
+        NetworkServer.Destroy(gameObject);
+    }
+
+
+    [Server]
+    protected virtual void HandleCollision(Collider2D collision)
+    {
         if (collision.CompareTag("Player"))
         {
             NetworkIdentity identity = collision.GetComponent<NetworkIdentity>();
@@ -113,32 +125,45 @@ public class Projectile : NetworkBehaviour
             healthController.Damage(damage);
         }
 
+        var tileCollisionPos = CheckTileCollision(collision);
+        if (tileCollisionPos != null)
+            DamageTile(tileCollisionPos.Value, damage);
+    }
+
+
+    [Server]
+    protected Vector3Int? CheckTileCollision(Collider2D collision)
+    {
         Tilemap collidedTilemap = collision.GetComponentInParent<Tilemap>();
-        if(collidedTilemap == tilemap)
+        if (collidedTilemap == null)
+            return null;
+
+        GameMapManager manager = GameMapManager.Instance;
+        float tileSize = Math.Max(manager.tileSize.x, manager.tileSize.y);
+
+        RaycastHit2D hit = Physics2D.CircleCast((Vector2)transform.position - Direction, 0.5f, Direction, tileSize * 2.0f, LayerMask.GetMask("Tilemap"));
+        if (hit.collider == null)
+            return null;
+
+        Vector2 worldPosition = hit.point - hit.normal * (tileSize * 0.5f);
+        Vector3Int tilePosition = collidedTilemap.WorldToCell(worldPosition);
+
+        if (manager.GetTileType(tilePosition) == TileType.None)
         {
-            GameMapManager manager = GameMapManager.Instance;
-            float tileSize = Math.Max(manager.tileSize.x, manager.tileSize.y);
-
-            RaycastHit2D hit = Physics2D.CircleCast((Vector2)transform.position - Direction, 0.5f, Direction, tileSize * 2.0f, LayerMask.GetMask("Tilemap"));
-            if (hit.collider != null)
-            {
-                Vector2 worldPosition = hit.point - hit.normal * (tileSize * 0.5f);
-                Vector3Int tilePosition = collidedTilemap.WorldToCell(worldPosition);
-                
-                if (manager.GetTileType(tilePosition) == TileType.None)
-                {
-                    worldPosition -= (Direction + hit.normal).normalized * (tileSize * 0.5f);
-                    tilePosition = collidedTilemap.WorldToCell(worldPosition);
-                }
-
-                if (manager.DamageTile(tilePosition, damage))
-                    shootingPlayer.GetComponent<BuildController>().blocksInInventory++;
-            }
+            worldPosition -= (Direction + hit.normal).normalized * (tileSize * 0.5f);
+            tilePosition = collidedTilemap.WorldToCell(worldPosition);
         }
 
-        CalculateParticleExplosion();
-        NetworkServer.Destroy(gameObject);
+        return tilePosition;
     }
+
+    [Server]
+    protected void DamageTile(Vector3Int tilePos, int damage)
+    {
+        if (GameMapManager.Instance.DamageTile(tilePos, damage))
+            shootingPlayer.GetComponent<BuildController>().blocksInInventory++;
+    }
+
 
     [Server]
     void CalculateParticleExplosion()
