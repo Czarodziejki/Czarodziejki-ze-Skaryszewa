@@ -42,6 +42,7 @@ public class PlayerController : BasePlayerController
         base.Start();
 
         SetupLocalPlayerCamera();
+        SetupLocalPlayerAudioListener();
         SetupLocalPlayerCrosshair();
         rigidBody = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<Collider2D>();
@@ -62,7 +63,7 @@ public class PlayerController : BasePlayerController
 	}
 
 
-	void Update()
+    void Update()
     {
         if (!isLocalPlayer)
             return;
