@@ -1,18 +1,27 @@
 using Mirror;
+using NUnit.Framework;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+
 public class RoomPlayer : NetworkRoomPlayer
 {
     [SyncVar]
-    public int ColorID;
+    public int ColorID = 0;
+    [SyncVar]
+    public string Name = "Player";
 
     [SyncVar]
     public bool showResults = false;
     [SyncVar]
-    public int place = -1;
+    public string[] orderedPlayersNames;
+    [SyncVar]
+    public int[] orderedPlayersColorID;
     private InputAction fireAction;
 
     static bool localShowResults = false;
@@ -30,7 +39,7 @@ public class RoomPlayer : NetworkRoomPlayer
     {
         if (isLocalPlayer)
         {
-            if(showResults && fireAction.IsPressed())
+            if (showResults && fireAction.IsPressed())
                 showResults = false;
 
             localShowResults = showResults;
@@ -87,7 +96,14 @@ public class RoomPlayer : NetworkRoomPlayer
 
         GUILayout.BeginArea(new Rect((index + 1) * spacing + (index * areaWidth), Screen.height * 0.1f, areaWidth, areaHeight));
         GUILayout.BeginVertical(area);
-        GUILayout.Label($"Player {index + 1}", labelStyle, GUILayout.ExpandWidth(true));
+        if (isLocalPlayer)
+        {
+            string newName = GUILayout.TextField(Name, labelStyle, GUILayout.ExpandWidth(true));
+            if (newName != Name)
+                CmdChangeName(newName);
+        }
+        else
+            GUILayout.Label(Name, labelStyle, GUILayout.ExpandWidth(true));
 
         if (((isServer && index > 0) || isServerOnly) && GUILayout.Button("REMOVE", new GUIStyle(GUI.skin.button)
         {
@@ -209,36 +225,53 @@ public class RoomPlayer : NetworkRoomPlayer
         ColorID = newColorID;
     }
 
+    [Command]
+    public void CmdChangeName(string newName)
+    {
+        Name = newName;
+    }
+
     private void DrawResults()
     {
-        if (!isLocalPlayer) return;
+        float screenWidth = Screen.width;
+        float screenHeight = Screen.height;
 
-        string resultText = "";
-        switch (place)
+        float podiumWidth = screenWidth * 0.75f;
+        float podiumHeight = screenHeight * 0.5f;
+        float podiumX = screenWidth * 0.5f - podiumWidth * 0.5f;
+        float podiumY = screenHeight * 0.7f;
+
+        DrawPodiumBlock(podiumX, podiumY, podiumWidth * 0.3f, podiumHeight * 0.5f, "2nd", 2); // Second place
+        DrawPodiumBlock(podiumX + podiumWidth * 0.3f, podiumY - podiumHeight * 0.25f, podiumWidth * 0.4f, podiumHeight * 0.75f, "1st", 1); // First place
+        DrawPodiumBlock(podiumX + podiumWidth * 0.7f, podiumY, podiumWidth * 0.3f, podiumHeight * 0.5f, "3rd", 3); // Third place
+    }
+
+    private void DrawPodiumBlock(float x, float y, float width, float height, string label, int place)
+    {
+        // Draw the block
+        Rect podiumBlockRect = new Rect(x, y, width, height);
+        GUIStyle backgroundStyle = new GUIStyle(GUI.skin.box)
         {
-            case 1:
-                resultText = "You won!!!";
-                break;
-            case 2:
-                resultText = "2nd place";
-                break;
-            case 3:
-                resultText = "3rd place";
-                break;
-            case 4:
-                resultText = "4th place";
-                break;
-        }
+            normal = { background = Texture2D.whiteTexture }
+        };
+        GUI.Box(podiumBlockRect, GUIContent.none, backgroundStyle);
 
         GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
         labelStyle.fontSize = 70;
         labelStyle.font = Resources.Load<Font>("Fonts/VT323-Regular");
         labelStyle.normal.textColor = Color.black;
         labelStyle.alignment = TextAnchor.MiddleCenter;
-
-        GUIStyle area = new GUIStyle();
-        GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height));
-        GUILayout.Label(resultText, labelStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+        GUILayout.BeginArea(podiumBlockRect);
+        GUILayout.BeginVertical();
+        GUILayout.Label(label, labelStyle);
+        if(orderedPlayersNames.Length >= place)
+            GUILayout.Label(orderedPlayersNames[place - 1], labelStyle);
+        GUILayout.EndVertical();
         GUILayout.EndArea();
+
+        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
+        float texSize = podiumBlockRect.width * 0.8f;
+        if (orderedPlayersColorID.Length >= place && gameManager.playerTextures[orderedPlayersColorID[place - 1]] != null)
+            GUI.DrawTexture(new Rect(podiumBlockRect.x + podiumBlockRect.width * 0.1f, podiumBlockRect.y - texSize, texSize, texSize), gameManager.playerTextures[orderedPlayersColorID[place - 1]]);
     }
 }

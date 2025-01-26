@@ -1,5 +1,6 @@
 using Mirror;
 using Mirror.Discovery;
+using System;
 using System.Collections.Generic;
 using System.Security.Principal;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class GameNetworkManager : NetworkRoomManager
 
     public List<NetworkConnectionToClient> alivePlayers = new List<NetworkConnectionToClient>();
     public List<NetworkConnectionToClient> deadPlayers = new List<NetworkConnectionToClient>();
+    public Dictionary<NetworkConnectionToClient, Tuple<string, int>> playersProperties = new Dictionary<NetworkConnectionToClient, Tuple<string, int>>();
 
     private void SpawnMap()
     {
@@ -33,12 +35,13 @@ public class GameNetworkManager : NetworkRoomManager
     public override GameObject OnRoomServerCreateGamePlayer(NetworkConnectionToClient conn, GameObject roomPlayer)
     {
         RoomPlayer roomPlayerComponent = roomPlayer.GetComponent<RoomPlayer>();
+        playersProperties.Add(conn, new Tuple<string, int>(roomPlayerComponent.Name, roomPlayerComponent.ColorID));
         int playerIndex = roomPlayerComponent.ColorID % playerPrefabVariants.Length;
         Transform startPos = GetStartPosition();
         alivePlayers.Add(conn);
         return startPos != null
-            ? Instantiate(playerPrefabVariants[playerIndex], startPos.position, startPos.rotation)
-            : Instantiate(playerPrefabVariants[playerIndex], Vector3.zero, Quaternion.identity);
+            ? Instantiate(playerPrefabVariants[roomPlayerComponent.ColorID], startPos.position, startPos.rotation)
+            : Instantiate(playerPrefabVariants[roomPlayerComponent.ColorID], Vector3.zero, Quaternion.identity);
     }
 
     public override void OnGUI()
@@ -120,15 +123,27 @@ public class GameNetworkManager : NetworkRoomManager
         if(alivePlayers.Count == 1)
         {
             ServerChangeScene(RoomScene);
+            string[] orderedPlayersNames = new string[alivePlayers.Count + deadPlayers.Count];
+            int[] orderedPlayersColorID = new int[alivePlayers.Count + deadPlayers.Count];
+            orderedPlayersNames[0] = playersProperties[alivePlayers[0]].Item1;
+            orderedPlayersColorID[0] = playersProperties[alivePlayers[0]].Item2;
+            for (int i = 0; i < deadPlayers.Count; i++)
+            {
+                orderedPlayersNames[i + 1] = playersProperties[deadPlayers[i]].Item1;
+                orderedPlayersColorID[i + 1] = playersProperties[deadPlayers[i]].Item2;
+            }
             for (int i = deadPlayers.Count - 1; i >= 0; i--)
             {
-                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().place = i + 2;
                 deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
+                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersNames = orderedPlayersNames;
+                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersColorID = orderedPlayersColorID;
             }
-            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().place = 1;
             alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
+            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersNames = orderedPlayersNames;
+            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersColorID = orderedPlayersColorID;
             alivePlayers.Clear();
             deadPlayers.Clear();
+            playersProperties.Clear();
         }
     }
 }
