@@ -2830,8 +2830,8 @@ MonoBehaviour:
   - {fileID: 5204409105843196082, guid: eae997468073ae04e8b9745dac304496, type: 3}
   - {fileID: 6696409980995135855, guid: 0816c475f8b1daa4baf3fe44c7d37ca3, type: 3}
   playerTextures:
-  - {fileID: 2800000, guid: 86c0ecdec75e54e41b3ff3565a61ece9, type: 3}
-  - {fileID: 2800000, guid: 2d3354ef6604957429675e11356ec8cc, type: 3}
+  - {fileID: 2800000, guid: 2541544ddbbae7a48b350dcb97f6b569, type: 3}
+  - {fileID: 2800000, guid: 6b1415be0a53f094a883746ba2529b19, type: 3}
   - {fileID: 2800000, guid: 2c9f275d07697f645b4f02b15bf55f42, type: 3}
   - {fileID: 2800000, guid: 1744ff925ca8d6243be62ed748010016, type: 3}
 --- !u!4 &2005144875
