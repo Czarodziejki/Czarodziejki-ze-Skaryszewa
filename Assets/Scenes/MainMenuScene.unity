@@ -2798,6 +2798,7 @@ MonoBehaviour:
   - {fileID: 6787894561041403779, guid: ef598db5e436343448cca59c528448eb, type: 3}
   - {fileID: 1632252176323868055, guid: 59ee57b3e2cefcf44b5a7b5501ae946d, type: 3}
   - {fileID: 2184671378781004366, guid: 20d3d1b2bbfccf546ac4961df2d9e4c4, type: 3}
+  - {fileID: 5204409105843196082, guid: eae997468073ae04e8b9745dac304496, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -2828,6 +2829,7 @@ MonoBehaviour:
   playerTextures:
   - {fileID: 2800000, guid: 86c0ecdec75e54e41b3ff3565a61ece9, type: 3}
   - {fileID: 2800000, guid: 2d3354ef6604957429675e11356ec8cc, type: 3}
+  - {fileID: 2800000, guid: 2c9f275d07697f645b4f02b15bf55f42, type: 3}
 --- !u!4 &2005144875
 Transform:
   m_ObjectHideFlags: 0
