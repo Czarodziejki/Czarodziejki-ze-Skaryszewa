@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1814862657362653138, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: m_LightCookieSprite
+      value: 
+      objectReference: {fileID: 3480390921246496796, guid: cd0fcdc9b7a5f62468591fe2b24c764d, type: 3}
     - target: {fileID: 3100068472667883354, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -90,3 +94,5 @@ MonoBehaviour:
   explosionParticleSystemPrefab: {fileID: 3891732719347987594, guid: a8184e783c01bd8448f89525bcfbea96, type: 3}
   trail: {fileID: 7400216202020309457, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
   pointLight: {fileID: 2204139540950569362, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+  range: 2
+  distanceMultiplier: 0.1

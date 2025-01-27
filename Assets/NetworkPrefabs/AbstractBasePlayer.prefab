@@ -494,7 +494,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  coolDownTime: 1
+  coolDownTime: 1.5
   projectileSpeed: 20
   damage: 30
   projectileOffset: 2.5

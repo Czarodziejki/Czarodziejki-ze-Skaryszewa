@@ -49,7 +49,7 @@ public class ShootingController : NetworkBehaviour
                 { WeaponType.AOEWeapon, GetComponent<AOEWeapon>() },
             };
 
-            EquipWeapon(WeaponType.AOEWeapon);
+            EquipWeapon(WeaponType.DefaultWeapon);
         }
     }
 
