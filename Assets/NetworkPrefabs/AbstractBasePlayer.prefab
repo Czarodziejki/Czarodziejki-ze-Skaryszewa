@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 7186973530306824647}
   - component: {fileID: 6574615948733859183}
   - component: {fileID: 4805026350646976284}
+  - component: {fileID: 8325743739919978034}
   m_Layer: 3
   m_Name: AbstractBasePlayer
   m_TagString: Player
@@ -564,6 +565,21 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3890295508702063332}
   m_Enabled: 1
+--- !u!114 &8325743739919978034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3890295508702063332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ca8533d3b8d71844b0f0632dff1e387, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseWeaponImage: {fileID: 7422751471946698182, guid: 5dd5d7d7f6661524fbba95a0facb6a26, type: 3}
+  fastWeaponImage: {fileID: 8243874888172102519, guid: 11e5e0afa20f0df4c8986650057f60fa, type: 3}
+  sniperWeaponImage: {fileID: 9138664981832011267, guid: 3444df7ffb28f924d8f55d2442046801, type: 3}
 --- !u!1 &4314809671352918761
 GameObject:
   m_ObjectHideFlags: 0
