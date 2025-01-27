@@ -1037,6 +1037,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AmmoAmount
       objectReference: {fileID: 0}
+    - target: {fileID: 8703496917096652502, guid: 544ca0edb236e59409b9e0cc48f8c5c8, type: 3}
+      propertyPath: m_text
+      value: text
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1187,6 +1191,10 @@ PrefabInstance:
     - target: {fileID: 8663611814001962977, guid: 544ca0edb236e59409b9e0cc48f8c5c8, type: 3}
       propertyPath: m_Name
       value: BlockCount
+      objectReference: {fileID: 0}
+    - target: {fileID: 8703496917096652502, guid: 544ca0edb236e59409b9e0cc48f8c5c8, type: 3}
+      propertyPath: m_text
+      value: text
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
