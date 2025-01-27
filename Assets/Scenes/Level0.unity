@@ -664,7 +664,7 @@ GameObject:
   - component: {fileID: 1241833547}
   - component: {fileID: 1241833546}
   m_Layer: 5
-  m_Name: GrassBlockIcon
+  m_Name: BlockIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -709,7 +709,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -2028779429, guid: 881191180bddf9249aaa680f055915c8, type: 3}
+  m_Sprite: {fileID: -1440816738, guid: b699d864c75d5034693b25e6b914a840, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -873,7 +873,7 @@ GameObject:
   - component: {fileID: 1773001185}
   - component: {fileID: 1773001184}
   m_Layer: 5
-  m_Name: GrassBlockCount
+  m_Name: BlockCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -920,8 +920,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 3fe674b1fa2e3de4db55c9a0c7cdd848, type: 2}
+  m_sharedMaterial: {fileID: 2477517363500805230, guid: 3fe674b1fa2e3de4db55c9a0c7cdd848, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1056,8 +1056,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 3fe674b1fa2e3de4db55c9a0c7cdd848, type: 2}
+  m_sharedMaterial: {fileID: 2477517363500805230, guid: 3fe674b1fa2e3de4db55c9a0c7cdd848, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
