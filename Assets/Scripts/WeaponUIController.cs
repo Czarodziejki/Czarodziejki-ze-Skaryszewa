@@ -8,6 +8,7 @@ public class WeaponUIController : MonoBehaviour
     public Sprite baseWeaponImage;
     public Sprite fastWeaponImage;
     public Sprite sniperWeaponImage;
+    public Sprite aoeWeaponImage;
 
     private GameObject weaponIcon;
     private TMP_Text ammoAmount;
@@ -33,6 +34,10 @@ public class WeaponUIController : MonoBehaviour
 
             case WeaponType.SniperWeapon:
                 weaponIcon.GetComponent<Image>().sprite = sniperWeaponImage;
+                break;
+
+            case WeaponType.AOEWeapon:
+                weaponIcon.GetComponent<Image>().sprite = aoeWeaponImage;
                 break;
         }
     }
