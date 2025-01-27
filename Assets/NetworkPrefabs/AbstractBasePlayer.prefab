@@ -499,6 +499,7 @@ MonoBehaviour:
   damage: 30
   projectileOffset: 2.5
   burstParticleSystem: {fileID: 5403147663079378835}
+  sound: {fileID: 6318493384141066493}
   maxAmmo: 5
   range: 5
   distanceMultiplier: 0.1
