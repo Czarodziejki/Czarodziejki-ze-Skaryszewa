@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -47,6 +48,7 @@ public class ExplodingProjectile : Projectile
     {
         float sqrDist = (pos - gameObject.transform.position).sqrMagnitude;
         sqrDist *= distanceMultiplier;
+        sqrDist = Math.Max(1.0f, sqrDist);
 
         return (int)(damage / sqrDist);
     }
