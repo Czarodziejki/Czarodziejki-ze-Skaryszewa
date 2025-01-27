@@ -5,7 +5,6 @@
         <meta charset="utf-8">
         <link rel="stylesheet" href="styles/main.css">
         <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
-        <!-- <script src="script.js"></script> -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
@@ -32,9 +31,13 @@
                 </div>
             </div>
         </div>
-        <audio autoplay muted>
-            <source src="audio/track.mp3" type="audio/mpeg">
+        <audio id="main-screen-audio" loop>
+            <source src="audio/main_screen.mp3" type="audio/mpeg">
             Twoja przeglądarka nie obsługuje odtwarzacza audio.
         </audio>
     </body>
+    <script>
+        const positionAbsolute = true;
+    </script>
+    <script src="js/musicScript.js" type="module"></script>
 </html>

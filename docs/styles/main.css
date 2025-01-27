@@ -106,6 +106,16 @@ body {
     filter: drop-shadow(0 0 0.1em rgb(var(--primary-color)));
 }
 
+@media (max-width: 550px) {
+    .header .logo {
+        height: 6vh;
+    }
+
+    .header a {
+        font-size: 1em;
+    }
+}
+
 .play-button {
     align-items: center;
     justify-content: center;
@@ -131,7 +141,7 @@ button:hover {
 
 .gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(400px, 95vw), 1fr));
     width: 95vw;
     margin: 0 auto;
     gap: 1em;
@@ -144,12 +154,15 @@ button:hover {
     border-color: black;
     border-width: 0.05em;
     transition: transform .2s; /* Animation */
+
+    image-rendering: auto;
 }
 
 @media (hover: hover) {
     .gallery img:hover, .gallery video:hover {
         transform: scale(1.04);
         filter: drop-shadow(0 0 0.5em black);
+        cursor: pointer;
     }
     
     .gallery img:active, .gallery video:active {
@@ -195,4 +208,14 @@ p {
 .player-image {
     width: 30vh;
     height: 30vh;
+}
+
+.mute-button {
+    /* make it move with scrolling */
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    width: 3em;
+    padding: 0.5em;
+    font-size: 1.1em;
 }
