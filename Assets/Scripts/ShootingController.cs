@@ -20,12 +20,15 @@ public class ShootingController : NetworkBehaviour
 
     private Dictionary<WeaponType, BaseWeapon> weaponRepository;
 
+    private WeaponUIController uiController;
+
     public void EquipWeapon(WeaponType weaponType)
     {
         if (!isLocalPlayer)
             return;
 
         weapon = weaponRepository[weaponType];
+        uiController.UpdateWeaponType(weaponType);
 
         if (weapon is WeaponWithLimitedAmmo w)
         {
@@ -50,6 +53,7 @@ public class ShootingController : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
+            uiController = gameObject.GetComponent<WeaponUIController>();
             fireAction = InputSystem.actions.FindAction("Attack");
 
             weaponRepository = new Dictionary<WeaponType, BaseWeapon>
