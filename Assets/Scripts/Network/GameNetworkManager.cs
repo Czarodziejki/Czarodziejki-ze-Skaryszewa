@@ -1,6 +1,9 @@
 using Mirror;
 using Mirror.Discovery;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Principal;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,6 +14,13 @@ public class GameNetworkManager : NetworkRoomManager
 
     public GameObject[] playerPrefabVariants;
     public Texture2D[] playerTextures;
+    public string[] playerNames;
+
+    public List<NetworkConnectionToClient> alivePlayers = new List<NetworkConnectionToClient>();
+    public List<NetworkConnectionToClient> deadPlayers = new List<NetworkConnectionToClient>();
+    public Dictionary<NetworkConnectionToClient, int> playersVariants = new Dictionary<NetworkConnectionToClient, int>();
+
+    public bool[] VariantAvaliable = Enumerable.Repeat(true, 4).ToArray();
 
     private void SpawnMap()
     {
@@ -29,11 +39,13 @@ public class GameNetworkManager : NetworkRoomManager
     public override GameObject OnRoomServerCreateGamePlayer(NetworkConnectionToClient conn, GameObject roomPlayer)
     {
         RoomPlayer roomPlayerComponent = roomPlayer.GetComponent<RoomPlayer>();
-        int playerIndex = roomPlayerComponent.ColorID % playerPrefabVariants.Length;
+        playersVariants.Add(conn, roomPlayerComponent.VariantID);
+        int playerIndex = roomPlayerComponent.VariantID % playerPrefabVariants.Length;
         Transform startPos = GetStartPosition();
+        alivePlayers.Add(conn);
         return startPos != null
-            ? Instantiate(playerPrefabVariants[playerIndex], startPos.position, startPos.rotation)
-            : Instantiate(playerPrefabVariants[playerIndex], Vector3.zero, Quaternion.identity);
+            ? Instantiate(playerPrefabVariants[roomPlayerComponent.VariantID], startPos.position, startPos.rotation)
+            : Instantiate(playerPrefabVariants[roomPlayerComponent.VariantID], Vector3.zero, Quaternion.identity);
     }
 
     public override void OnGUI()
@@ -98,5 +110,40 @@ public class GameNetworkManager : NetworkRoomManager
         result.SetPixels(pix);
         result.Apply();
         return result;
+    }
+
+    [Server]
+    public void OnPlayerKilled(NetworkConnectionToClient conn)
+    {
+        alivePlayers.Remove(conn);
+        deadPlayers.Add(conn);
+
+        CheckGameEnd();
+    }
+
+    [Server]
+    private void CheckGameEnd()
+    {
+        if(alivePlayers.Count == 1)
+        {
+            ServerChangeScene(RoomScene);
+            int[] orderedPlayersVariants = new int[alivePlayers.Count + deadPlayers.Count];
+            orderedPlayersVariants[0] = playersVariants[alivePlayers[0]];
+            for (int i = 0; i < deadPlayers.Count; i++)
+            {
+                orderedPlayersVariants[i + 1] = playersVariants[deadPlayers[deadPlayers.Count - 1 - i]];
+            }
+            for (int i = deadPlayers.Count - 1; i >= 0; i--)
+            {
+                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
+                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersVariants = orderedPlayersVariants;
+            }
+            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
+            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersVariants = orderedPlayersVariants;
+            alivePlayers.Clear();
+            deadPlayers.Clear();
+            playersVariants.Clear();
+            Array.Fill(VariantAvaliable, true);
+        }
     }
 }

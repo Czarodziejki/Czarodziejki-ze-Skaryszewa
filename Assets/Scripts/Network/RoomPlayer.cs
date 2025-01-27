@@ -1,12 +1,49 @@
 using Mirror;
+using NUnit.Framework;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
+
 
 public class RoomPlayer : NetworkRoomPlayer
 {
     [SyncVar]
-    public int ColorID;
+    public int VariantID = 0;
+
+    [SyncVar]
+    bool variantAvaliable;
+
+    [SyncVar]
+    public bool showResults = false;
+    [SyncVar]
+    public int[] orderedPlayersVariants;
+    public GameObject lobbyCanvas;
+
+    static bool localShowResults = false;
+    public override void OnClientEnterRoom()
+    {
+        if (isLocalPlayer)
+        {
+            lobbyCanvas = GameObject.Find("LobbyCanvas");
+        }
+    }
+
+    public void Update()
+    {
+        if (isLocalPlayer)
+        {
+            if (Keyboard.current.tabKey.wasPressedThisFrame)
+                showResults = !showResults;
+
+            localShowResults = showResults;
+            if(lobbyCanvas != null)
+                lobbyCanvas.SetActive(!localShowResults);
+        }
+    }
 
     public override void OnGUI()
     {
@@ -22,17 +59,27 @@ public class RoomPlayer : NetworkRoomPlayer
             if (!Utils.IsSceneActive(room.RoomScene))
                 return;
 
-            DrawPlayerState();
-            if (NetworkClient.active && isLocalPlayer)
+            if(isLocalPlayer)
+                CmdCheckVariantAvaliable();
+            if (localShowResults)
             {
-                DrawPlayerSelection();
-                DrawPlayerReadyButton();
+                DrawResults();
+            }
+            else
+            {
+                DrawPlayerState();
+                if (NetworkClient.active && isLocalPlayer)
+                {
+                    DrawPlayerSelection();
+                    DrawPlayerReadyButton();
+                }
             }
         }
     }
 
     void DrawPlayerState()
     {
+        GameNetworkManager manager = NetworkManager.singleton as GameNetworkManager;
         GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
         labelStyle.fontSize = 70;
         labelStyle.font = Resources.Load<Font>("Fonts/VT323-Regular");
@@ -45,14 +92,14 @@ public class RoomPlayer : NetworkRoomPlayer
         float spacing = Screen.width * 0.05f;
 
         GUIStyle area = new GUIStyle();
-        if(readyToBegin)
+        if (readyToBegin)
             area.normal.background = MakeTex(2, 2, new Color(0.439f, 1.0f, 0.518f));
         else
             area.normal.background = MakeTex(2, 2, new Color(1f, 0.416f, 0.416f));
 
         GUILayout.BeginArea(new Rect((index + 1) * spacing + (index * areaWidth), Screen.height * 0.1f, areaWidth, areaHeight));
-        GUILayout.BeginVertical(area, GUILayout.ExpandHeight(true));
-        GUILayout.Label($"Player {index + 1}", labelStyle, GUILayout.ExpandWidth(true));
+        GUILayout.BeginVertical(area);
+        GUILayout.Label(manager.playerNames[VariantID], labelStyle, GUILayout.ExpandWidth(true));
         GUILayout.Space(10);
         if (((isServer && index > 0) || isServerOnly) && GUILayout.Button("REMOVE", new GUIStyle(GUI.skin.button)
         {
@@ -86,12 +133,20 @@ public class RoomPlayer : NetworkRoomPlayer
             if (readyToBegin)
             {
                 if (GUILayout.Button("CANCEL", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(100)))
+                {
+                    CmdFreeVariant();
                     CmdChangeReadyState(false);
+                }
             }
             else
             {
+                GUI.enabled = variantAvaliable;
                 if (GUILayout.Button("READY", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(100)))
+                {
+                    CmdReserveVariant();
                     CmdChangeReadyState(true);
+                }
+                GUI.enabled = true;
             }
 
             GUILayout.EndArea();
@@ -100,17 +155,16 @@ public class RoomPlayer : NetworkRoomPlayer
 
     void DrawPlayerSelection()
     {
-        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
-        
+        GameNetworkManager manager = NetworkManager.singleton as GameNetworkManager;
+
         float size = Screen.height * 0.4f;
         float arrowsHeight = Screen.height * 0.05f;
         float spacing = 20.0f;
 
         GUILayout.BeginArea(new Rect(Screen.width * 0.5f - size / 2.0f, Screen.height * 0.5f - size / 2.0f, size, size + spacing + arrowsHeight));
-        if (gameManager.playerTextures[ColorID] != null)
+        if (manager.playerTextures[VariantID] != null)
         {
-            // Stretch the texture to fill the whole box (200x200)
-            GUI.DrawTexture(new Rect(0, 0, size, size), gameManager.playerTextures[ColorID], ScaleMode.StretchToFill);
+            GUI.DrawTexture(new Rect(0, 0, size, size), manager.playerTextures[VariantID], ScaleMode.StretchToFill);
         }
         GUILayout.EndArea();
 
@@ -129,24 +183,16 @@ public class RoomPlayer : NetworkRoomPlayer
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("<", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(arrowsHeight)))
         {
-            int colorID = (ColorID - 1 + gameManager.playerTextures.Length) % gameManager.playerTextures.Length;
-            CmdChangeColorID(colorID);
+            int newVariantID = (VariantID - 1 + manager.playerTextures.Length) % manager.playerTextures.Length;
+            CmdSetVariantID(newVariantID);
         }
         if (GUILayout.Button(">", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(arrowsHeight)))
         {
-            int colorID = (ColorID + 1) % gameManager.playerTextures.Length;
-            CmdChangeColorID(colorID);
+            int newVariantID = (VariantID + 1) % manager.playerTextures.Length;
+            CmdSetVariantID(newVariantID);
         }
         GUILayout.EndHorizontal();
         GUILayout.EndArea();
-    }
-
-    public void ChangeColor(int direction)
-    {
-        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
-        if (!gameManager) return;
-        int colorID = (ColorID + direction + gameManager.playerTextures.Length) % gameManager.playerTextures.Length;
-        CmdChangeColorID(colorID);
     }
 
     public void MainMenuButton()
@@ -169,8 +215,75 @@ public class RoomPlayer : NetworkRoomPlayer
     }
 
     [Command]
-    public void CmdChangeColorID(int newColorID)
+    public void CmdSetVariantID(int newVariantID)
     {
-        ColorID = newColorID;
+        VariantID = newVariantID;
+    }
+
+    private void DrawResults()
+    {
+        float screenWidth = Screen.width;
+        float screenHeight = Screen.height;
+
+        float podiumWidth = screenWidth * 0.75f;
+        float podiumHeight = screenHeight * 0.5f;
+        float podiumX = screenWidth * 0.5f - podiumWidth * 0.5f;
+        float podiumY = screenHeight * 0.7f;
+
+        DrawPodiumBlock(podiumX, podiumY, podiumWidth * 0.3f, podiumHeight * 0.5f, "2nd", 2); // Second place
+        DrawPodiumBlock(podiumX + podiumWidth * 0.3f, podiumY - podiumHeight * 0.25f, podiumWidth * 0.4f, podiumHeight * 0.75f, "1st", 1); // First place
+        DrawPodiumBlock(podiumX + podiumWidth * 0.7f, podiumY, podiumWidth * 0.3f, podiumHeight * 0.5f, "3rd", 3); // Third place
+    }
+
+    private void DrawPodiumBlock(float x, float y, float width, float height, string label, int place)
+    {
+        GameNetworkManager manager = NetworkManager.singleton as GameNetworkManager;
+
+        // Draw the block
+        Rect podiumBlockRect = new Rect(x, y, width, height);
+        GUIStyle backgroundStyle = new GUIStyle(GUI.skin.box)
+        {
+            normal = { background = Texture2D.whiteTexture }
+        };
+        GUI.Box(podiumBlockRect, GUIContent.none, backgroundStyle);
+
+        GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
+        labelStyle.fontSize = 70;
+        labelStyle.font = Resources.Load<Font>("Fonts/VT323-Regular");
+        labelStyle.normal.textColor = Color.black;
+        labelStyle.alignment = TextAnchor.MiddleCenter;
+        GUILayout.BeginArea(podiumBlockRect);
+        GUILayout.BeginVertical();
+        GUILayout.Label(label, labelStyle);
+        if (orderedPlayersVariants.Length >= place)
+            GUILayout.Label(manager.playerNames[orderedPlayersVariants[place - 1]], labelStyle);
+        GUILayout.EndVertical();
+        GUILayout.EndArea();
+
+        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
+        float texSize = podiumBlockRect.width * 0.8f;
+        if (orderedPlayersVariants.Length >= place && gameManager.playerTextures[orderedPlayersVariants[place - 1]] != null)
+            GUI.DrawTexture(new Rect(podiumBlockRect.x + podiumBlockRect.width * 0.1f, podiumBlockRect.y - texSize, texSize, texSize), gameManager.playerTextures[orderedPlayersVariants[place - 1]]);
+    }
+
+    [Command]
+    public void CmdCheckVariantAvaliable()
+    {
+        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
+        variantAvaliable = gameManager.VariantAvaliable[VariantID];
+    }
+
+    [Command]
+    public void CmdReserveVariant()
+    {
+        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
+        gameManager.VariantAvaliable[VariantID] = false;
+    }
+
+    [Command]
+    public void CmdFreeVariant()
+    {
+        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
+        gameManager.VariantAvaliable[VariantID] = true;
     }
 }

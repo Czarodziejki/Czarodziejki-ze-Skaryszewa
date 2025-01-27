@@ -300,6 +300,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6110808179570073090, guid: 3a13e8495c503dd488b1534b143e578b, type: 3}
+      propertyPath: Mute
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6926845343089646181, guid: 3a13e8495c503dd488b1534b143e578b, type: 3}
       propertyPath: m_Name
       value: Multi scene music player
@@ -2891,6 +2895,11 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 6b1415be0a53f094a883746ba2529b19, type: 3}
   - {fileID: 2800000, guid: 2c9f275d07697f645b4f02b15bf55f42, type: 3}
   - {fileID: 2800000, guid: 1744ff925ca8d6243be62ed748010016, type: 3}
+  playerNames:
+  - Dicaeopolis
+  - Philippos
+  - Xanthias
+  - Myrrhine
 --- !u!4 &2005144875
 Transform:
   m_ObjectHideFlags: 0
