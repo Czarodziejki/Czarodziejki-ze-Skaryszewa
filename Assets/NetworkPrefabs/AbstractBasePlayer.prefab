@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 9020713271465857214}
   - component: {fileID: 510819309919490130}
   - component: {fileID: -3473317808712288086}
+  - component: {fileID: 7186973530306824647}
   - component: {fileID: 6574615948733859183}
   - component: {fileID: 4805026350646976284}
   - component: {fileID: 8325743739919978034}
@@ -479,6 +480,30 @@ MonoBehaviour:
   burstParticleSystem: {fileID: 4314809671352918761}
   sound: {fileID: 1561310147291740809}
   maxAmmo: 10
+--- !u!114 &7186973530306824647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3890295508702063332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d19b20afdec6e1b48b34745e39e1a2b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  coolDownTime: 1.5
+  projectileSpeed: 20
+  damage: 30
+  projectileOffset: 2.5
+  burstParticleSystem: {fileID: 5403147663079378835}
+  sound: {fileID: 6318493384141066493}
+  maxAmmo: 5
+  range: 5
+  distanceMultiplier: 0.1
 --- !u!114 &6574615948733859183
 MonoBehaviour:
   m_ObjectHideFlags: 0

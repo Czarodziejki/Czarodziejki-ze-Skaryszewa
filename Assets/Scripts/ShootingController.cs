@@ -8,7 +8,8 @@ public enum WeaponType : byte
 {
     DefaultWeapon = 0,
     FastWeapon = 1,
-    SniperWeapon = 2
+    SniperWeapon = 2,
+    AOEWeapon = 3
 }
 
 
@@ -38,18 +39,6 @@ public class ShootingController : NetworkBehaviour
         uiController.UpdateAmmo(weapon);
     }
 
-    //[TargetRpc]
-    //public void RpcEquipWeapon(NetworkConnectionToClient target, WeaponType weaponType)
-    //{
-    //    weapon = weaponRepository[weaponType];
-
-    //    if (weapon is WeaponWithLimitedAmmo w)
-    //    {
-    //        w.ResetAmmo();
-    //    }
-    //}
-
-
 
     private void Start()
     {
@@ -63,6 +52,7 @@ public class ShootingController : NetworkBehaviour
                 { WeaponType.DefaultWeapon, GetComponent<DefaultWeapon>() },
                 { WeaponType.FastWeapon, GetComponent<FastWeapon>() },
                 { WeaponType.SniperWeapon, GetComponent<SniperWeapon>() },
+                { WeaponType.AOEWeapon, GetComponent<AOEWeapon>() },
             };
 
             EquipWeapon(WeaponType.DefaultWeapon);
