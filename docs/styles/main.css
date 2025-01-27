@@ -219,3 +219,30 @@ p {
     padding: 0.5em;
     font-size: 1.1em;
 }
+
+.projectile-image {
+    /* background is a radial gradient */
+    background: radial-gradient(circle, black, #00000080 50%, transparent 70%);
+    object-fit: none;
+    width: 100px;
+    margin-right: 1em;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1em;
+}
+
+/* portrait */
+@media (orientation: portrait) {
+    .flex {
+        flex-direction: column;
+    }
+
+    .projectile-image {
+        margin-right: 0;
+        margin-bottom: 1em;
+    }
+}
