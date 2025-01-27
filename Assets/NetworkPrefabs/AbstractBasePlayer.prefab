@@ -580,6 +580,7 @@ MonoBehaviour:
   baseWeaponImage: {fileID: 7422751471946698182, guid: 5dd5d7d7f6661524fbba95a0facb6a26, type: 3}
   fastWeaponImage: {fileID: 8243874888172102519, guid: 11e5e0afa20f0df4c8986650057f60fa, type: 3}
   sniperWeaponImage: {fileID: 9138664981832011267, guid: 3444df7ffb28f924d8f55d2442046801, type: 3}
+  aoeWeaponImage: {fileID: 3480390921246496796, guid: cd0fcdc9b7a5f62468591fe2b24c764d, type: 3}
 --- !u!1 &4314809671352918761
 GameObject:
   m_ObjectHideFlags: 0
