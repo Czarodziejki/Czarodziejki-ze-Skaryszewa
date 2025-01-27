@@ -20,6 +20,8 @@ public class ShootingController : NetworkBehaviour
 
     private Dictionary<WeaponType, BaseWeapon> weaponRepository;
 
+    private WeaponUIController uiController;
+
     public void EquipWeapon(WeaponType weaponType)
     {
         if (!isLocalPlayer)
@@ -31,6 +33,9 @@ public class ShootingController : NetworkBehaviour
         {
             w.ResetAmmo();
         }
+
+        uiController.UpdateWeaponType(weaponType);
+        uiController.UpdateAmmo(weapon);
     }
 
     //[TargetRpc]
@@ -50,6 +55,7 @@ public class ShootingController : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
+            uiController = gameObject.GetComponent<WeaponUIController>();
             fireAction = InputSystem.actions.FindAction("Attack");
 
             weaponRepository = new Dictionary<WeaponType, BaseWeapon>
@@ -67,7 +73,8 @@ public class ShootingController : NetworkBehaviour
     {
         if (isLocalPlayer && fireAction.IsPressed())
         {
-            weapon.TryToUseWeapon();
+            if (weapon.TryToUseWeapon())
+                uiController.UpdateAmmo(weapon);
         }
     }
 }

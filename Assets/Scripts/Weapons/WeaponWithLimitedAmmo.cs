@@ -3,7 +3,7 @@ using UnityEngine;
 public class WeaponWithLimitedAmmo: BaseWeapon
 {
     public int maxAmmo = 50;
-	private int currentAmmo;
+	public int currentAmmo { get; private set; }
 
 	protected new void Start()
     {
