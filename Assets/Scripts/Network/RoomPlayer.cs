@@ -12,16 +12,15 @@ using UnityEngine.UI;
 public class RoomPlayer : NetworkRoomPlayer
 {
     [SyncVar]
-    public int ColorID = 0;
+    public int VariantID = 0;
+
     [SyncVar]
-    public string Name = "Player";
+    bool variantAvaliable;
 
     [SyncVar]
     public bool showResults = false;
     [SyncVar]
-    public string[] orderedPlayersNames;
-    [SyncVar]
-    public int[] orderedPlayersColorID;
+    public int[] orderedPlayersVariants;
     public GameObject lobbyCanvas;
 
     static bool localShowResults = false;
@@ -60,6 +59,8 @@ public class RoomPlayer : NetworkRoomPlayer
             if (!Utils.IsSceneActive(room.RoomScene))
                 return;
 
+            if(isLocalPlayer)
+                CmdCheckVariantAvaliable();
             if (localShowResults)
             {
                 DrawResults();
@@ -78,6 +79,7 @@ public class RoomPlayer : NetworkRoomPlayer
 
     void DrawPlayerState()
     {
+        GameNetworkManager manager = NetworkManager.singleton as GameNetworkManager;
         GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
         labelStyle.fontSize = 70;
         labelStyle.font = Resources.Load<Font>("Fonts/VT323-Regular");
@@ -97,14 +99,7 @@ public class RoomPlayer : NetworkRoomPlayer
 
         GUILayout.BeginArea(new Rect((index + 1) * spacing + (index * areaWidth), Screen.height * 0.1f, areaWidth, areaHeight));
         GUILayout.BeginVertical(area);
-        if (isLocalPlayer)
-        {
-            string newName = GUILayout.TextField(Name, labelStyle, GUILayout.ExpandWidth(true));
-            if (newName != Name)
-                CmdChangeName(newName);
-        }
-        else
-            GUILayout.Label(Name, labelStyle, GUILayout.ExpandWidth(true));
+        GUILayout.Label(manager.playerNames[VariantID], labelStyle, GUILayout.ExpandWidth(true));
         GUILayout.Space(10);
         if (((isServer && index > 0) || isServerOnly) && GUILayout.Button("REMOVE", new GUIStyle(GUI.skin.button)
         {
@@ -138,12 +133,20 @@ public class RoomPlayer : NetworkRoomPlayer
             if (readyToBegin)
             {
                 if (GUILayout.Button("CANCEL", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(100)))
+                {
+                    CmdFreeVariant();
                     CmdChangeReadyState(false);
+                }
             }
             else
             {
+                GUI.enabled = variantAvaliable;
                 if (GUILayout.Button("READY", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(100)))
+                {
+                    CmdReserveVariant();
                     CmdChangeReadyState(true);
+                }
+                GUI.enabled = true;
             }
 
             GUILayout.EndArea();
@@ -152,17 +155,16 @@ public class RoomPlayer : NetworkRoomPlayer
 
     void DrawPlayerSelection()
     {
-        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
+        GameNetworkManager manager = NetworkManager.singleton as GameNetworkManager;
 
         float size = Screen.height * 0.4f;
         float arrowsHeight = Screen.height * 0.05f;
         float spacing = 20.0f;
 
         GUILayout.BeginArea(new Rect(Screen.width * 0.5f - size / 2.0f, Screen.height * 0.5f - size / 2.0f, size, size + spacing + arrowsHeight));
-        if (gameManager.playerTextures[ColorID] != null)
+        if (manager.playerTextures[VariantID] != null)
         {
-            // Stretch the texture to fill the whole box (200x200)
-            GUI.DrawTexture(new Rect(0, 0, size, size), gameManager.playerTextures[ColorID], ScaleMode.StretchToFill);
+            GUI.DrawTexture(new Rect(0, 0, size, size), manager.playerTextures[VariantID], ScaleMode.StretchToFill);
         }
         GUILayout.EndArea();
 
@@ -181,24 +183,16 @@ public class RoomPlayer : NetworkRoomPlayer
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("<", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(arrowsHeight)))
         {
-            int colorID = (ColorID - 1 + gameManager.playerTextures.Length) % gameManager.playerTextures.Length;
-            CmdChangeColorID(colorID);
+            int newVariantID = (VariantID - 1 + manager.playerTextures.Length) % manager.playerTextures.Length;
+            CmdSetVariantID(newVariantID);
         }
         if (GUILayout.Button(">", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(arrowsHeight)))
         {
-            int colorID = (ColorID + 1) % gameManager.playerTextures.Length;
-            CmdChangeColorID(colorID);
+            int newVariantID = (VariantID + 1) % manager.playerTextures.Length;
+            CmdSetVariantID(newVariantID);
         }
         GUILayout.EndHorizontal();
         GUILayout.EndArea();
-    }
-
-    public void ChangeColor(int direction)
-    {
-        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
-        if (!gameManager) return;
-        int colorID = (ColorID + direction + gameManager.playerTextures.Length) % gameManager.playerTextures.Length;
-        CmdChangeColorID(colorID);
     }
 
     public void MainMenuButton()
@@ -221,15 +215,9 @@ public class RoomPlayer : NetworkRoomPlayer
     }
 
     [Command]
-    public void CmdChangeColorID(int newColorID)
+    public void CmdSetVariantID(int newVariantID)
     {
-        ColorID = newColorID;
-    }
-
-    [Command]
-    public void CmdChangeName(string newName)
-    {
-        Name = newName;
+        VariantID = newVariantID;
     }
 
     private void DrawResults()
@@ -249,6 +237,8 @@ public class RoomPlayer : NetworkRoomPlayer
 
     private void DrawPodiumBlock(float x, float y, float width, float height, string label, int place)
     {
+        GameNetworkManager manager = NetworkManager.singleton as GameNetworkManager;
+
         // Draw the block
         Rect podiumBlockRect = new Rect(x, y, width, height);
         GUIStyle backgroundStyle = new GUIStyle(GUI.skin.box)
@@ -265,14 +255,35 @@ public class RoomPlayer : NetworkRoomPlayer
         GUILayout.BeginArea(podiumBlockRect);
         GUILayout.BeginVertical();
         GUILayout.Label(label, labelStyle);
-        if (orderedPlayersNames.Length >= place)
-            GUILayout.Label(orderedPlayersNames[place - 1], labelStyle);
+        if (orderedPlayersVariants.Length >= place)
+            GUILayout.Label(manager.playerNames[orderedPlayersVariants[place - 1]], labelStyle);
         GUILayout.EndVertical();
         GUILayout.EndArea();
 
         GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
         float texSize = podiumBlockRect.width * 0.8f;
-        if (orderedPlayersColorID.Length >= place && gameManager.playerTextures[orderedPlayersColorID[place - 1]] != null)
-            GUI.DrawTexture(new Rect(podiumBlockRect.x + podiumBlockRect.width * 0.1f, podiumBlockRect.y - texSize, texSize, texSize), gameManager.playerTextures[orderedPlayersColorID[place - 1]]);
+        if (orderedPlayersVariants.Length >= place && gameManager.playerTextures[orderedPlayersVariants[place - 1]] != null)
+            GUI.DrawTexture(new Rect(podiumBlockRect.x + podiumBlockRect.width * 0.1f, podiumBlockRect.y - texSize, texSize, texSize), gameManager.playerTextures[orderedPlayersVariants[place - 1]]);
+    }
+
+    [Command]
+    public void CmdCheckVariantAvaliable()
+    {
+        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
+        variantAvaliable = gameManager.VariantAvaliable[VariantID];
+    }
+
+    [Command]
+    public void CmdReserveVariant()
+    {
+        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
+        gameManager.VariantAvaliable[VariantID] = false;
+    }
+
+    [Command]
+    public void CmdFreeVariant()
+    {
+        GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
+        gameManager.VariantAvaliable[VariantID] = true;
     }
 }

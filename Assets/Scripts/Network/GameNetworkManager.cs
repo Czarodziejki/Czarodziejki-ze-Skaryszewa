@@ -14,10 +14,13 @@ public class GameNetworkManager : NetworkRoomManager
 
     public GameObject[] playerPrefabVariants;
     public Texture2D[] playerTextures;
+    public string[] playerNames;
 
     public List<NetworkConnectionToClient> alivePlayers = new List<NetworkConnectionToClient>();
     public List<NetworkConnectionToClient> deadPlayers = new List<NetworkConnectionToClient>();
-    public Dictionary<NetworkConnectionToClient, Tuple<string, int>> playersProperties = new Dictionary<NetworkConnectionToClient, Tuple<string, int>>();
+    public Dictionary<NetworkConnectionToClient, int> playersVariants = new Dictionary<NetworkConnectionToClient, int>();
+
+    public bool[] VariantAvaliable = Enumerable.Repeat(true, 4).ToArray();
 
     private void SpawnMap()
     {
@@ -36,13 +39,13 @@ public class GameNetworkManager : NetworkRoomManager
     public override GameObject OnRoomServerCreateGamePlayer(NetworkConnectionToClient conn, GameObject roomPlayer)
     {
         RoomPlayer roomPlayerComponent = roomPlayer.GetComponent<RoomPlayer>();
-        playersProperties.Add(conn, new Tuple<string, int>(roomPlayerComponent.Name, roomPlayerComponent.ColorID));
-        int playerIndex = roomPlayerComponent.ColorID % playerPrefabVariants.Length;
+        playersVariants.Add(conn, roomPlayerComponent.VariantID);
+        int playerIndex = roomPlayerComponent.VariantID % playerPrefabVariants.Length;
         Transform startPos = GetStartPosition();
         alivePlayers.Add(conn);
         return startPos != null
-            ? Instantiate(playerPrefabVariants[roomPlayerComponent.ColorID], startPos.position, startPos.rotation)
-            : Instantiate(playerPrefabVariants[roomPlayerComponent.ColorID], Vector3.zero, Quaternion.identity);
+            ? Instantiate(playerPrefabVariants[roomPlayerComponent.VariantID], startPos.position, startPos.rotation)
+            : Instantiate(playerPrefabVariants[roomPlayerComponent.VariantID], Vector3.zero, Quaternion.identity);
     }
 
     public override void OnGUI()
@@ -124,27 +127,23 @@ public class GameNetworkManager : NetworkRoomManager
         if(alivePlayers.Count == 1)
         {
             ServerChangeScene(RoomScene);
-            string[] orderedPlayersNames = new string[alivePlayers.Count + deadPlayers.Count];
-            int[] orderedPlayersColorID = new int[alivePlayers.Count + deadPlayers.Count];
-            orderedPlayersNames[0] = playersProperties[alivePlayers[0]].Item1;
-            orderedPlayersColorID[0] = playersProperties[alivePlayers[0]].Item2;
+            int[] orderedPlayersVariants = new int[alivePlayers.Count + deadPlayers.Count];
+            orderedPlayersVariants[0] = playersVariants[alivePlayers[0]];
             for (int i = 0; i < deadPlayers.Count; i++)
             {
-                orderedPlayersNames[i + 1] = playersProperties[deadPlayers[deadPlayers.Count - 1 - i]].Item1;
-                orderedPlayersColorID[i + 1] = playersProperties[deadPlayers[deadPlayers.Count - 1 - i]].Item2;
+                orderedPlayersVariants[i + 1] = playersVariants[deadPlayers[deadPlayers.Count - 1 - i]];
             }
             for (int i = deadPlayers.Count - 1; i >= 0; i--)
             {
                 deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
-                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersNames = orderedPlayersNames;
-                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersColorID = orderedPlayersColorID;
+                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersVariants = orderedPlayersVariants;
             }
             alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
-            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersNames = orderedPlayersNames;
-            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersColorID = orderedPlayersColorID;
+            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersVariants = orderedPlayersVariants;
             alivePlayers.Clear();
             deadPlayers.Clear();
-            playersProperties.Clear();
+            playersVariants.Clear();
+            Array.Fill(VariantAvaliable, true);
         }
     }
 }
