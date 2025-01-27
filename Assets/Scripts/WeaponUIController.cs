@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,10 +10,12 @@ public class WeaponUIController : MonoBehaviour
     public Sprite sniperWeaponImage;
 
     private GameObject weaponIcon;
+    private TMP_Text ammoAmount;
 
     private void Awake()
     {
         weaponIcon = GameObject.Find("WeaponIcon");
+        ammoAmount = GameObject.Find("AmmoAmount").GetComponent<TMP_Text>();
     }
 
 
@@ -32,7 +35,13 @@ public class WeaponUIController : MonoBehaviour
                 weaponIcon.GetComponent<Image>().sprite = sniperWeaponImage;
                 break;
         }
+    }
 
-        
+    public void UpdateAmmo(BaseWeapon weapon)
+    {
+        if (weapon is WeaponWithLimitedAmmo w)
+            ammoAmount.text = w.currentAmmo.ToString();
+        else
+            ammoAmount.text = "Inf.";
     }
 }
