@@ -28,12 +28,14 @@ public class ShootingController : NetworkBehaviour
             return;
 
         weapon = weaponRepository[weaponType];
-        uiController.UpdateWeaponType(weaponType);
 
         if (weapon is WeaponWithLimitedAmmo w)
         {
             w.ResetAmmo();
         }
+
+        uiController.UpdateWeaponType(weaponType);
+        uiController.UpdateAmmo(weapon);
     }
 
     //[TargetRpc]
@@ -71,7 +73,8 @@ public class ShootingController : NetworkBehaviour
     {
         if (isLocalPlayer && fireAction.IsPressed())
         {
-            weapon.TryToUseWeapon();
+            if (weapon.TryToUseWeapon())
+                uiController.UpdateAmmo(weapon);
         }
     }
 }
