@@ -1,42 +1,70 @@
 using Mirror;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
+
+public enum WeaponType : byte
+{
+    DefaultWeapon = 0,
+    FastWeapon = 1,
+    SniperWeapon = 2,
+    AOEWeapon = 3
+}
 
 
 public class ShootingController : NetworkBehaviour
 {
-    public GameObject projectilePrefab;
-    public float coolDownTime = 0.2f;
+    private BaseWeapon weapon;
 
-    private Transform playerTransform;
-    private float lastShootTime = 0f;   // Timestamp of the last shoot
+    private InputAction fireAction;
+
+    private Dictionary<WeaponType, BaseWeapon> weaponRepository;
+
+    private WeaponUIController uiController;
+
+    public void EquipWeapon(WeaponType weaponType)
+    {
+        if (!isLocalPlayer)
+            return;
+
+        weapon = weaponRepository[weaponType];
+
+        if (weapon is WeaponWithLimitedAmmo w)
+        {
+            w.ResetAmmo();
+        }
+
+        uiController.UpdateWeaponType(weaponType);
+        uiController.UpdateAmmo(weapon);
+    }
 
 
     private void Start()
     {
-        playerTransform = GetComponent<Transform>();
+        if (isLocalPlayer)
+        {
+            uiController = gameObject.GetComponent<WeaponUIController>();
+            fireAction = InputSystem.actions.FindAction("Attack");
+
+            weaponRepository = new Dictionary<WeaponType, BaseWeapon>
+            {
+                { WeaponType.DefaultWeapon, GetComponent<DefaultWeapon>() },
+                { WeaponType.FastWeapon, GetComponent<FastWeapon>() },
+                { WeaponType.SniperWeapon, GetComponent<SniperWeapon>() },
+                { WeaponType.AOEWeapon, GetComponent<AOEWeapon>() },
+            };
+
+            EquipWeapon(WeaponType.DefaultWeapon);
+        }
     }
 
     private void Update()
     {
-        // Checking time prevents spamming fire button
-        if (isLocalPlayer && Input.GetMouseButton(0) && Time.time - lastShootTime > coolDownTime)
+        if (isLocalPlayer && fireAction.IsPressed())
         {
-            lastShootTime = Time.time;
-
-            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mouseWorldPosition.z = 0f;
-            Vector2 shootingDirection = (mouseWorldPosition - playerTransform.position).normalized;
-            Vector2 startPoint = playerTransform.position;
-            startPoint += shootingDirection * 2.5f;
-            CmdShootProjectile(startPoint, shootingDirection);
+            if (weapon.TryToUseWeapon())
+                uiController.UpdateAmmo(weapon);
         }
-    }
-
-    [Command]
-    private void CmdShootProjectile(Vector3 startPosition, Vector2 direction)
-    {
-        GameObject projectile = Instantiate(projectilePrefab, startPosition, Quaternion.identity);
-        projectile.GetComponent<Projectile>().Initialize(direction);
-        NetworkServer.Spawn(projectile);
     }
 }

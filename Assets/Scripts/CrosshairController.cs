@@ -1,34 +1,45 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
+using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 public class CrosshairController : MonoBehaviour
 {
-    private Quaternion spin;
     public float range;
     public float idleSpinVelocity;
     public float firingSpinVelocity;
+	public GameObject shadowCastingLight;
+    public GameObject foregroundLight;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private Quaternion spin;
+	private InputAction fireAction;
+
+	// Start is called once before the first execution of Update after the MonoBehaviour is created
+	void Start()
     {
 		spin = Quaternion.identity;
-	}
+		var color = transform.parent.GetComponent<PlayerController>().primaryColor;
+        GetComponent<SpriteRenderer>().color = color;
+        shadowCastingLight.GetComponent<Light2D>().color = color;
+        foregroundLight.GetComponent<Light2D>().color = color;
+
+        fireAction = InputSystem.actions.FindAction("Attack");
+    }
 
     // Update is called once per frame
     void Update()
     {
         // Update position
-        Vector3 mousePos = Input.mousePosition;
+        Vector3 mousePos = Mouse.current.position.ReadValue();
         Vector3 parentPos = Camera.main.WorldToScreenPoint(transform.parent.gameObject.transform.position);
+        parentPos.z = 0.0f;
 		Vector3 aimDirection = Vector3.Normalize(mousePos - parentPos);
 		Vector3 scaledAimDirection = aimDirection * range;
 
 		transform.localPosition = scaledAimDirection;
 
 		// Update spin
-        var spinVelocity = Input.GetKey(KeyCode.Mouse0) ? firingSpinVelocity : idleSpinVelocity;
+        var spinVelocity = fireAction.IsPressed() ? firingSpinVelocity : idleSpinVelocity;
         spin = Quaternion.Euler(0, 0, spinVelocity) * spin;
         var totalRotation = spin;
 
@@ -40,5 +51,7 @@ public class CrosshairController : MonoBehaviour
 		var matchQuaternion = Quaternion.AngleAxis(angle, new Vector3(0,0,1));
 		totalRotation = matchQuaternion * totalRotation;
 		transform.localRotation = totalRotation;
+
+        shadowCastingLight.transform.rotation = Quaternion.identity;
     }
 }
