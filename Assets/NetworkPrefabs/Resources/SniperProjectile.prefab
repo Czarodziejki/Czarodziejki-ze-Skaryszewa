@@ -129,6 +129,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4925702408316590373, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 52cf120f99193b84da437d4316612f94, type: 2}
+    - target: {fileID: 4925702408316590373, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
       propertyPath: m_Parameters.textureScale.x
       value: 1
       objectReference: {fileID: 0}
