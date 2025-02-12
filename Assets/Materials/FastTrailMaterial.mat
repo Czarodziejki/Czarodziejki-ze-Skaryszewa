@@ -132,7 +132,7 @@ Material:
     - _ZWriteControl: 0
     - __dirty: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 1.0595891, b: 5.9921575, a: 1}
     - _Color1: {r: 5.9921565, g: 0.3666879, b: 0, a: 1}
     - _Color2: {r: 11.984315, g: 7.0684104, b: 0.50876784, a: 0}
     - _DissolveSpeed: {r: -0.5, g: 0, b: 0, a: 0}
