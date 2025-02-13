@@ -191,7 +191,8 @@ MonoBehaviour:
   lifetime: 5
   explosionParticleSpeedCoefficient: 0.15
   explosionParticleSystemPrefab: {fileID: 3891732719347987594, guid: a8184e783c01bd8448f89525bcfbea96, type: 3}
-  trail: {fileID: 7400216202020309457}
+  trails:
+  - {fileID: 7400216202020309457}
   pointLight: {fileID: 2204139540950569362}
 --- !u!50 &6315705476054053490
 Rigidbody2D:

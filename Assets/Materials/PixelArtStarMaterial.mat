@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PixelArtButterflyMaterial
+  m_Name: PixelArtStarMaterial
   m_Shader: {fileID: -6465566751694194690, guid: dc59aa548202abc45b979c052328a91e, type: 3}
   m_Parent: {fileID: 2100000, guid: c4c36ed2a256fe2489fd518ff99b2162, type: 2}
   m_ModifiedSerializedProperties: 0
@@ -41,12 +41,12 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTexture:
-        m_Texture: {fileID: 2800000, guid: 330d794bf32c3b1468a0f959f97527a9, type: 3}
+        m_Texture: {fileID: 2800000, guid: e8e7fb9956e4a5c45883b68a49848720, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Bits: 24
+    - _Bits: 16
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -11,7 +11,7 @@ public class Projectile : NetworkBehaviour
     public float lifetime = 15f;
     public float explosionParticleSpeedCoefficient = 0.2f;
     public GameObject explosionParticleSystemPrefab;
-    public GameObject trail;
+    public GameObject[] trails;
     public GameObject pointLight;
 
     private float timeAlive = 0f;
@@ -58,14 +58,17 @@ public class Projectile : NetworkBehaviour
         pointLight.GetComponent<Light2D>().color = playerController.secondaryColor; // Point light illuminating the foreground
 
         // Set colors of the trails
-        var trailMaterial = trail.GetComponent<TrailRenderer>().sharedMaterial;
+        foreach (var trail in trails)
+        {
+            var trailMaterial = trail.GetComponent<TrailRenderer>().material;
 
-        trailMaterial.SetColor("_Color1", playerController.secondaryColor);
-        trailMaterial.SetColor("_Color2", playerController.ternaryColor);
-        
-        // Random texture animation offset
-        float timeOffset = UnityEngine.Random.Range(0.0f, 1.0f);
-        trailMaterial.SetFloat("_TimeOffset", timeOffset);
+            trailMaterial.SetColor("_Color1", playerController.secondaryColor);
+            trailMaterial.SetColor("_Color2", playerController.ternaryColor);
+
+            // Random texture animation offset
+            float timeOffset = UnityEngine.Random.Range(0.0f, 1.0f);
+            trailMaterial.SetFloat("_TimeOffset", timeOffset);
+        }
     }
 
     private void Awake()
@@ -197,12 +200,15 @@ public class Projectile : NetworkBehaviour
     public override void OnStopClient()
     {
         // Set parent of the trail to null so that it persists after the projectile is destroyed
-        var trail = gameObject.GetComponentInChildren<TrailRenderer>();
-        trail.transform.parent = null;
-        // Adjust the parameters to create an absorption-like effect
-        trail.time = 0.2f;
-        trail.widthMultiplier *= 0.3f;
-        trail.widthCurve = new AnimationCurve(new(0.0f, 1.0f), new(1.0f, 0.0f));
+        foreach (var trailObject in trails)
+        {
+            var trail = trailObject.GetComponent<TrailRenderer>();
+            trail.transform.parent = null;
+            // Adjust the parameters to create an absorption-like effect
+            trail.time = 0.2f;
+            trail.widthMultiplier *= 0.3f;
+            trail.widthCurve = new AnimationCurve(new(0.0f, 1.0f), new(1.0f, 0.0f));
+        }  
 
         // Emit explosion particles
         if (!collisionDetected)
