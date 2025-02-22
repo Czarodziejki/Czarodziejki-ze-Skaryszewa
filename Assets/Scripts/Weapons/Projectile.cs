@@ -11,6 +11,7 @@ public class Projectile : NetworkBehaviour
     public float lifetime = 15f;
     public float explosionParticleSpeedCoefficient = 0.2f;
     public GameObject explosionParticleSystemPrefab;
+    public GameObject extraEffectParticleSystemPrefab;
     public GameObject[] trails;
     public GameObject pointLight;
 
@@ -224,7 +225,16 @@ public class Projectile : NetworkBehaviour
         particleRenderer.material.SetColor("_Color", playerController.secondaryColor);
         particleRenderer.trailMaterial.SetColor("_Color1", playerController.secondaryColor);
         particleRenderer.trailMaterial.SetColor("_Color2", playerController.ternaryColor);
-
         Destroy(particleSystem, particleSettings.startLifetimeMultiplier);
+
+        // Additional explosion if set
+        if (extraEffectParticleSystemPrefab != null)
+        {
+            GameObject extraParticleSystem = Instantiate(extraEffectParticleSystemPrefab, explosionParticleOrigin, Quaternion.identity);
+            var extraParticleSettings = extraParticleSystem.GetComponent<ParticleSystem>().main;
+            var extraParticleRenderer = extraParticleSystem.GetComponent<ParticleSystemRenderer>();
+            extraParticleRenderer.material.SetColor("_Color", playerController.ternaryColor);
+            Destroy(extraParticleSystem, extraParticleSettings.startLifetimeMultiplier);
+        }      
     }
 }
