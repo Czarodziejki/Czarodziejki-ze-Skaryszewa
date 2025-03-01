@@ -1,0 +1,248 @@
+@font-face {
+    font-family: "VT323";
+    src:
+        local("VT323"),
+        url("../fonts/VT323-Regular.ttf") format("truetype");
+}
+
+body {
+    font-family: "VT323";
+    font-smooth: never;
+    -webkit-font-smoothing : none;
+
+    --primary-color: 255, 255, 255;
+    --secondary-color: 248, 119, 233;
+
+    background: repeat-x local url("../img/mountains_background.png");
+    background-size: auto 100%;
+    image-rendering: pixelated;
+
+    min-height: 100vh;
+    height: 100%;
+
+    margin: 0;
+}
+
+.main-container {
+    margin: 1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: calc(90vh - 2rem);
+}
+
+.translucent-overlay {
+    /* add a translucent background color */
+    background-color: #ffffff80;
+}
+
+.main-container h1 {
+    font-size: 15vw;
+    color: rgb(var(--primary-color));
+    text-align: center;
+
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+
+    text-shadow: rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em, rgb(var(--secondary-color)) 0 0 0.1em;
+    font-weight: 100;
+}
+
+.description-container {
+    font-size: 2em;
+    width: 100vh
+}
+
+.long-description-container {
+    font-size: 1.5em;
+    width: 95%;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.header {
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    height: 10vh;
+
+    background-color: rgb(var(--secondary-color));
+    filter: drop-shadow(0 0.5em 0.5em rgb(var(--secondary-color)));
+}
+
+.header .logo {
+    height: 7vh;
+    margin-left: 1em;
+}
+
+.header .logo img {
+    height: 100%;
+}
+
+.header .menu ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.header .menu li {
+    margin: 0 1em;
+}
+
+.header a {
+    color: rgb(var(--primary-color));
+    text-decoration: none;
+    font-size: 1.5em;
+}
+
+.header a:hover {
+    filter: drop-shadow(0 0 0.1em rgb(var(--primary-color)));
+}
+
+@media (max-width: 550px) {
+    .header .logo {
+        height: 6vh;
+    }
+
+    .header a {
+        font-size: 1em;
+    }
+}
+
+.play-button {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+button {
+    font-family: "VT323";
+    font-size: 1.5em;
+    color: black;
+    background-color: rgb(var(--primary-color));
+    /* add curved border */
+    border-radius: 0.5em;
+    border-color: rgb(var(--secondary-color));
+    border-width: 0.15em;
+    padding: 0.5em 1em;
+    cursor: pointer;
+}
+
+button:hover {
+    filter: drop-shadow(0 0 0.5em rgb(var(--secondary-color)));
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(400px, 95vw), 1fr));
+    width: 95vw;
+    margin: 0 auto;
+    gap: 1em;
+}
+
+.gallery img, .gallery video {
+    max-width: 100%;
+    height: auto;
+    border-style: solid;
+    border-color: black;
+    border-width: 0.05em;
+    transition: transform .2s; /* Animation */
+
+    image-rendering: auto;
+}
+
+@media (hover: hover) {
+    .gallery img:hover, .gallery video:hover {
+        transform: scale(1.04);
+        filter: drop-shadow(0 0 0.5em black);
+        cursor: pointer;
+    }
+    
+    .gallery img:active, .gallery video:active {
+        transform: scale(1);
+    }
+}
+
+.gallery img:active, .gallery video:active {
+    filter: drop-shadow(0 0 0.5em black) drop-shadow(0 0 0.5em black); 
+}
+
+p {
+    color: black;
+}
+
+.key, .mousekey {
+    display: inline-block;
+    min-width: 1em;
+    height: 1em;
+    /* make text inside center */
+    text-align: center;
+    /* make the centerline align with the centerline of the text */
+    line-height: 1em;
+    font-size: 1.5em;
+    color: black;
+    
+    padding: 0.1em;
+    
+    border-radius: 0.1em;
+    border-color: black;
+    margin: 0.1em;
+}
+
+.key {
+    background-color: white;
+    border-style: solid;
+}
+
+.mousekey {
+    text-shadow: 0 0 0.1em rgb(var(--primary-color)), 0 0 0.1em rgb(var(--primary-color)), 0 0 0.1em rgb(var(--primary-color)), 0 0 0.1em rgb(var(--primary-color));
+}
+
+.player-image {
+    width: 30vh;
+    height: 30vh;
+}
+
+.mute-button {
+    /* make it move with scrolling */
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    width: 3em;
+    padding: 0.5em;
+    font-size: 1.1em;
+}
+
+.projectile-image {
+    /* background is a radial gradient */
+    background: radial-gradient(circle, black, #00000080 50%, transparent 70%);
+    object-fit: none;
+    width: 100px;
+    margin-right: 1em;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1em;
+}
+
+/* portrait */
+@media (orientation: portrait) {
+    .flex {
+        flex-direction: column;
+    }
+
+    .projectile-image {
+        margin-right: 0;
+        margin-bottom: 1em;
+    }
+}

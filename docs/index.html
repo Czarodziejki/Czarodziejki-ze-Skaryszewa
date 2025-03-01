@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Czarodziejki ze Skaryszewa</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div class="header">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="img/PlayerRed.png" alt="logo">
+                </a>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li><a href="game.html">O grze</a></li>
+                    <li><a href="gallery.html">Galeria</a></li>
+                    <li><a href="team.html">Zespół</a></li>
+                    <li><a href="project.html">O projekcie</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="main-container">
+            <div>
+                <h1>Czarodziejki ze Skaryszewa</h1>
+                <div class="play-button">
+                    <button id="play-button">Zagraj teraz <span style="position: relative; bottom: -0.05em;">▶</span></button>
+                </div>
+            </div>
+        </div>
+        <audio id="main-screen-audio" loop>
+            <source src="audio/main_screen.mp3" type="audio/mpeg">
+            Twoja przeglądarka nie obsługuje odtwarzacza audio.
+        </audio>
+    </body>
+    <script>
+        const positionAbsolute = true;
+    </script>
+    <script src="js/musicScript.js" type="module"></script>
+    <script src="js/downloadScript.js" type="module"></script>
+</html>

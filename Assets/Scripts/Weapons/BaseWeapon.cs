@@ -69,21 +69,22 @@ public class BaseWeapon : NetworkBehaviour
     }
 
     [Client]
-    private void SetColors()
+    virtual protected void SetColors()
     {
+        var player = playerTransform.GetComponent<PlayerController>();
         var particleRenderer = burstParticleSystemController.GetComponent<ParticleSystemRenderer>();
-        particleRenderer.material.SetColor("_Color", playerTransform.GetComponent<PlayerController>().ternaryColor);
+        particleRenderer.material.SetColor("_Color", player.ternaryColor);
     }
 
     [Command]
     private void CmdShootProjectile(Vector3 startPosition, Vector2 direction)
     {
         GameObject projectile = Instantiate(projectilePrefab, startPosition, Quaternion.identity);
-		// Initialize the projectile with the direction and the player that shot it
-		GameObject player = GetComponent<NetworkIdentity>().gameObject;
+        // Initialize the projectile with the direction and the player that shot it
+        GameObject player = GetComponent<NetworkIdentity>().gameObject;
         projectile.GetComponent<Projectile>().Initialize(direction, player, projectileSpeed, damage);
         NetworkServer.Spawn(projectile);
-        projectile.GetComponent<Projectile>().SetColors();
+        SetUpProjectile(projectile);
         EmitBurstParticles(startPosition, direction);
 
         PlayWeaponSound();
@@ -93,5 +94,12 @@ public class BaseWeapon : NetworkBehaviour
     private void PlayWeaponSound()
     {
         sound.Play();
+    }
+
+
+    [Server]
+    protected virtual void SetUpProjectile(GameObject projectile)
+    {
+        projectile.GetComponent<Projectile>().SetColors();
     }
 }

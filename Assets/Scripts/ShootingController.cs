@@ -8,7 +8,8 @@ public enum WeaponType : byte
 {
     DefaultWeapon = 0,
     FastWeapon = 1,
-    SniperWeapon = 2
+    SniperWeapon = 2,
+    AOEWeapon = 3
 }
 
 
@@ -19,6 +20,8 @@ public class ShootingController : NetworkBehaviour
     private InputAction fireAction;
 
     private Dictionary<WeaponType, BaseWeapon> weaponRepository;
+
+    private WeaponUIController uiController;
 
     public void EquipWeapon(WeaponType weaponType)
     {
@@ -31,25 +34,17 @@ public class ShootingController : NetworkBehaviour
         {
             w.ResetAmmo();
         }
+
+        uiController.UpdateWeaponType(weaponType);
+        uiController.UpdateAmmo(weapon);
     }
-
-    //[TargetRpc]
-    //public void RpcEquipWeapon(NetworkConnectionToClient target, WeaponType weaponType)
-    //{
-    //    weapon = weaponRepository[weaponType];
-
-    //    if (weapon is WeaponWithLimitedAmmo w)
-    //    {
-    //        w.ResetAmmo();
-    //    }
-    //}
-
 
 
     private void Start()
     {
         if (isLocalPlayer)
         {
+            uiController = gameObject.GetComponent<WeaponUIController>();
             fireAction = InputSystem.actions.FindAction("Attack");
 
             weaponRepository = new Dictionary<WeaponType, BaseWeapon>
@@ -57,6 +52,7 @@ public class ShootingController : NetworkBehaviour
                 { WeaponType.DefaultWeapon, GetComponent<DefaultWeapon>() },
                 { WeaponType.FastWeapon, GetComponent<FastWeapon>() },
                 { WeaponType.SniperWeapon, GetComponent<SniperWeapon>() },
+                { WeaponType.AOEWeapon, GetComponent<AOEWeapon>() },
             };
 
             EquipWeapon(WeaponType.DefaultWeapon);
@@ -67,7 +63,8 @@ public class ShootingController : NetworkBehaviour
     {
         if (isLocalPlayer && fireAction.IsPressed())
         {
-            weapon.TryToUseWeapon();
+            if (weapon.TryToUseWeapon())
+                uiController.UpdateAmmo(weapon);
         }
     }
 }
