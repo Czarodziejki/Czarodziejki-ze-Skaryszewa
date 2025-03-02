@@ -89,7 +89,8 @@ public class RoomPlayer : NetworkRoomPlayer
 
         float areaHeight = Screen.height * 0.13f;
         float areaWidth = Screen.width * 0.2f;
-        float spacing = Screen.width * 0.05f;
+        float side_spacing = Screen.width * 0.05f;
+        float inner_spacing = (Screen.width - 2.0f * side_spacing - 4.0f * areaWidth) / 3.0f;
 
         GUIStyle area = new GUIStyle();
         if (readyToBegin)
@@ -97,7 +98,7 @@ public class RoomPlayer : NetworkRoomPlayer
         else
             area.normal.background = MakeTex(2, 2, new Color(1f, 0.416f, 0.416f));
 
-        GUILayout.BeginArea(new Rect((index + 1) * spacing + (index * areaWidth), Screen.height * 0.1f, areaWidth, areaHeight));
+        GUILayout.BeginArea(new Rect(side_spacing + index * (inner_spacing + areaWidth), Screen.height * 0.1f, areaWidth, areaHeight));
         GUILayout.BeginVertical(area);
         GUILayout.Label(manager.playerNames[VariantID], labelStyle, GUILayout.ExpandWidth(true));
         GUILayout.Space(10);
