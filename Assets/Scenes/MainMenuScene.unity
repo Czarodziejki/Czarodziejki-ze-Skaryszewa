@@ -2849,7 +2849,7 @@ MonoBehaviour:
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 8558821589367696018, guid: bf962fa515cd78d44a975d87163c28d7, type: 3}
   autoCreatePlayer: 1
-  playerSpawnMethod: 0
+  playerSpawnMethod: 1
   spawnPrefabs:
   - {fileID: 884548099962710154, guid: ec2fa7e39f830f74192ffda6248817cb, type: 3}
   - {fileID: 6122572798316568362, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
@@ -2902,6 +2902,7 @@ MonoBehaviour:
   - Philippos
   - Xanthias
   - Myrrhine
+  VariantAvaliable: 01010101
 --- !u!4 &2005144875
 Transform:
   m_ObjectHideFlags: 0
