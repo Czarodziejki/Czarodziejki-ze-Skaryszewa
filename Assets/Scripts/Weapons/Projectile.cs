@@ -10,6 +10,8 @@ public class Projectile : NetworkBehaviour
 {
     public float lifetime = 15f;
     public float explosionParticleSpeedCoefficient = 0.2f;
+    public int tilemapDamageRange = 1;
+
     public GameObject explosionParticleSystemPrefab;
     public GameObject trail;
     public GameObject pointLight;
@@ -127,7 +129,16 @@ public class Projectile : NetworkBehaviour
 
         var tileCollisionPos = CheckTileCollision(collision);
         if (tileCollisionPos != null)
-            DamageTile(tileCollisionPos.Value, damage);
+        {
+            for (int x = -tilemapDamageRange; x <= tilemapDamageRange; x++)
+            {
+                for (int y = -tilemapDamageRange; y <= tilemapDamageRange; y++)
+                {
+                    DamageTile(tileCollisionPos.Value + new Vector3Int(x, y, 0), damage);
+                }
+            }
+        }
+            
     }
 
 
