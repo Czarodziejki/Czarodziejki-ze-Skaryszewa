@@ -81,22 +81,24 @@ public class PlayerController : BasePlayerController
     {
         if (pauseAction.triggered) Paused = !Paused;
 
-        if (!isLocalPlayer || Paused)
+        if (!isLocalPlayer)
             return;
 
-        Vector2 movement = moveAction.ReadValue<Vector2>();
+        Vector2 movement = Paused ? Vector2.zero : moveAction.ReadValue<Vector2>();
 
         horizontal = movement.x;
         animator.SetFloat("Speed", Mathf.Abs(horizontal));
 
-        bool jump = jumpAction.triggered || (movement.y > 0 && previousMovementInput.y <= 0);
+        if (!Paused) {
+            bool jump = jumpAction.triggered || (movement.y > 0 && previousMovementInput.y <= 0);
 
-        previousMovementInput = movement;
+            previousMovementInput = movement;
 
-        if (jump && IsGrounded())
-        {
-            animator.SetBool("IsJumping", true);
-            rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocityX, jumpingPower);
+            if (jump && IsGrounded())
+            {
+                animator.SetBool("IsJumping", true);
+                rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocityX, jumpingPower);
+            }
         }
 
         if (IsGrounded() && rigidBody.linearVelocityY <= 0.01f)
@@ -144,7 +146,7 @@ public class PlayerController : BasePlayerController
 
     private void FixedUpdate()
     {
-        if (!isLocalPlayer || Paused)
+        if (!isLocalPlayer)
             return;
 
         rigidBody.linearVelocity = new Vector2(horizontal * speed, rigidBody.linearVelocity.y);

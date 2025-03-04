@@ -62,7 +62,6 @@ public class CrosshairController : MonoBehaviour
 
     public void SetPaused(bool value)
     {
-        Debug.Log("Crosshair paused set to: " + value);
         paused = value;
     }
 }
