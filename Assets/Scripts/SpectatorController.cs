@@ -36,7 +36,7 @@ public class SpectatorController : BasePlayerController
 
     void Update()
     {
-        if (!isLocalPlayer || !activated)
+        if (!isLocalPlayer || !activated || !GetComponent<PlayerController>().Paused)
             return;
 
         MoveCamera();
@@ -46,7 +46,7 @@ public class SpectatorController : BasePlayerController
 
     public void OnGUI()
     {
-        if (!isLocalPlayer)
+        if (!isLocalPlayer || GetComponent<PlayerController>().Paused)
             return;
 
         if (activated)

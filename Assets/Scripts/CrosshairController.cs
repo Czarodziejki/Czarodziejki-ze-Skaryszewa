@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
@@ -14,8 +15,10 @@ public class CrosshairController : MonoBehaviour
     private Quaternion spin;
 	private InputAction fireAction;
 
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	void Start()
+    public bool paused = false;
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
 		spin = Quaternion.identity;
 		var color = transform.parent.GetComponent<PlayerController>().primaryColor;
@@ -29,6 +32,8 @@ public class CrosshairController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (paused) return;
+
         // Update position
         Vector3 mousePos = Mouse.current.position.ReadValue();
         Vector3 parentPos = Camera.main.WorldToScreenPoint(transform.parent.gameObject.transform.position);
@@ -53,5 +58,11 @@ public class CrosshairController : MonoBehaviour
 		transform.localRotation = totalRotation;
 
         shadowCastingLight.transform.rotation = Quaternion.identity;
+    }
+
+    public void SetPaused(bool value)
+    {
+        Debug.Log("Crosshair paused set to: " + value);
+        paused = value;
     }
 }

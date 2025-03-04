@@ -1,5 +1,6 @@
 using Mirror;
 using Mirror.Examples.Common;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +10,7 @@ public class PlayerController : BasePlayerController
     public float speed = 8f;
     public float jumpingPower = 15f;
     public GameObject crosshair;
+    private GameObject myCrosshair = null;
     public Vector2 boxSize;
     public float castDistance;
 
@@ -32,6 +34,17 @@ public class PlayerController : BasePlayerController
     private InputAction jumpAction;
     private Vector2 previousMovementInput;
 
+    private InputAction pauseAction;
+    private bool _paused = false;
+    public bool Paused { 
+        get => _paused;
+        private set
+        {
+            if (myCrosshair != null) myCrosshair.GetComponent<CrosshairController>().SetPaused(value);
+            _paused = value;
+        }
+    }
+
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -53,19 +66,22 @@ public class PlayerController : BasePlayerController
         }
 
         jumpAction = InputSystem.actions.FindAction("Jump");
+        pauseAction = InputSystem.actions.FindAction("Pause");
     }
 
 
-	private void SetupLocalPlayerCrosshair()
+    private void SetupLocalPlayerCrosshair()
     {
         if (isLocalPlayer)
-		    Instantiate(crosshair, gameObject.transform);
-	}
+            myCrosshair = Instantiate(crosshair, gameObject.transform);
+    }
 
 
     void Update()
     {
-        if (!isLocalPlayer)
+        if (pauseAction.triggered) Paused = !Paused;
+
+        if (!isLocalPlayer || Paused)
             return;
 
         Vector2 movement = moveAction.ReadValue<Vector2>();
@@ -93,9 +109,42 @@ public class PlayerController : BasePlayerController
         Flip();
     }
 
+    public void OnGUI()
+    {
+        if (!isLocalPlayer || !Paused) return;
+
+        GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+        buttonStyle.font = Resources.Load<Font>("Fonts/VT323-Regular");
+        buttonStyle.normal.textColor = Color.black;
+        buttonStyle.hover.textColor = Color.black;
+        buttonStyle.active.textColor = Color.black;
+        buttonStyle.normal.background = MakeTex(2, 2, new Color(0.9607844f, 0.7294118f, 0.9215687f));
+        buttonStyle.hover.background = MakeTex(2, 2, new Color(1f, 0.8820755f, 0.980345f));
+        buttonStyle.active.background = MakeTex(2, 2, new Color(0.9811321f, 0.513706f, 0.9019072f));
+        buttonStyle.alignment = TextAnchor.MiddleCenter;
+        float buttonWidth = 140;
+        if (GUI.Button(new Rect((Screen.width - buttonWidth) / 2.0f, 85, buttonWidth, 30), "Resume", buttonStyle))
+        {
+            Paused = false;
+        }
+    }
+
+    private Texture2D MakeTex(int width, int height, Color col)
+    {
+        Color[] pix = new Color[width * height];
+        for (int i = 0; i < pix.Length; i++)
+        {
+            pix[i] = col;
+        }
+        Texture2D result = new Texture2D(width, height);
+        result.SetPixels(pix);
+        result.Apply();
+        return result;
+    }
+
     private void FixedUpdate()
     {
-        if (!isLocalPlayer)
+        if (!isLocalPlayer || Paused)
             return;
 
         rigidBody.linearVelocity = new Vector2(horizontal * speed, rigidBody.linearVelocity.y);

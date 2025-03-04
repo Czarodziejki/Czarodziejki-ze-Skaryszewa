@@ -67,7 +67,7 @@ public class BuildController : NetworkBehaviour
         }
         modifierHeld = false;
 
-        if (!buildHeld) return;
+        if (!buildHeld || GetComponent<PlayerController>().Paused) return;
 
         DrawBlockLine(startBlockPos, UpdateBlockPos(), true);
         startBlockPos = blockPos;
@@ -83,8 +83,8 @@ public class BuildController : NetworkBehaviour
             return;
         }
         modifierHeld = true;
-
-        if (!buildHeld) return;
+        
+        if (!buildHeld || GetComponent<PlayerController>().Paused) return;
 
         DrawBlockLine(startBlockPos, UpdateBlockPos(), false);
         startBlockPos = blockPos;
@@ -100,6 +100,7 @@ public class BuildController : NetworkBehaviour
             return;
         }
         buildHeld = false;
+        if (GetComponent<PlayerController>().Paused) return;
 
         DrawBlockLine(startBlockPos, UpdateBlockPos(), modifierHeld);
     }
@@ -114,13 +115,14 @@ public class BuildController : NetworkBehaviour
             return;
         }
         buildHeld = true;
+        if (GetComponent<PlayerController>().Paused) return;
 
         startBlockPos = UpdateBlockPos();
     }
 
     private void Update()
     {
-        if (!isLocalPlayer) return;
+        if (!isLocalPlayer || GetComponent<PlayerController>().Paused) return;
         UpdateBlockPos();
         if (buildHeld)
         {
