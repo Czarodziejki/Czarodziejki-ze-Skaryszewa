@@ -2852,6 +2852,7 @@ MonoBehaviour:
   playerSpawnMethod: 1
   spawnPrefabs:
   - {fileID: 884548099962710154, guid: ec2fa7e39f830f74192ffda6248817cb, type: 3}
+  - {fileID: 3842646524329725848, guid: 4b0e7734190294d468b6156a770a7813, type: 3}
   - {fileID: 6122572798316568362, guid: 7ce3ebc774551f34bbc895afd9d61df1, type: 3}
   - {fileID: 7973805836510998114, guid: 28fe9eee444c19d4fac4159bf36c7f99, type: 3}
   - {fileID: 9084563842192943459, guid: 7520691e6fa472144a4c688627429b74, type: 3}
