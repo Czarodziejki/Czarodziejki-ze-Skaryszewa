@@ -37,11 +37,8 @@ public class GameNetworkManager : NetworkRoomManager
     public void SelectMap(GameObject map)
     {
         mapPrefab = map;
-            
-        for (int i=0; i < VariantAvaliable.Length; i++)
-            VariantAvaliable[i] = true;
 
-        allPlayersReady = true;
+        allPlayersReady = true;     // This starts a game
     }
 
 
@@ -64,6 +61,11 @@ public class GameNetworkManager : NetworkRoomManager
                 player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayPlayerSelection;
                 player.gameObject.GetComponent<RoomPlayer>().charactekSelected = false;
             }
+
+            for (int i=0; i < VariantAvaliable.Length; i++)
+                VariantAvaliable[i] = true;
+
+            playersVariants.Clear();
         }
         
     }
