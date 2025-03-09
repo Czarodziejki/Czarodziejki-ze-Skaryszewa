@@ -112,6 +112,14 @@ public class GameNetworkManager : NetworkRoomManager
         return result;
     }
 
+    public override void OnServerDisconnect(NetworkConnectionToClient conn)
+    {
+        base.OnServerDisconnect(conn);
+        alivePlayers.Remove(conn);
+        deadPlayers.Remove(conn);
+        CheckGameEnd();
+    }
+
     [Server]
     public void OnPlayerKilled(NetworkConnectionToClient conn)
     {
