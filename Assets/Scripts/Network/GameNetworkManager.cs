@@ -1,15 +1,16 @@
 using Mirror;
-using Mirror.Discovery;
+using Mono.Cecil.Cil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
+using UnityEditor.Rendering.Universal;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class GameNetworkManager : NetworkRoomManager
 {
-    public GameObject mapPrefab;
+    public GameObject[] avaiableMaps;
+
+    private GameObject mapPrefab = null;
     public GameMapManager gameMapManager;
 
     public GameObject[] playerPrefabVariants;
@@ -21,6 +22,28 @@ public class GameNetworkManager : NetworkRoomManager
     public Dictionary<NetworkConnectionToClient, int> playersVariants = new Dictionary<NetworkConnectionToClient, int>();
 
     public bool[] VariantAvaliable = Enumerable.Repeat(true, 4).ToArray();
+
+    public void ReserveVariant(int variantId)
+    {
+        VariantAvaliable[variantId] = false;
+
+        if (VariantAvaliable.Count(v => v == false) == roomSlots.Count)
+        {
+            foreach (var player in roomSlots)
+                player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayMapSelection;
+        }
+    }
+
+    public void SelectMap(GameObject map)
+    {
+        mapPrefab = map;
+            
+        for (int i=0; i < VariantAvaliable.Length; i++)
+            VariantAvaliable[i] = true;
+
+        allPlayersReady = true;
+    }
+
 
     private void SpawnMap()
     {
@@ -34,13 +57,21 @@ public class GameNetworkManager : NetworkRoomManager
         base.OnRoomServerSceneChanged(sceneName);
         if(sceneName == GameplayScene)
             SpawnMap();
+        else if (sceneName == RoomScene)
+        {
+            foreach (var player in roomSlots)
+            {
+                player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayPlayerSelection;
+                player.gameObject.GetComponent<RoomPlayer>().charactekSelected = false;
+            }
+        }
+        
     }
 
     public override GameObject OnRoomServerCreateGamePlayer(NetworkConnectionToClient conn, GameObject roomPlayer)
     {
         RoomPlayer roomPlayerComponent = roomPlayer.GetComponent<RoomPlayer>();
         playersVariants.Add(conn, roomPlayerComponent.VariantID);
-        int playerIndex = roomPlayerComponent.VariantID % playerPrefabVariants.Length;
         Transform startPos = GetStartPosition();
         alivePlayers.Add(conn);
         return startPos != null
