@@ -135,10 +135,10 @@ public class GameNetworkManager : NetworkRoomManager
             }
             for (int i = deadPlayers.Count - 1; i >= 0; i--)
             {
-                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
+                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayGameResults;
                 deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersVariants = orderedPlayersVariants;
             }
-            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
+            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayGameResults;
             alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersVariants = orderedPlayersVariants;
             alivePlayers.Clear();
             deadPlayers.Clear();

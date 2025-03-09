@@ -1,16 +1,16 @@
 using Mirror;
-using NUnit.Framework;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 
 public class RoomPlayer : NetworkRoomPlayer
 {
+    public enum DisplayType
+    {
+        DisplayPlayerSelection,
+        DisplayGameResults,
+    }
+
     [SyncVar]
     public int VariantID = 0;
 
@@ -18,12 +18,13 @@ public class RoomPlayer : NetworkRoomPlayer
     bool variantAvaliable;
 
     [SyncVar]
-    public bool showResults = false;
+    public DisplayType displayType;
+    static private DisplayType localDisplayType;
+
     [SyncVar]
     public int[] orderedPlayersVariants;
     public GameObject lobbyCanvas;
 
-    static bool localShowResults = false;
     public override void OnClientEnterRoom()
     {
         if (isLocalPlayer)
@@ -36,12 +37,12 @@ public class RoomPlayer : NetworkRoomPlayer
     {
         if (isLocalPlayer)
         {
-            if (Keyboard.current.tabKey.wasPressedThisFrame)
-                showResults = !showResults;
+            if (Keyboard.current.tabKey.wasPressedThisFrame && displayType == DisplayType.DisplayGameResults)
+                displayType = DisplayType.DisplayPlayerSelection;
 
-            localShowResults = showResults;
+            localDisplayType = displayType;
             if(lobbyCanvas != null)
-                lobbyCanvas.SetActive(!localShowResults);
+                lobbyCanvas.SetActive(localDisplayType != DisplayType.DisplayGameResults);
         }
     }
 
@@ -59,20 +60,22 @@ public class RoomPlayer : NetworkRoomPlayer
             if (!Utils.IsSceneActive(room.RoomScene))
                 return;
 
-            if(isLocalPlayer)
-                CmdCheckVariantAvaliable();
-            if (localShowResults)
+            switch (localDisplayType)
             {
-                DrawResults();
-            }
-            else
-            {
-                DrawPlayerState();
-                if (NetworkClient.active && isLocalPlayer)
-                {
-                    DrawPlayerSelection();
-                    DrawPlayerReadyButton();
-                }
+                case DisplayType.DisplayPlayerSelection:
+                    if(isLocalPlayer)
+                        CmdCheckVariantAvaliable();
+                    DrawPlayerState();
+                    if (NetworkClient.active && isLocalPlayer)
+                    {
+                        DrawPlayerSelection();
+                        DrawPlayerReadyButton();
+                    }
+                    break;
+
+                case DisplayType.DisplayGameResults:
+                    DrawResults();
+                    break;
             }
         }
     }
