@@ -2885,7 +2885,9 @@ MonoBehaviour:
   GameplayScene: Assets/Scenes/Level0.unity
   _allPlayersReady: 0
   clientIndex: 0
-  mapPrefab: {fileID: 884548099962710154, guid: ec2fa7e39f830f74192ffda6248817cb, type: 3}
+  avaiableMaps:
+  - {fileID: 884548099962710154, guid: ec2fa7e39f830f74192ffda6248817cb, type: 3}
+  - {fileID: 3842646524329725848, guid: 4b0e7734190294d468b6156a770a7813, type: 3}
   gameMapManager: {fileID: 0}
   playerPrefabVariants:
   - {fileID: 8558821589367696018, guid: bf962fa515cd78d44a975d87163c28d7, type: 3}
