@@ -1,15 +1,16 @@
 using Mirror;
-using Mirror.Discovery;
+using Mono.Cecil.Cil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
+using UnityEditor.Rendering.Universal;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class GameNetworkManager : NetworkRoomManager
 {
-    public GameObject mapPrefab;
+    public GameObject[] avaiableMaps;
+
+    private GameObject mapPrefab = null;
     public GameMapManager gameMapManager;
 
     public GameObject[] playerPrefabVariants;
@@ -21,6 +22,25 @@ public class GameNetworkManager : NetworkRoomManager
     public Dictionary<NetworkConnectionToClient, int> playersVariants = new Dictionary<NetworkConnectionToClient, int>();
 
     public bool[] VariantAvaliable = Enumerable.Repeat(true, 4).ToArray();
+
+    public void ReserveVariant(int variantId)
+    {
+        VariantAvaliable[variantId] = false;
+
+        if (VariantAvaliable.Count(v => v == false) == roomSlots.Count)
+        {
+            foreach (var player in roomSlots)
+                player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayMapSelection;
+        }
+    }
+
+    public void SelectMap(GameObject map)
+    {
+        mapPrefab = map;
+
+        allPlayersReady = true;     // This starts a game
+    }
+
 
     private void SpawnMap()
     {
@@ -34,13 +54,26 @@ public class GameNetworkManager : NetworkRoomManager
         base.OnRoomServerSceneChanged(sceneName);
         if(sceneName == GameplayScene)
             SpawnMap();
+        else if (sceneName == RoomScene)
+        {
+            foreach (var player in roomSlots)
+            {
+                player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayPlayerSelection;
+                player.gameObject.GetComponent<RoomPlayer>().charactekSelected = false;
+            }
+
+            for (int i=0; i < VariantAvaliable.Length; i++)
+                VariantAvaliable[i] = true;
+
+            playersVariants.Clear();
+        }
+        
     }
 
     public override GameObject OnRoomServerCreateGamePlayer(NetworkConnectionToClient conn, GameObject roomPlayer)
     {
         RoomPlayer roomPlayerComponent = roomPlayer.GetComponent<RoomPlayer>();
         playersVariants.Add(conn, roomPlayerComponent.VariantID);
-        int playerIndex = roomPlayerComponent.VariantID % playerPrefabVariants.Length;
         Transform startPos = GetStartPosition();
         alivePlayers.Add(conn);
         return startPos != null
@@ -112,6 +145,14 @@ public class GameNetworkManager : NetworkRoomManager
         return result;
     }
 
+    public override void OnServerDisconnect(NetworkConnectionToClient conn)
+    {
+        base.OnServerDisconnect(conn);
+        alivePlayers.Remove(conn);
+        deadPlayers.Remove(conn);
+        CheckGameEnd();
+    }
+
     [Server]
     public void OnPlayerKilled(NetworkConnectionToClient conn)
     {
@@ -135,10 +176,10 @@ public class GameNetworkManager : NetworkRoomManager
             }
             for (int i = deadPlayers.Count - 1; i >= 0; i--)
             {
-                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
+                deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayGameResults;
                 deadPlayers[i].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersVariants = orderedPlayersVariants;
             }
-            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().showResults = true;
+            alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayGameResults;
             alivePlayers[0].identity.gameObject.GetComponent<RoomPlayer>().orderedPlayersVariants = orderedPlayersVariants;
             alivePlayers.Clear();
             deadPlayers.Clear();

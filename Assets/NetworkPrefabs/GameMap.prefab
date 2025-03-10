@@ -640,6 +640,7 @@ GameObject:
   - component: {fileID: 3305719349682045513}
   - component: {fileID: -1148343261323658759}
   - component: {fileID: 3016430716592613366}
+  - component: {fileID: 8589925610126334039}
   m_Layer: 0
   m_Name: GameMap
   m_TagString: Untagged
@@ -737,6 +738,19 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+--- !u!114 &8589925610126334039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7402533721660197922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1de6bbc2fcbcbb8c889ef9b3e825d516, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Value: GameMap
 --- !u!1 &8124024392466471658
 GameObject:
   m_ObjectHideFlags: 0
