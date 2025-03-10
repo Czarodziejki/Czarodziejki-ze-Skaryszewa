@@ -455,7 +455,7 @@ MonoBehaviour:
   syncInterval: 0
   coolDownTime: 0.1
   projectileSpeed: 35
-  damage: 2
+  damage: 3
   projectileOffset: 2.5
   burstParticleSystem: {fileID: 5101085393836346290}
   sound: {fileID: 4192749258401139508}
@@ -475,7 +475,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  coolDownTime: 1.5
+  coolDownTime: 1.4
   projectileSpeed: 50
   damage: 45
   projectileOffset: 2.5
@@ -497,8 +497,8 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  coolDownTime: 1.5
-  projectileSpeed: 20
+  coolDownTime: 1.4
+  projectileSpeed: 25
   damage: 40
   projectileOffset: 2.5
   burstParticleSystem: {fileID: 7166665670063158651}
@@ -15400,7 +15400,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.4
+      scalar: 0.2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
