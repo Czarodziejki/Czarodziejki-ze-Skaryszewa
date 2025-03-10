@@ -1,3 +1,4 @@
+using Mirror.BouncyCastle.Math.Field;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,6 +24,12 @@ public class SpectatorController : BasePlayerController
 
         zoomAction = InputSystem.actions.FindAction("Zoom");
         mainCamera = GetComponentInChildren<Camera>();
+
+        if (!isLocalPlayer)
+        {
+            if (TryGetComponent<AudioListener>(out var listener))
+                listener.enabled = false;
+        }
     }
 
 
