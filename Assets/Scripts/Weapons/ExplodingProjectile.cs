@@ -9,6 +9,20 @@ public class ExplodingProjectile : Projectile
     public int range;
     public float distanceMultiplier;
 
+    private void LateUpdate()
+    {
+        const float trailDisplacementCoefficient = 0.25f;
+        const float trailTimeCoefficient = 40.0f;
+        float displacement = Mathf.Sin(trailTimeCoefficient * Time.fixedTime);
+        
+        var pos0 = trails[0].transform.localPosition;
+        pos0.y = trailDisplacementCoefficient * displacement;
+        trails[0].transform.localPosition = pos0;
+
+        var pos1 = trails[1].transform.localPosition;
+        pos1.y = trailDisplacementCoefficient * (1.0f - displacement);
+        trails[1].transform.localPosition = pos1;
+    }
 
     [Server]
     protected override void HandleCollision(Collider2D collision)

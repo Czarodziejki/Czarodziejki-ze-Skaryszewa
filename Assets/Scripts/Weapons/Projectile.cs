@@ -10,8 +10,11 @@ public class Projectile : NetworkBehaviour
 {
     public float lifetime = 15f;
     public float explosionParticleSpeedCoefficient = 0.2f;
+    public int tilemapDamageRange = 1;
+
     public GameObject explosionParticleSystemPrefab;
-    public GameObject trail;
+    public GameObject extraEffectParticleSystemPrefab;
+    public GameObject[] trails;
     public GameObject pointLight;
 
     private float timeAlive = 0f;
@@ -58,14 +61,17 @@ public class Projectile : NetworkBehaviour
         pointLight.GetComponent<Light2D>().color = playerController.secondaryColor; // Point light illuminating the foreground
 
         // Set colors of the trails
-        var trailMaterial = trail.GetComponent<TrailRenderer>().sharedMaterial;
+        foreach (var trail in trails)
+        {
+            var trailMaterial = trail.GetComponent<TrailRenderer>().material;
 
-        trailMaterial.SetColor("_Color1", playerController.secondaryColor);
-        trailMaterial.SetColor("_Color2", playerController.ternaryColor);
-        
-        // Random texture animation offset
-        float timeOffset = UnityEngine.Random.Range(0.0f, 1.0f);
-        trailMaterial.SetFloat("_TimeOffset", timeOffset);
+            trailMaterial.SetColor("_Color1", playerController.secondaryColor);
+            trailMaterial.SetColor("_Color2", playerController.ternaryColor);
+
+            // Random texture animation offset
+            float timeOffset = UnityEngine.Random.Range(0.0f, 1.0f);
+            trailMaterial.SetFloat("_TimeOffset", timeOffset);
+        }
     }
 
     private void Awake()
@@ -127,7 +133,16 @@ public class Projectile : NetworkBehaviour
 
         var tileCollisionPos = CheckTileCollision(collision);
         if (tileCollisionPos != null)
-            DamageTile(tileCollisionPos.Value, damage);
+        {
+            for (int x = -tilemapDamageRange; x <= tilemapDamageRange; x++)
+            {
+                for (int y = -tilemapDamageRange; y <= tilemapDamageRange; y++)
+                {
+                    DamageTile(tileCollisionPos.Value + new Vector3Int(x, y, 0), damage);
+                }
+            }
+        }
+            
     }
 
 
@@ -197,12 +212,15 @@ public class Projectile : NetworkBehaviour
     public override void OnStopClient()
     {
         // Set parent of the trail to null so that it persists after the projectile is destroyed
-        var trail = gameObject.GetComponentInChildren<TrailRenderer>();
-        trail.transform.parent = null;
-        // Adjust the parameters to create an absorption-like effect
-        trail.time = 0.2f;
-        trail.widthMultiplier *= 0.3f;
-        trail.widthCurve = new AnimationCurve(new(0.0f, 1.0f), new(1.0f, 0.0f));
+        foreach (var trailObject in trails)
+        {
+            var trail = trailObject.GetComponent<TrailRenderer>();
+            trail.transform.parent = null;
+            // Adjust the parameters to create an absorption-like effect
+            trail.time = 0.2f;
+            trail.widthMultiplier *= 0.3f;
+            trail.widthCurve = new AnimationCurve(new(0.0f, 1.0f), new(1.0f, 0.0f));
+        }  
 
         // Emit explosion particles
         if (!collisionDetected)
@@ -218,7 +236,16 @@ public class Projectile : NetworkBehaviour
         particleRenderer.material.SetColor("_Color", playerController.secondaryColor);
         particleRenderer.trailMaterial.SetColor("_Color1", playerController.secondaryColor);
         particleRenderer.trailMaterial.SetColor("_Color2", playerController.ternaryColor);
-
         Destroy(particleSystem, particleSettings.startLifetimeMultiplier);
+
+        // Additional explosion if set
+        if (extraEffectParticleSystemPrefab != null)
+        {
+            GameObject extraParticleSystem = Instantiate(extraEffectParticleSystemPrefab, explosionParticleOrigin, Quaternion.identity);
+            var extraParticleSettings = extraParticleSystem.GetComponent<ParticleSystem>().main;
+            var extraParticleRenderer = extraParticleSystem.GetComponent<ParticleSystemRenderer>();
+            extraParticleRenderer.material.SetColor("_Color", playerController.ternaryColor);
+            Destroy(extraParticleSystem, extraParticleSettings.startLifetimeMultiplier);
+        }      
     }
 }

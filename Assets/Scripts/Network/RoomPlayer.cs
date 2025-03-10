@@ -1,16 +1,17 @@
 using Mirror;
-using NUnit.Framework;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 
 public class RoomPlayer : NetworkRoomPlayer
 {
+    public enum DisplayType
+    {
+        DisplayPlayerSelection,
+        DisplayMapSelection,
+        DisplayGameResults,
+    }
+
     [SyncVar]
     public int VariantID = 0;
 
@@ -18,12 +19,16 @@ public class RoomPlayer : NetworkRoomPlayer
     bool variantAvaliable;
 
     [SyncVar]
-    public bool showResults = false;
+    public DisplayType displayType;
+    static private DisplayType localDisplayType;
+
     [SyncVar]
     public int[] orderedPlayersVariants;
     public GameObject lobbyCanvas;
 
-    static bool localShowResults = false;
+    [SyncVar]
+    public bool charactekSelected = false;
+
     public override void OnClientEnterRoom()
     {
         if (isLocalPlayer)
@@ -36,12 +41,12 @@ public class RoomPlayer : NetworkRoomPlayer
     {
         if (isLocalPlayer)
         {
-            if (Keyboard.current.tabKey.wasPressedThisFrame)
-                showResults = !showResults;
+            if (Keyboard.current.tabKey.wasPressedThisFrame && displayType == DisplayType.DisplayGameResults)
+                displayType = DisplayType.DisplayPlayerSelection;
 
-            localShowResults = showResults;
+            localDisplayType = displayType;
             if(lobbyCanvas != null)
-                lobbyCanvas.SetActive(!localShowResults);
+                lobbyCanvas.SetActive(localDisplayType == DisplayType.DisplayPlayerSelection);
         }
     }
 
@@ -59,20 +64,26 @@ public class RoomPlayer : NetworkRoomPlayer
             if (!Utils.IsSceneActive(room.RoomScene))
                 return;
 
-            if(isLocalPlayer)
-                CmdCheckVariantAvaliable();
-            if (localShowResults)
+            switch (localDisplayType)
             {
-                DrawResults();
-            }
-            else
-            {
-                DrawPlayerState();
-                if (NetworkClient.active && isLocalPlayer)
-                {
-                    DrawPlayerSelection();
-                    DrawPlayerReadyButton();
-                }
+                case DisplayType.DisplayPlayerSelection:
+                    if(isLocalPlayer)
+                        CmdCheckVariantAvaliable();
+                    DrawPlayerState();
+                    if (NetworkClient.active && isLocalPlayer)
+                    {
+                        DrawPlayerSelection();
+                        DrawPlayerReadyButton();
+                    }
+                    break;
+
+                case DisplayType.DisplayMapSelection:
+                    DrawMapSelection();
+                    break;
+
+                case DisplayType.DisplayGameResults:
+                    DrawResults();
+                    break;
             }
         }
     }
@@ -89,15 +100,16 @@ public class RoomPlayer : NetworkRoomPlayer
 
         float areaHeight = Screen.height * 0.13f;
         float areaWidth = Screen.width * 0.2f;
-        float spacing = Screen.width * 0.05f;
+        float side_spacing = Screen.width * 0.05f;
+        float inner_spacing = (Screen.width - 2.0f * side_spacing - 4.0f * areaWidth) / 3.0f;
 
         GUIStyle area = new GUIStyle();
-        if (readyToBegin)
+        if (charactekSelected)
             area.normal.background = MakeTex(2, 2, new Color(0.439f, 1.0f, 0.518f));
         else
             area.normal.background = MakeTex(2, 2, new Color(1f, 0.416f, 0.416f));
 
-        GUILayout.BeginArea(new Rect((index + 1) * spacing + (index * areaWidth), Screen.height * 0.1f, areaWidth, areaHeight));
+        GUILayout.BeginArea(new Rect(side_spacing + index * (inner_spacing + areaWidth), Screen.height * 0.1f, areaWidth, areaHeight));
         GUILayout.BeginVertical(area);
         GUILayout.Label(manager.playerNames[VariantID], labelStyle, GUILayout.ExpandWidth(true));
         GUILayout.Space(10);
@@ -130,12 +142,11 @@ public class RoomPlayer : NetworkRoomPlayer
         if (NetworkClient.active && isLocalPlayer)
         {
             GUILayout.BeginArea(new Rect(Screen.width * 0.25f, Screen.height * 0.8f, Screen.width * 0.5f, Screen.height * 0.2f));
-            if (readyToBegin)
+            if (charactekSelected)
             {
                 if (GUILayout.Button("CANCEL", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(100)))
                 {
-                    CmdFreeVariant();
-                    CmdChangeReadyState(false);
+                    CmdFreeVariant(GetComponent<NetworkIdentity>());
                 }
             }
             else
@@ -143,8 +154,7 @@ public class RoomPlayer : NetworkRoomPlayer
                 GUI.enabled = variantAvaliable;
                 if (GUILayout.Button("READY", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(100)))
                 {
-                    CmdReserveVariant();
-                    CmdChangeReadyState(true);
+                    CmdReserveVariant(GetComponent<NetworkIdentity>());
                 }
                 GUI.enabled = true;
             }
@@ -266,6 +276,62 @@ public class RoomPlayer : NetworkRoomPlayer
             GUI.DrawTexture(new Rect(podiumBlockRect.x + podiumBlockRect.width * 0.1f, podiumBlockRect.y - texSize, texSize, texSize), gameManager.playerTextures[orderedPlayersVariants[place - 1]]);
     }
 
+    private void DrawMapSelection()
+    {
+        if (isServer || isServerOnly)
+        {
+            GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
+            labelStyle.fontSize = 80;
+            labelStyle.font = Resources.Load<Font>("Fonts/VT323-Regular");
+            labelStyle.normal.textColor = Color.black;
+            labelStyle.hover.textColor = Color.black;
+            labelStyle.alignment = TextAnchor.MiddleCenter;            
+
+            GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+            buttonStyle.fontSize = 72;
+            buttonStyle.font = Resources.Load<Font>("Fonts/VT323-Regular");
+            buttonStyle.normal.textColor = Color.black;
+            buttonStyle.hover.textColor = Color.black;
+            buttonStyle.active.textColor = Color.black;
+            buttonStyle.normal.background = MakeTex(2, 2, new Color(0.9607844f, 0.7294118f, 0.9215687f));
+            buttonStyle.hover.background = MakeTex(2, 2, new Color(1f, 0.8820755f, 0.980345f));
+            buttonStyle.active.background = MakeTex(2, 2, new Color(0.9811321f, 0.513706f, 0.9019072f));
+            buttonStyle.alignment = TextAnchor.MiddleCenter;
+
+            GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
+
+            GUILayout.BeginArea(new Rect(Screen.width * 0.25f, Screen.height * 0.3f, Screen.width * 0.5f, Screen.height * 0.5f));
+            GUILayout.Label("Select map", labelStyle, GUILayout.ExpandWidth(true));
+
+            GUILayout.Space(20);
+
+            foreach (var map in gameManager.avaiableMaps)
+            {
+                if (GUILayout.Button(map.GetComponent<MapName>().Value, buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(100)))
+                {
+                    gameManager.SelectMap(map);
+                    gameManager.StartGame();
+                }
+                GUILayout.Space(10);
+            }
+
+            GUILayout.EndArea();
+        }
+        else if (isLocalPlayer)
+        {
+            GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
+            labelStyle.fontSize = 70;
+            labelStyle.font = Resources.Load<Font>("Fonts/VT323-Regular");
+            labelStyle.normal.textColor = Color.black;
+            labelStyle.hover.textColor = Color.black;
+            labelStyle.alignment = TextAnchor.MiddleCenter;
+
+            GUILayout.BeginArea(new Rect(Screen.width * 0.25f, Screen.height * 0.3f, Screen.width * 0.5f, Screen.height * 0.2f));
+            GUILayout.Label("Wait for host to select a map", labelStyle, GUILayout.ExpandWidth(true));
+            GUILayout.EndArea();
+        }
+    }
+
     [Command]
     public void CmdCheckVariantAvaliable()
     {
@@ -274,16 +340,20 @@ public class RoomPlayer : NetworkRoomPlayer
     }
 
     [Command]
-    public void CmdReserveVariant()
+    public void CmdReserveVariant(NetworkIdentity identity)
     {
         GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
-        gameManager.VariantAvaliable[VariantID] = false;
+        gameManager.ReserveVariant(VariantID);
+
+        identity.gameObject.GetComponent<RoomPlayer>().charactekSelected = true;
     }
 
     [Command]
-    public void CmdFreeVariant()
+    public void CmdFreeVariant(NetworkIdentity identity)
     {
         GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
         gameManager.VariantAvaliable[VariantID] = true;
+
+        identity.gameObject.GetComponent<RoomPlayer>().charactekSelected = false;
     }
 }

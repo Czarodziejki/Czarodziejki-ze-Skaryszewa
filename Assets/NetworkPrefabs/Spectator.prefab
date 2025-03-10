@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5175658699172652910}
   - component: {fileID: 6541590495888669751}
   - component: {fileID: 1013511579038915284}
+  - component: {fileID: 2964049618132942759}
   m_Layer: 3
   m_Name: Spectator
   m_TagString: Player
@@ -66,6 +67,15 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  movementSpeedCoef: 0.3
+--- !u!81 &2964049618132942759
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6787894561041403779}
+  m_Enabled: 1
 --- !u!1001 &48213932901363453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -74,6 +84,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5175658699172652910}
     m_Modifications:
+    - target: {fileID: 1073393536147269311, guid: 57562c3e9148ce04b86814653a7e3f49, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6327102142395442965, guid: 57562c3e9148ce04b86814653a7e3f49, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -69,10 +69,11 @@ public class BaseWeapon : NetworkBehaviour
     }
 
     [Client]
-    private void SetColors()
+    virtual protected void SetColors()
     {
+        var player = playerTransform.GetComponent<PlayerController>();
         var particleRenderer = burstParticleSystemController.GetComponent<ParticleSystemRenderer>();
-        particleRenderer.material.SetColor("_Color", playerTransform.GetComponent<PlayerController>().ternaryColor);
+        particleRenderer.material.SetColor("_Color", player.ternaryColor);
     }
 
     [Command]
