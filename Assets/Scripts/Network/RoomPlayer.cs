@@ -310,6 +310,7 @@ public class RoomPlayer : NetworkRoomPlayer
                 if (GUILayout.Button(map.GetComponent<MapName>().Value, buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(100)))
                 {
                     gameManager.SelectMap(map);
+                    gameManager.StartGame();
                 }
                 GUILayout.Space(10);
             }

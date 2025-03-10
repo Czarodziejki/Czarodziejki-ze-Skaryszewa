@@ -37,8 +37,12 @@ public class GameNetworkManager : NetworkRoomManager
     public void SelectMap(GameObject map)
     {
         mapPrefab = map;
+    }
 
-        allPlayersReady = true;     // This starts a game
+
+    public void StartGame()
+    {
+        allPlayersReady = true;
     }
 
 
@@ -49,18 +53,15 @@ public class GameNetworkManager : NetworkRoomManager
         gameMapManager = mapInstance.GetComponent<GameMapManager>();
     }
 
-    public override void OnRoomServerSceneChanged(string sceneName)
+
+    public override void OnServerSceneChanged(string sceneName)
     {
-        base.OnRoomServerSceneChanged(sceneName);
         if(sceneName == GameplayScene)
             SpawnMap();
         else if (sceneName == RoomScene)
         {
             foreach (var player in roomSlots)
-            {
-                player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayPlayerSelection;
                 player.gameObject.GetComponent<RoomPlayer>().charactekSelected = false;
-            }
 
             for (int i=0; i < VariantAvaliable.Length; i++)
                 VariantAvaliable[i] = true;
@@ -110,7 +111,6 @@ public class GameNetworkManager : NetworkRoomManager
         return NetworkServer.active;
     }
 
-
     public void ReturnToMainMenu()
     {
         if (NetworkServer.active && NetworkClient.isConnected)
@@ -122,6 +122,7 @@ public class GameNetworkManager : NetworkRoomManager
             StopClient();
         }
     }
+    
     private Texture2D MakeTex(int width, int height, Color col)
     {
         Color[] pix = new Color[width * height];
