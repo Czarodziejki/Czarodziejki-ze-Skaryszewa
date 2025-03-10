@@ -56,17 +56,12 @@ public class GameNetworkManager : NetworkRoomManager
 
     public override void OnServerSceneChanged(string sceneName)
     {
-        //base.OnRoomServerSceneChanged(sceneName);
-
         if(sceneName == GameplayScene)
             SpawnMap();
         else if (sceneName == RoomScene)
         {
             foreach (var player in roomSlots)
-            {
-                player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayPlayerSelection;
                 player.gameObject.GetComponent<RoomPlayer>().charactekSelected = false;
-            }
 
             for (int i=0; i < VariantAvaliable.Length; i++)
                 VariantAvaliable[i] = true;
@@ -105,7 +100,13 @@ public class GameNetworkManager : NetworkRoomManager
             if (NetworkServer.active)
             {
                 if (GUILayout.Button("Return to Room", buttonStyle))
+                {
+                    foreach (var player in roomSlots)
+                        player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayPlayerSelection;
+
                     ServerChangeScene(RoomScene);
+                }
+                    
             }
             else
             {
