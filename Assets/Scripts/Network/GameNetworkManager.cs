@@ -37,8 +37,12 @@ public class GameNetworkManager : NetworkRoomManager
     public void SelectMap(GameObject map)
     {
         mapPrefab = map;
+    }
 
-        allPlayersReady = true;     // This starts a game
+
+    public void StartGame()
+    {
+        allPlayersReady = true;
     }
 
 
@@ -49,9 +53,11 @@ public class GameNetworkManager : NetworkRoomManager
         gameMapManager = mapInstance.GetComponent<GameMapManager>();
     }
 
-    public override void OnRoomServerSceneChanged(string sceneName)
+
+    public override void OnServerSceneChanged(string sceneName)
     {
-        base.OnRoomServerSceneChanged(sceneName);
+        //base.OnRoomServerSceneChanged(sceneName);
+
         if(sceneName == GameplayScene)
             SpawnMap();
         else if (sceneName == RoomScene)
