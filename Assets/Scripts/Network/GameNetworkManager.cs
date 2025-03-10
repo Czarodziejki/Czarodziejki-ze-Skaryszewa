@@ -122,6 +122,14 @@ public class GameNetworkManager : NetworkRoomManager
             StopClient();
         }
     }
+
+    public void ReturnToRoom()
+    {
+        foreach (var player in roomSlots)
+            player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayPlayerSelection;
+
+        ServerChangeScene(RoomScene);
+    }
     
     private Texture2D MakeTex(int width, int height, Color col)
     {

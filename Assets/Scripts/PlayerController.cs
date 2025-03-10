@@ -137,7 +137,7 @@ public class PlayerController : BasePlayerController
         {
             if (isHost)
             {
-                manager.ServerChangeScene(manager.RoomScene);
+                manager.ReturnToRoom();
             }
             else
             {
