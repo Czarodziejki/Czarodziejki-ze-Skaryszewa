@@ -93,22 +93,6 @@ public class GameNetworkManager : NetworkRoomManager
         buttonStyle.active.background = MakeTex(2, 2, new Color(0.9811321f, 0.513706f, 0.9019072f));
         buttonStyle.alignment = TextAnchor.MiddleCenter;
 
-        if (Utils.IsSceneActive(GameplayScene))
-        {
-            GUILayout.BeginArea(new Rect(Screen.width - 150f, 10f, 140f, 30f));
-            if (NetworkServer.active)
-            {
-                if (GUILayout.Button("Return to Room", buttonStyle))
-                    ServerChangeScene(RoomScene);
-            }
-            else
-            {
-                if (GUILayout.Button("Leave", buttonStyle))
-                    StopClient();
-            }
-            GUILayout.EndArea();
-        }
-
         if (Utils.IsSceneActive(RoomScene))
         {
             GUILayout.BeginArea(new Rect(Screen.width - 400f, 10f, 390f, 60f));
@@ -120,6 +104,12 @@ public class GameNetworkManager : NetworkRoomManager
             GUILayout.EndArea();
         }
     }
+
+    public bool IsHost()
+    {
+        return NetworkServer.active;
+    }
+
 
     public void ReturnToMainMenu()
     {

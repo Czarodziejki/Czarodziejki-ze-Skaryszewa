@@ -120,14 +120,29 @@ public class PlayerController : BasePlayerController
         buttonStyle.normal.textColor = Color.black;
         buttonStyle.hover.textColor = Color.black;
         buttonStyle.active.textColor = Color.black;
+        buttonStyle.fontSize = 64;
         buttonStyle.normal.background = MakeTex(2, 2, new Color(0.9607844f, 0.7294118f, 0.9215687f));
         buttonStyle.hover.background = MakeTex(2, 2, new Color(1f, 0.8820755f, 0.980345f));
         buttonStyle.active.background = MakeTex(2, 2, new Color(0.9811321f, 0.513706f, 0.9019072f));
         buttonStyle.alignment = TextAnchor.MiddleCenter;
-        float buttonWidth = 140;
-        if (GUI.Button(new Rect((Screen.width - buttonWidth) / 2.0f, 85, buttonWidth, 30), "Resume", buttonStyle))
+        float buttonWidth = 500;
+        float buttonHeight = 100;
+        if (GUI.Button(new Rect((Screen.width - buttonWidth) / 2.0f, (int)(Screen.height / 2 - 1.5 * buttonHeight), buttonWidth, buttonHeight), "RESUME", buttonStyle))
         {
             Paused = false;
+        }
+        GameNetworkManager manager = NetworkManager.singleton as GameNetworkManager;
+        bool isHost = manager.IsHost();
+        if (GUI.Button(new Rect((Screen.width - buttonWidth) / 2.0f, (int)(Screen.height / 2 + 0.5 * buttonHeight), buttonWidth, buttonHeight), isHost ? "RETURN TO ROOM" : "LEAVE", buttonStyle))
+        {
+            if (isHost)
+            {
+                manager.ServerChangeScene(manager.RoomScene);
+            }
+            else
+            {
+                manager.StopClient();
+            }
         }
     }
 
