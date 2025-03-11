@@ -1,12 +1,20 @@
-document.getElementById('play-button').addEventListener('click', async function() {
-    // download release/Czarodziejki ze Skaryszewa (Windows).zip
-    const url = 'release/Czarodziejki ze Skaryszewa (Windows).zip';
+async function downloadFile(url) {
     const response = await fetch(url);
     const blob = await response.blob();
     const urlBlob = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = urlBlob;
-    a.download = 'Czarodziejki ze Skaryszewa (Windows).zip';
+    a.download = url.split('/').pop();
     a.click();
     URL.revokeObjectURL(urlBlob);
+}
+
+document.getElementById('windows-button').addEventListener('click', async function() {
+    const url = 'release/Czarodziejki ze Skaryszewa (Windows).zip';
+    await downloadFile(url);
+});
+
+document.getElementById('linux-button').addEventListener('click', async function() {
+    const url = 'release/Czarodziejki ze Skaryszewa (Linux).zip';
+    await downloadFile(url);
 });
