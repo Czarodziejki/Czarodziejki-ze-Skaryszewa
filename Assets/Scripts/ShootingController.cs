@@ -61,7 +61,7 @@ public class ShootingController : NetworkBehaviour
 
     private void Update()
     {
-        if (isLocalPlayer && fireAction.IsPressed())
+        if (isLocalPlayer && fireAction.IsPressed() && !GetComponent<PlayerController>().Paused)
         {
             if (weapon.TryToUseWeapon())
                 uiController.UpdateAmmo(weapon);
