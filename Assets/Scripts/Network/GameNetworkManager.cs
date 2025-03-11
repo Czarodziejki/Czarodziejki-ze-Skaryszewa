@@ -19,17 +19,27 @@ public class GameNetworkManager : NetworkRoomManager
     public List<NetworkConnectionToClient> deadPlayers = new List<NetworkConnectionToClient>();
     public Dictionary<NetworkConnectionToClient, int> playersVariants = new Dictionary<NetworkConnectionToClient, int>();
 
-    public bool[] VariantAvaliable = Enumerable.Repeat(true, 4).ToArray();
+    private bool[] variantAvaliable = Enumerable.Repeat(true, 4).ToArray();
 
-    public void ReserveVariant(int variantId)
+    public void ReserveVariant(NetworkConnectionToClient conn, int variantId)
     {
-        VariantAvaliable[variantId] = false;
-
-        if (VariantAvaliable.Count(v => v == false) == roomSlots.Count)
+        variantAvaliable[variantId] = false;
+        playersVariants[conn] = variantId;
+        if (variantAvaliable.Count(v => v == false) == roomSlots.Count)
         {
             foreach (var player in roomSlots)
                 player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayMapSelection;
         }
+    }
+    public void FreeVariant(NetworkConnectionToClient conn, int variantId)
+    {
+        variantAvaliable[variantId] = true;
+        playersVariants.Remove(conn);
+    }
+
+    public bool IsVariantAvaliable(int variantId)
+    {
+        return variantAvaliable[variantId];
     }
 
     public void SelectMap(GameObject map)
@@ -59,10 +69,9 @@ public class GameNetworkManager : NetworkRoomManager
         else if (sceneName == RoomScene)
         {
             foreach (var player in roomSlots)
-                player.gameObject.GetComponent<RoomPlayer>().charactekSelected = false;
+                player.gameObject.GetComponent<RoomPlayer>().characterSelected = false;
 
-            for (int i=0; i < VariantAvaliable.Length; i++)
-                VariantAvaliable[i] = true;
+            Array.Fill(variantAvaliable, true);
 
             playersVariants.Clear();
         }
@@ -72,7 +81,6 @@ public class GameNetworkManager : NetworkRoomManager
     public override GameObject OnRoomServerCreateGamePlayer(NetworkConnectionToClient conn, GameObject roomPlayer)
     {
         RoomPlayer roomPlayerComponent = roomPlayer.GetComponent<RoomPlayer>();
-        playersVariants.Add(conn, roomPlayerComponent.VariantID);
         Transform startPos = GetStartPosition();
         alivePlayers.Add(conn);
         return startPos != null
@@ -156,6 +164,11 @@ public class GameNetworkManager : NetworkRoomManager
         base.OnServerDisconnect(conn);
         alivePlayers.Remove(conn);
         deadPlayers.Remove(conn);
+        if(playersVariants.ContainsKey(conn))
+        {
+            variantAvaliable[playersVariants[conn]] = true;
+            playersVariants.Remove(conn);
+        }
         CheckGameEnd();
     }
 
@@ -190,7 +203,7 @@ public class GameNetworkManager : NetworkRoomManager
             alivePlayers.Clear();
             deadPlayers.Clear();
             playersVariants.Clear();
-            Array.Fill(VariantAvaliable, true);
+            Array.Fill(variantAvaliable, true);
         }
     }
 }
