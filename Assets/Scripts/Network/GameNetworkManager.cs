@@ -1,9 +1,7 @@
 using Mirror;
-using Mono.Cecil.Cil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Rendering.Universal;
 using UnityEngine;
 
 public class GameNetworkManager : NetworkRoomManager
@@ -21,17 +19,27 @@ public class GameNetworkManager : NetworkRoomManager
     public List<NetworkConnectionToClient> deadPlayers = new List<NetworkConnectionToClient>();
     public Dictionary<NetworkConnectionToClient, int> playersVariants = new Dictionary<NetworkConnectionToClient, int>();
 
-    public bool[] VariantAvaliable = Enumerable.Repeat(true, 4).ToArray();
+    private bool[] variantAvaliable = Enumerable.Repeat(true, 4).ToArray();
 
-    public void ReserveVariant(int variantId)
+    public void ReserveVariant(NetworkConnectionToClient conn, int variantId)
     {
-        VariantAvaliable[variantId] = false;
-
-        if (VariantAvaliable.Count(v => v == false) == roomSlots.Count)
+        variantAvaliable[variantId] = false;
+        playersVariants[conn] = variantId;
+        if (variantAvaliable.Count(v => v == false) == roomSlots.Count)
         {
             foreach (var player in roomSlots)
                 player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayMapSelection;
         }
+    }
+    public void FreeVariant(NetworkConnectionToClient conn, int variantId)
+    {
+        variantAvaliable[variantId] = true;
+        playersVariants.Remove(conn);
+    }
+
+    public bool IsVariantAvaliable(int variantId)
+    {
+        return variantAvaliable[variantId];
     }
 
     public void SelectMap(GameObject map)
@@ -61,10 +69,9 @@ public class GameNetworkManager : NetworkRoomManager
         else if (sceneName == RoomScene)
         {
             foreach (var player in roomSlots)
-                player.gameObject.GetComponent<RoomPlayer>().charactekSelected = false;
+                player.gameObject.GetComponent<RoomPlayer>().characterSelected = false;
 
-            for (int i=0; i < VariantAvaliable.Length; i++)
-                VariantAvaliable[i] = true;
+            Array.Fill(variantAvaliable, true);
 
             playersVariants.Clear();
         }
@@ -74,7 +81,6 @@ public class GameNetworkManager : NetworkRoomManager
     public override GameObject OnRoomServerCreateGamePlayer(NetworkConnectionToClient conn, GameObject roomPlayer)
     {
         RoomPlayer roomPlayerComponent = roomPlayer.GetComponent<RoomPlayer>();
-        playersVariants.Add(conn, roomPlayerComponent.VariantID);
         Transform startPos = GetStartPosition();
         alivePlayers.Add(conn);
         return startPos != null
@@ -94,28 +100,6 @@ public class GameNetworkManager : NetworkRoomManager
         buttonStyle.active.background = MakeTex(2, 2, new Color(0.9811321f, 0.513706f, 0.9019072f));
         buttonStyle.alignment = TextAnchor.MiddleCenter;
 
-        if (Utils.IsSceneActive(GameplayScene))
-        {
-            GUILayout.BeginArea(new Rect(Screen.width - 150f, 10f, 140f, 30f));
-            if (NetworkServer.active)
-            {
-                if (GUILayout.Button("Return to Room", buttonStyle))
-                {
-                    foreach (var player in roomSlots)
-                        player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayPlayerSelection;
-
-                    ServerChangeScene(RoomScene);
-                }
-                    
-            }
-            else
-            {
-                if (GUILayout.Button("Leave", buttonStyle))
-                    StopClient();
-            }
-            GUILayout.EndArea();
-        }
-
         if (Utils.IsSceneActive(RoomScene))
         {
             GUILayout.BeginArea(new Rect(Screen.width - 400f, 10f, 390f, 60f));
@@ -128,6 +112,11 @@ public class GameNetworkManager : NetworkRoomManager
         }
     }
 
+    public bool IsHost()
+    {
+        return NetworkServer.active;
+    }
+
     public void ReturnToMainMenu()
     {
         if (NetworkServer.active && NetworkClient.isConnected)
@@ -138,6 +127,14 @@ public class GameNetworkManager : NetworkRoomManager
         {
             StopClient();
         }
+    }
+
+    public void ReturnToRoom()
+    {
+        foreach (var player in roomSlots)
+            player.gameObject.GetComponent<RoomPlayer>().displayType = RoomPlayer.DisplayType.DisplayPlayerSelection;
+
+        ServerChangeScene(RoomScene);
     }
     
     private Texture2D MakeTex(int width, int height, Color col)
@@ -158,6 +155,11 @@ public class GameNetworkManager : NetworkRoomManager
         base.OnServerDisconnect(conn);
         alivePlayers.Remove(conn);
         deadPlayers.Remove(conn);
+        if(playersVariants.ContainsKey(conn))
+        {
+            variantAvaliable[playersVariants[conn]] = true;
+            playersVariants.Remove(conn);
+        }
         CheckGameEnd();
     }
 
@@ -192,7 +194,7 @@ public class GameNetworkManager : NetworkRoomManager
             alivePlayers.Clear();
             deadPlayers.Clear();
             playersVariants.Clear();
-            Array.Fill(VariantAvaliable, true);
+            Array.Fill(variantAvaliable, true);
         }
     }
 }

@@ -27,7 +27,7 @@ public class RoomPlayer : NetworkRoomPlayer
     public GameObject lobbyCanvas;
 
     [SyncVar]
-    public bool charactekSelected = false;
+    public bool characterSelected = false;
 
     public override void OnClientEnterRoom()
     {
@@ -104,7 +104,7 @@ public class RoomPlayer : NetworkRoomPlayer
         float inner_spacing = (Screen.width - 2.0f * side_spacing - 4.0f * areaWidth) / 3.0f;
 
         GUIStyle area = new GUIStyle();
-        if (charactekSelected)
+        if (characterSelected)
             area.normal.background = MakeTex(2, 2, new Color(0.439f, 1.0f, 0.518f));
         else
             area.normal.background = MakeTex(2, 2, new Color(1f, 0.416f, 0.416f));
@@ -142,7 +142,7 @@ public class RoomPlayer : NetworkRoomPlayer
         if (NetworkClient.active && isLocalPlayer)
         {
             GUILayout.BeginArea(new Rect(Screen.width * 0.25f, Screen.height * 0.8f, Screen.width * 0.5f, Screen.height * 0.2f));
-            if (charactekSelected)
+            if (characterSelected)
             {
                 if (GUILayout.Button("CANCEL", buttonStyle, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(100)))
                 {
@@ -336,24 +336,24 @@ public class RoomPlayer : NetworkRoomPlayer
     public void CmdCheckVariantAvaliable()
     {
         GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
-        variantAvaliable = gameManager.VariantAvaliable[VariantID];
+        variantAvaliable = gameManager.IsVariantAvaliable(VariantID);
     }
 
     [Command]
     public void CmdReserveVariant(NetworkIdentity identity)
     {
         GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
-        gameManager.ReserveVariant(VariantID);
+        gameManager.ReserveVariant(identity.connectionToClient, VariantID);
 
-        identity.gameObject.GetComponent<RoomPlayer>().charactekSelected = true;
+        identity.gameObject.GetComponent<RoomPlayer>().characterSelected = true;
     }
 
     [Command]
     public void CmdFreeVariant(NetworkIdentity identity)
     {
         GameNetworkManager gameManager = NetworkManager.singleton as GameNetworkManager;
-        gameManager.VariantAvaliable[VariantID] = true;
+        gameManager.FreeVariant(identity.connectionToClient, VariantID);
 
-        identity.gameObject.GetComponent<RoomPlayer>().charactekSelected = false;
+        identity.gameObject.GetComponent<RoomPlayer>().characterSelected = false;
     }
 }
